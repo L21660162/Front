@@ -1,0 +1,11 @@
+subscription Subscription {
+  userAdded {
+    _id
+    createdAt
+    email
+    firstName
+    lastName
+    middleName
+    roles
+  }
+}

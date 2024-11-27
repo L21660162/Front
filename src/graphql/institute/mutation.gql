@@ -1,0 +1,73 @@
+mutation UpdateInstituteInput($data: UpdateInstituteInput!) {
+  UpdateInstituteInput(data: $data) {
+    Logo
+    _id
+    abbreviation
+    adress {
+      address
+      city
+      postalCode
+      state
+      suburb
+    }
+    createdAt
+    deletedAt
+    isDeleted
+    level
+    location {
+      address
+      city
+      postalCode
+      state
+      suburb
+    }
+    name
+    principallName {
+      firstName
+      lastName
+      secondLastName
+    }
+    totalHours
+    updatedAt
+  }
+}
+
+mutation CreateInstitute($data: InsertInstituteInput!) {
+  createInstitute(data: $data) {
+    Logo
+    _id
+    abbreviation
+    adress {
+      address
+      city
+      postalCode
+      state
+      suburb
+    }
+    createdAt
+    deletedAt
+    isDeleted
+    level
+    location {
+      address
+      city
+      postalCode
+      state
+      suburb
+    }
+    name
+    principallName {
+      firstName
+      lastName
+      secondLastName
+    }
+    totalHours
+    updatedAt
+  }
+}
+
+mutation RemoveInstitute($data: InstituteIdArgs!) {
+  removeInstitute(data: $data) {
+    deleted
+  }
+}

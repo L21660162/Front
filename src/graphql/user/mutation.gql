@@ -1,0 +1,44 @@
+mutation RemoveUser($data: UserIdArgs!, $signInData2: SignInInput!) {
+  removeUser(data: $data) {
+    deleted
+  }
+  signIn(data: $signInData2) {
+    accessToken
+    accessTokenExpiresIn
+    refreshToken
+    refreshTokenExpiresIn
+    type
+  }
+}
+
+mutation UpdateUser($data: UpdateUserInput!) {
+  updateUser(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    email
+    firstName
+    isDeleted
+    lastName
+    middleName
+    password
+    roles
+    updatedAt
+  }
+}
+
+mutation UpsertUser($data: UpsertUserInput!) {
+  upsertUser(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    email
+    firstName
+    isDeleted
+    lastName
+    middleName
+    password
+    roles
+    updatedAt
+  }
+}

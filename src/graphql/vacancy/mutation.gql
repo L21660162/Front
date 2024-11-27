@@ -1,0 +1,157 @@
+mutation InsertVacancy($data: InsertVacancyInput!) {
+  createVacancy(data: $data) {
+    _id
+    actuallyStatus
+    benefits
+    contact {
+      email
+      person
+      phone
+    }
+    createdAt
+    deadline
+    deletedAt
+    description
+    experienceLevel
+    isDeleted
+    location {
+      address
+      city
+      postalCode
+      state
+      suburb
+    }
+    maxCapacity
+    organizationId
+    position
+    postulation {
+      status
+      userId
+    }
+    requirements
+    responsibilities
+    salary
+    skills
+    updatedAt
+  }
+}
+
+mutation UpdateVacancy($data: UpdateVacancyInput!) {
+  updateVacancy(data: $data) {
+    _id
+    actuallyStatus
+    benefits
+    contact {
+      email
+      person
+      phone
+    }
+    createdAt
+    deadline
+    deletedAt
+    description
+    experienceLevel
+    isDeleted
+    location {
+      address
+      city
+      postalCode
+      state
+      suburb
+    }
+    maxCapacity
+    organizationId
+    position
+    postulation {
+      status
+      userId
+    }
+    requirements
+    responsibilities
+    salary
+    skills
+    updatedAt
+  }
+}
+
+mutation UpdateVacancyStatus($data: ChangeVacancyStatusInput!) {
+  updateVacancyStatus(data: $data) {
+    _id
+    actuallyStatus
+    benefits
+    contact {
+      email
+      person
+      phone
+    }
+    createdAt
+    deadline
+    deletedAt
+    description
+    experienceLevel
+    isDeleted
+    location {
+      address
+      city
+      postalCode
+      state
+      suburb
+    }
+    maxCapacity
+    organizationId
+    position
+    postulation {
+      status
+      userId
+    }
+    requirements
+    responsibilities
+    salary
+    skills
+    updatedAt
+  }
+}
+
+mutation UpsertPostulation($data: AddPostulationIntoVacancyInput!) {
+  upsertPostulation(data: $data) {
+    _id
+    actuallyStatus
+    benefits
+    contact {
+      email
+      person
+      phone
+    }
+    createdAt
+    deadline
+    deletedAt
+    description
+    experienceLevel
+    isDeleted
+    location {
+      address
+      city
+      postalCode
+      state
+      suburb
+    }
+    maxCapacity
+    organizationId
+    position
+    postulation {
+      status
+      userId
+    }
+    requirements
+    responsibilities
+    salary
+    skills
+    updatedAt
+  }
+}
+
+mutation RemoveVacancy($data: VacancyIdArgs!) {
+  removeVacancy(data: $data) {
+    deleted
+  }
+}

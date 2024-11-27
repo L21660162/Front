@@ -1,0 +1,95 @@
+{
+  "sidebar": {
+    "home": {
+      "label": "Inicio",
+      "dashboard": "Panel principal"
+    },
+    "app": {
+      "label": "Aplicación",
+      "users": "Usuarios"
+    },
+    "organization": {
+      "label": "Organizacion",
+      "dashboard": "Panel de Organizacion",
+      "mgmt": "Gestión de Organizacion"
+    },
+    "vacancy": {
+      "label": "Vacantes",
+      "dashboard": "Panel de Vacantes",
+      "mgmt": "Gestión de Vacantes"
+    },
+    "career": {
+      "label": "Carrera",
+      "dashboard": "Panel de Carrera"
+    },
+    "covenant": {
+      "label": "Convenio",
+      "dashboard": "Panel principal"
+    },
+    "file": {
+      "label": "Archivo",
+      "dashboard": "Panel de archivos"
+    },
+    "institute": {
+      "label": "Instituto",
+      "dashboard": "Panel de Instituto"
+    }
+  },
+  "signUp": {
+    "message": "Inicia sesión para continuar"
+  },
+  "signIn": {
+    "signIn": "Iniciar sesión",
+    "message": "Inicia sesión para continuar",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "rememberMe": "Recuérdame"
+  },
+  "global": {
+    "forms": {
+      "submit": "Enviar",
+      "validation": {
+        "firstName": "El nombre es obligatiorio",
+        "lastName": "El apellido es obligatorio",
+        "email": "El correo electrónico es obligatorio",
+        "emailRegex": "Dirección de correo electrónico inválida. Ej. example@email.com",
+        "password": "La contraseña es obligatoria",
+        "suggestion": "Sugerencia",
+        "lowercase": "Al menos una letra minúscula",
+        "uppercase": "Al menos una letra mayúscula",
+        "numeric": "Al menos una dígito numérico",
+        "length": "Al menos 8 caracteres",
+        "pickPassword": "Establece una contraseña"
+      }
+    },
+    "dictionary": {
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "welcome": "Bienvenido"
+    },
+    "toast": {
+      "error": {
+        "summary": "Error"
+      },
+      "success": {
+        "summary": "Realizado",
+        "detail": {
+          "signUpSuccess": "Tu cuenta ha sido creada con éxito. \nRedireccionando al inicio de sesión..."
+        }
+      }
+    }
+  },
+  "module": {
+    "home": {
+      "dashboard": {
+        "addExample": "Crear ejemplo",
+        "dialog": {
+          "add": {
+            "header": "Ejemplo de header para el dialogo add"
+          }
+        }
+      }
+    }
+  }
+}

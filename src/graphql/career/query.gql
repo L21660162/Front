@@ -1,0 +1,51 @@
+query GetAllCareers($filter: CareerArgs, $limit: Int!, $offset: Int, $page: Int!) {
+  getAllCareers(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      name
+      description
+      duration
+      credits
+      organizationId
+      instituteId
+      location {
+        address
+        city
+        state
+        suburb
+        postalCode
+      }
+      isCertified
+      createdAt
+      updatedAt
+      isDeleted
+      deletedAt
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+
+query getCareerById($id: ID) {
+  getFileById(_id: $id) {
+    _id
+    createdAt
+    deletedAt
+    description
+    extension
+    isDeleted
+    nameFile
+    size
+    type
+    updatedAt
+    uploadedBy
+  }
+}

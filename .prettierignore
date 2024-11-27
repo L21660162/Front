@@ -1,0 +1,14 @@
+# Ignore artifacts:
+build
+coverage
+node_modules*
+
+# Ignore all HTML files:
+*.html
+
+# Ignore UI presets
+public
+styles
+
+# Ignore pnpm-lock,yaml
+pnpm-lock.yaml

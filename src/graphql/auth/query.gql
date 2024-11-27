@@ -1,0 +1,7 @@
+query RefreshToken($data: RefreshTokenInput!) {
+  refreshToken(data: $data) {
+    accessToken
+    accessTokenExpiresIn
+    type
+  }
+}

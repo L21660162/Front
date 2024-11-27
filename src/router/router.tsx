@@ -1,0 +1,143 @@
+import React from 'react';
+import { Router, Route, RootRoute } from '@tanstack/react-router';
+import App from '../App';
+import LandingPage from '../pages/LandingPage';
+import SignInPage from '../pages/auth/signin';
+import SignUpPage from '../pages/auth/signup';
+import Dashboard from '../pages/home/dashboard';
+import NotFoundPage from '../pages/notfound';
+import PasswordRecoveryPage from '../pages/auth/passwordrecovery';
+import Example from '../pages/example';
+import OrganizationDashboard from '../pages/organization/index';
+import OrganizationManagement from '../pages/organization/management';
+import VacancyDashboard from '../pages/vacancy/index';
+import VacancyManagement from '../pages/vacancy/management';
+import Career from '../pages/career';
+import UserDashboard from '../pages/user';
+import Institute from '../pages/institute';
+import CovenantPage from '../pages/covenant';
+
+const rootRoute = new RootRoute();
+
+const landingRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: () => <App Component={LandingPage} />,
+});
+
+const dashboardRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'home/dashboard',
+  component: () => <App Component={Dashboard} />,
+});
+
+const homeRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/app/example',
+  component: () => <App Component={Example} />,
+});
+
+const signInRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/auth/signin',
+  component: () => <App Component={SignInPage} />,
+});
+
+const signUpRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/auth/signup',
+  component: () => <App Component={SignUpPage} />,
+});
+
+const passwordRecoveryRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/auth/passwordrecovery',
+  component: () => <App Component={PasswordRecoveryPage} />,
+});
+
+const careerRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/career/dashboard',
+  component: () => <App Component={Career} />,
+});
+
+const instituteRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/institute/dashboard',
+  component: () => <App Component={Institute} />,
+});
+
+const notFoundRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '*',
+  component: () => <App Component={NotFoundPage} />,
+});
+
+// RUTA DE USERS
+
+const userDashboard = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/user/dashboard',
+  component: () => <App Component={UserDashboard} />,
+});
+// RUTAS DE ORGANIZACION
+const organizationDashboard = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/organization/dashboard',
+  component: () => <App Component={OrganizationDashboard} />,
+});
+
+const organizationManagement = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/organization/management',
+  component: () => <App Component={OrganizationManagement} />,
+});
+
+const covenantRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/covenant/dashboard',
+  component: () => <App Component={CovenantPage} />,
+});
+
+// RUTAS DE VACANTES
+const vacancyDashboard = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/vacancy/dashboard',
+  component: () => <App Component={VacancyDashboard} />,
+});
+
+const vacancyManagement = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/vacancy/management',
+  component: () => <App Component={VacancyManagement} />,
+});
+
+const routeConfig = rootRoute.addChildren([
+  landingRoute,
+  dashboardRoute,
+  homeRoute,
+  signInRoute,
+  signUpRoute,
+  notFoundRoute,
+  passwordRecoveryRoute,
+  organizationDashboard,
+  organizationManagement,
+  vacancyDashboard,
+  vacancyManagement,
+  careerRoute,
+  userDashboard,
+  instituteRoute,
+  covenantRoute,
+]);
+
+// Create the router using your route tree
+const router = new Router({ routeTree: routeConfig });
+
+// Register your router for maximum type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+export default router;

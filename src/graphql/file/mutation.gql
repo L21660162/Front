@@ -1,0 +1,40 @@
+mutation UpdateFile($data: UpdateFile!) {
+  updateFile(data: $data) {
+    _id
+    approvedBy {
+      status
+      userId
+    }
+    createdAt
+    deletedAt
+    description
+    extension
+    isDeleted
+    nameFile
+    size
+    type
+    updatedAt
+    uploadedBy
+  }
+}
+
+mutation CreateFile($data: CreateFile!) {
+  createFile(data: $data) {
+    _id
+    approvedBy {
+      status
+      userId
+    }
+    createdAt
+    deletedAt
+    description
+    extension
+    isDeleted
+    nameFile
+    size
+    size
+    type
+    updatedAt
+    uploadedBy
+  }
+}

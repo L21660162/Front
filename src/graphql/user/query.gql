@@ -1,0 +1,59 @@
+query GetAllUsers($page: Int!, $limit: Int!, $offset: Int, $filter: UserArgs) {
+  getAllUsers(page: $page, limit: $limit, offset: $offset, filter: $filter) {
+    docs {
+      _id
+      createdAt
+      deletedAt
+      email
+      firstName
+      isDeleted
+      lastName
+      middleName
+      password
+      roles
+      updatedAt
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+
+query GetById($id: ID) {
+  getById(_id: $id) {
+    _id
+    createdAt
+    deletedAt
+    email
+    firstName
+    isDeleted
+    lastName
+    middleName
+    password
+    roles
+    updatedAt
+  }
+}
+
+query Me {
+  me {
+    _id
+    createdAt
+    deletedAt
+    email
+    firstName
+    isDeleted
+    lastName
+    middleName
+    password
+    roles
+    updatedAt
+  }
+}

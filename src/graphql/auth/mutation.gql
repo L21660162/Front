@@ -1,0 +1,51 @@
+mutation SignUp($data: SignUpInput!) {
+  signUp(data: $data) {
+    _id
+    createdAt
+    email
+    firstName
+    lastName
+    middleName
+    roles
+  }
+}
+
+mutation SignIn($data: SignInInput!) {
+  signIn(data: $data) {
+    accessToken
+    accessTokenExpiresIn
+    refreshToken
+    refreshTokenExpiresIn
+    type
+  }
+}
+
+mutation SignOut($data: RefreshTokenInput!) {
+  signOut(data: $data)
+}
+
+mutation ChangePassword($data: ChangePasswordInput!) {
+  changePassword(data: $data) {
+    _id
+    email
+    firstName
+    lastName
+    middleName
+    updatedAt
+  }
+}
+
+mutation PasswordRecovery($data: PasswordRecoveryInput!) {
+  passwordRecovery(data: $data)
+}
+
+mutation PasswordReset($data: PasswordResetInput!) {
+  passwordReset(data: $data) {
+    _id
+    email
+    firstName
+    lastName
+    middleName
+    updatedAt
+  }
+}

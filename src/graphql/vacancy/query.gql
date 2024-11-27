@@ -1,0 +1,87 @@
+query GetAllVacancy {
+  getAllVacancies {
+    docs {
+      _id
+      actuallyStatus
+      benefits
+      contact {
+        email
+        person
+        phone
+      }
+      createdAt
+      deadline
+      deletedAt
+      description
+      experienceLevel
+      isDeleted
+      location {
+        address
+        city
+        postalCode
+        state
+        suburb
+      }
+      maxCapacity
+      organizationId
+      position
+      postulation {
+        status
+        userId
+      }
+      requirements
+      responsibilities
+      salary
+      skills
+      updatedAt
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+
+query GetByIdVacancy($id: ID) {
+  getVacancyById(_id: $id) {
+    _id
+    actuallyStatus
+    benefits
+    contact {
+      email
+      person
+      phone
+    }
+    createdAt
+    deadline
+    deletedAt
+    description
+    experienceLevel
+    isDeleted
+    location {
+      address
+      city
+      postalCode
+      state
+      suburb
+    }
+    maxCapacity
+    organizationId
+    position
+    postulation {
+      status
+      userId
+    }
+    requirements
+    responsibilities
+    salary
+    skills
+    updatedAt
+  }
+}

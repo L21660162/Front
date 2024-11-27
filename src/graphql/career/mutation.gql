@@ -1,0 +1,53 @@
+mutation CreateCareer($data: CreateCareerInput!) {
+  createCareer(data: $data) {
+    _id
+    createdAt
+    credits
+    deletedAt
+    description
+    duration
+    instituteId
+    isCertified
+    isDeleted
+    location {
+      address
+      city
+      state
+      suburb
+      postalCode
+    }
+    name
+    organizationId
+    updatedAt
+  }
+}
+
+mutation UpdateCareer($data: UpdateCareerInput!) {
+  updateCareer(data: $data) {
+    _id
+    createdAt
+    credits
+    deletedAt
+    description
+    duration
+    instituteId
+    isCertified
+    isDeleted
+    location {
+      address
+      city
+      state
+      suburb
+      postalCode
+    }
+    name
+    organizationId
+    updatedAt
+  }
+}
+
+mutation DeletedCareer($data: CareerIdArgs!) {
+  deletedCareer(data: $data) {
+    deleted
+  }
+}
