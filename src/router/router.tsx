@@ -16,12 +16,30 @@ import Career from '../pages/career';
 import UserDashboard from '../pages/user';
 import Institute from '../pages/institute';
 import CovenantPage from '../pages/covenant';
+import Justify from '../pages/justifies';
+import Schedule from '../pages/ schedule';
+import { useAccessTokenData } from '../store/auth/store';
+import { TokenData } from '../store/auth/type';
+import Events from '../pages/events';
+import Migrate from '../pages/migrate';
 
 const rootRoute = new RootRoute();
 
-const landingRoute = new Route({
+const signInRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/',
+  component: () => <App Component={SignInPage} />,
+});
+
+const signUpRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/auth/signup',
+  component: () => <App Component={SignUpPage} />,
+});
+
+const landingRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/LandingPage',
   component: () => <App Component={LandingPage} />,
 });
 
@@ -31,22 +49,66 @@ const dashboardRoute = new Route({
   component: () => <App Component={Dashboard} />,
 });
 
+const justifiyRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'justify/dashboard',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['DIRTECTOR_ACADEMICO', 'SUBDIRECTOR_ACADEMICO', 'RECURSOS_HUMANOS', 'JEFE_ACADEMICO'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={Justify} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const scheduleRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'schedule/dashboard',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['DIRTECTOR_ACADEMICO', 'SUBDIRECTOR_ACADEMICO', 'JEFE_ACADEMICO'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={Schedule} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const eventsRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'events/dashboard',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['DIRTECTOR_ACADEMICO', 'SUBDIRECTOR_ACADEMICO', 'JEFE_ACADEMICO'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={Events} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const migrateRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'migrate/dashboard',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={Migrate} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
 const homeRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/app/example',
   component: () => <App Component={Example} />,
-});
-
-const signInRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/auth/signin',
-  component: () => <App Component={SignInPage} />,
-});
-
-const signUpRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/auth/signup',
-  component: () => <App Component={SignUpPage} />,
 });
 
 const passwordRecoveryRoute = new Route({
@@ -128,6 +190,9 @@ const routeConfig = rootRoute.addChildren([
   userDashboard,
   instituteRoute,
   covenantRoute,
+  justifiyRoute,
+  scheduleRoute,
+  eventsRoute,
 ]);
 
 // Create the router using your route tree

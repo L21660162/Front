@@ -1,109 +1,99 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import AppMenuitem from './AppMenuitem';
 import { MenuProvider } from './context/menucontext';
 import { AppMenuItem } from '../types/types';
 import { useGlobalAppStore } from '../src/store/global/globalAppStore';
-import { useTranslation } from 'react-i18next';
+import { TokenData } from '../src/store/auth/type';
+import { useAccessTokenData } from '../src/store/auth/store';
+import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 
-const AppMenu = () => {
-  const { layoutConfig } = useGlobalAppStore();
-
-  const contextPath = '';
+function AppMenu() {
   const { t } = useTranslation('common');
+  const { roles } = useAccessTokenData() as TokenData;
 
   const model: AppMenuItem[] = [
     {
       label: t('sidebar.home.label'),
       items: [
-        { label: t('sidebar.home.dashboard'), icon: 'pi pi-fw pi-home', to: '/home/dashboard' },
+        { 
+          label: t('sidebar.home.dashboard'), 
+          icon: 'pi pi-fw pi-home', 
+          to: '/home/dashboard' 
+        },
       ],
     },
     {
       label: t('sidebar.app.label'),
-      items: [{ label: t('sidebar.app.users'), icon: 'pi pi-fw pi-list', to: '/user/dashboard' }],
+      items: [ 
+        { label: t('sidebar.app.users'),
+          icon: 'pi pi-fw pi-list',
+          to: '/user/dashboard' 
+        }
+      ],
     },
     {
-      label: t('sidebar.organization.label'),
+      label: t('sidebar.schedules.label'),
       items: [
         {
-          label: t('sidebar.organization.dashboard'),
-          icon: 'pi pi-fw pi-bars',
+          label: t('sidebar.schedules.dashboard'),
+          icon: 'pi pi-fw pi-calendar',
           to: '/organization/dashboard',
         },
-        {
-          label: t('sidebar.organization.mgmt'),
-          icon: 'pi pi-fw pi-pencil',
-          to: '/organization/management',
-        },
       ],
     },
     {
-      label: t('sidebar.vacancy.label'),
+      label: t('sidebar.justifications.label'),
       items: [
         {
-          label: t('sidebar.vacancy.dashboard'),
-          icon: 'pi pi-fw pi-list',
+          label: t('sidebar.justifications.dashboard'),
+          icon: 'pi pi-fw pi-file-pdf',
           to: '/vacancy/dashboard',
         },
-        { label: t('sidebar.vacancy.mgmt'), icon: 'pi pi-fw pi-pencil', to: '/vacancy/management' },
       ],
     },
     {
-      label: t('sidebar.institute.label'),
+      label: t('sidebar.events.label'),
       items: [
         {
-          label: t('sidebar.institute.dashboard'),
-          icon: 'pi pi-fw pi-flag',
+          label: t('sidebar.events.dashboard'),
+          icon: 'pi pi-fw pi-calendar-plus',
           to: '/institute/dashboard',
         },
       ],
     },
     {
-      label: t('sidebar.career.label'),
+      label: t('sidebar.maintenance.label'),
       items: [
         {
-          label: t('sidebar.career.dashboard'),
-          icon: 'pi pi-fw pi-briefcase',
+          label: t('sidebar.maintenance.dashboard'),
+          icon: 'pi pi-fw pi-wrench',
           to: '/career/dashboard',
         },
       ],
     },
-    {
-      label: t('sidebar.covenant.label'),
-      items: [
-        {
-          label: t('sidebar.covenant.dashboard'),
-          icon: 'pi pi-fw pi-file',
-          to: '/covenant/dashboard',
-        },
-      ],
-    },
-
-    {
-      label: t('sidebar.file.label'),
-      items: [
-        {
-          label: t('sidebar.file.dashboard'),
-          icon: 'pi pi-fw pi-file',
-          to: '/file/dashboard',
-        },
-      ],
-    },
   ];
+
+  const [date, setDate] = useState<string | Date | Date[] | null>(null);
 
   return (
     <MenuProvider>
       <ul className="layout-menu">
         {model.map((item, i) => {
           return !item?.seperator ? (
-            <AppMenuitem item={item} root={true} index={i} key={item.label} />
+            <AppMenuitem item={item} root index={i} key={item.label} />
           ) : (
-            <li className="menu-separator"></li>
+            <li className="menu-separator" />
           );
         })}
       </ul>
+            {/* <Calendar 
+              value={date} 
+              onChange={(e: CalendarChangeEvent) => setDate(e.value ?? null)} 
+              inline 
+            /> */}
     </MenuProvider>
   );
-};
+}
 
 export default AppMenu;

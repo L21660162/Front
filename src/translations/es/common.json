@@ -5,26 +5,24 @@
       "dashboard": "Panel principal"
     },
     "app": {
-      "label": "Aplicación",
+      "label": "Gestión de Usuarios",
       "users": "Usuarios"
     },
-    "organization": {
-      "label": "Organizacion",
-      "dashboard": "Panel de Organizacion",
-      "mgmt": "Gestión de Organizacion"
+    "schedules": {
+      "label": "Horarios",
+      "dashboard": "Panel de Horarios"
     },
-    "vacancy": {
-      "label": "Vacantes",
-      "dashboard": "Panel de Vacantes",
-      "mgmt": "Gestión de Vacantes"
+    "justifications": {
+      "label": "Justificaciones",
+      "dashboard": "Panel de Justificaciones"
     },
-    "career": {
-      "label": "Carrera",
-      "dashboard": "Panel de Carrera"
+    "events": {
+      "label": "Eventos",
+      "dashboard": "Panel de Eventos"
     },
-    "covenant": {
-      "label": "Convenio",
-      "dashboard": "Panel principal"
+    "maintenance": {
+      "label": "Mantenimiento",
+      "dashboard": "Panel de Mantenimiento"
     },
     "file": {
       "label": "Archivo",
