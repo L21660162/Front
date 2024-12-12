@@ -72,6 +72,37 @@ function AppMenu() {
         },
       ],
     },
+    {
+      label: t('sidebar.settings.label'),
+      items: [
+        {
+          label: t('sidebar.settings.dashboard'),
+          icon: 'pi pi-fw pi-cog',
+          items: [
+            {
+              label: t('sidebar.settings.schedule'), //Horario
+              icon: 'pi pi-fw pi-calendar',
+              to: '/settings/schedule',
+            },
+            {
+              label: t('sidebar.settings.users'), // Usuario
+              icon: 'pi pi-fw pi-users',
+              to: '/settings/users',
+            },
+            {
+              label: t('sidebar.settings.subject'), // Materia
+              icon: 'pi pi-fw pi-briefcase',
+              to: '/settings/subject',
+            },
+            {
+              label: t('sidebar.settings.buildings'), // edifgici{o}
+              icon: 'pi pi-fw pi-building',
+              to: '/settings/building',
+            },
+          ],
+        },
+      ],
+    },
   ];
 
   const [date, setDate] = useState<string | Date | Date[] | null>(null);

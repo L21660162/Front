@@ -31,6 +31,14 @@
     "institute": {
       "label": "Instituto",
       "dashboard": "Panel de Instituto"
+    },
+    "settings": {
+      "label": "Configuración",
+      "dashboard": "Panel de Configuración",
+      "users": "Usuarios",
+      "schedule": "Horarios",
+      "subject": "Materias",
+      "buildings": "Edificios"
     }
   },
   "signUp": {

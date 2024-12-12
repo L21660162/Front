@@ -22,6 +22,10 @@ import { useAccessTokenData } from '../store/auth/store';
 import { TokenData } from '../store/auth/type';
 import Events from '../pages/events';
 import Migrate from '../pages/migrate';
+import UserSettings from '../pages/settings/user';
+import ScheduleSettings from '../pages/settings/schedule';
+import SubjectSettings from '../pages/settings/subject';
+import BuildingSettings from '../pages/settings/buildings';
 
 const rootRoute = new RootRoute();
 
@@ -168,10 +172,60 @@ const vacancyDashboard = new Route({
   component: () => <App Component={VacancyDashboard} />,
 });
 
-const vacancyManagement = new Route({
+const userSettings = new Route({
   getParentRoute: () => rootRoute,
-  path: '/vacancy/management',
-  component: () => <App Component={VacancyManagement} />,
+  path: '/settings/users',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={UserSettings} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const scheduleSettings = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/settings/schedule',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={ScheduleSettings} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const subjectSettings = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/settings/subject',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={SubjectSettings} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const buildingSettings = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/settings/building',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={BuildingSettings} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
 });
 
 const routeConfig = rootRoute.addChildren([
@@ -185,7 +239,6 @@ const routeConfig = rootRoute.addChildren([
   organizationDashboard,
   organizationManagement,
   vacancyDashboard,
-  vacancyManagement,
   careerRoute,
   userDashboard,
   instituteRoute,
@@ -193,6 +246,10 @@ const routeConfig = rootRoute.addChildren([
   justifiyRoute,
   scheduleRoute,
   eventsRoute,
+  userSettings,
+  scheduleSettings,
+  subjectSettings,
+  buildingSettings,
 ]);
 
 // Create the router using your route tree
