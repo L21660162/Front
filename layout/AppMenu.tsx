@@ -99,6 +99,21 @@ function AppMenu() {
               icon: 'pi pi-fw pi-building',
               to: '/settings/building',
             },
+            {
+              label: t('sidebar.settings.departments'), // departamento
+              icon: 'pi pi-fw pi-briefcase',
+              to: '/settings/departamnt',
+            },
+            {
+              label: t('sidebar.settings.periods'), // periodo
+              icon: 'pi pi-fw pi-calendar-plus',
+              to: '/settings/period',
+            },
+            {
+              label: t('sidebar.settings.careers'), // carrera
+              icon: 'pi pi-fw pi-book',
+              to: '/settings/career',
+            },
           ],
         },
       ],

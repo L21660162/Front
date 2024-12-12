@@ -38,7 +38,10 @@
       "users": "Usuarios",
       "schedule": "Horarios",
       "subject": "Materias",
-      "buildings": "Edificios"
+      "buildings": "Edificios",
+      "departments": "Departamentos",
+      "periods": "Periodos",
+      "careers": "Carreras"
     }
   },
   "signUp": {

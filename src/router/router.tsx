@@ -26,6 +26,9 @@ import UserSettings from '../pages/settings/user';
 import ScheduleSettings from '../pages/settings/schedule';
 import SubjectSettings from '../pages/settings/subject';
 import BuildingSettings from '../pages/settings/buildings';
+import DepartmentsSettings from '../pages/settings/departament';
+import PeriodSettings from '../pages/settings/periodo';
+import CareerSettings from '../pages/settings/career';
 
 const rootRoute = new RootRoute();
 
@@ -228,6 +231,48 @@ const buildingSettings = new Route({
   },
 });
 
+const departamntSettings = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/settings/departamnt',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={DepartmentsSettings} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const periodSettings = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/settings/period',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={PeriodSettings} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const careerSettings = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/settings/career',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={CareerSettings} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
 const routeConfig = rootRoute.addChildren([
   landingRoute,
   dashboardRoute,
@@ -250,7 +295,11 @@ const routeConfig = rootRoute.addChildren([
   scheduleSettings,
   subjectSettings,
   buildingSettings,
+  departamntSettings,
+  periodSettings,
+  careerSettings,
 ]);
+
 
 // Create the router using your route tree
 const router = new Router({ routeTree: routeConfig });
