@@ -1,0 +1,24 @@
+query GetAllDepartment($filter: DepartmentArgs, $page: Int, $offset: Int, $limit: Int) {
+  getAllDepartment(filter: $filter, page: $page, offset: $offset, limit: $limit) {
+    docs {
+      _id
+      abbreviationOrg
+      createdAt
+      deletedAt
+      departmentBoss
+      isDeleted
+      name
+      updatedAt
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}

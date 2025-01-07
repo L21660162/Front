@@ -1,14 +1,18 @@
 import React from 'react';
+import CareerCrud from '../../components/ui/career/careerCrud';
+import PageHeadingCareer from '../../components/ui/career/careerHeading';
+
 
 function CareerSettings() {
   return (
     <div className="grid">
       <div className="col-12">
         <div className="card">
-          <h5>Empty Page - Dashboard the Carrer</h5>
-
-          <p>Use this page to start from scratch and place your custom content.</p>
+          <PageHeadingCareer />
         </div>
+      </div>
+      <div className="col-12">
+        <CareerCrud />
       </div>
     </div>
   );

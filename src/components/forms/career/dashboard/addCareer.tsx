@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Query } from '@tanstack/react-query';
@@ -18,10 +17,7 @@ import {
 ICareer,
 ICreateCareerInput,
 IGetAllCareersQuery,
-IGetAllInstitutesQuery,
-IInstitute,
 useCreateCareerMutation,
-useGetAllInstitutesQuery,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
@@ -36,7 +32,7 @@ visible,
 setVisible,
 }: PropsWithChildren<CareerFormPropsAndDialogStore>) {
 const { t } = useTranslation('common');
-const navigate = useNavigate({ from: '/career/dashboard' });
+const navigate = useNavigate({ from: '/settings/career' });
 const toast = useRef<Toast>(null);
 
 const { mutate } = useCreateCareerMutation<IApiError>(GRAPHQL_CLIENT, {
@@ -48,7 +44,7 @@ const { mutate } = useCreateCareerMutation<IApiError>(GRAPHQL_CLIENT, {
     });
 
     setTimeout(() => {
-        navigate({ to: '/career/dashboard' });
+        navigate({ to: '/settings/career' });
         window.location.reload();
     }, 200);
     setIsButtonDisabld(false);
@@ -67,18 +63,8 @@ const { mutate } = useCreateCareerMutation<IApiError>(GRAPHQL_CLIENT, {
 });
 
 const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
-const [selectedInstitute, setSelectedInstitute] = useState(null);
 
-const { data } = useGetAllInstitutesQuery<IGetAllInstitutesQuery>(GRAPHQL_CLIENT, {
-    limit: 500,
-    page: 1,
-    offset: 0,
-});
 
-let institutedata: Array<IInstitute> = [];
-if (data && Array.isArray(data.getAllInstitutes.docs)) {
-    institutedata = data.getAllInstitutes.docs;
-}
 
 const {
     handleSubmit,
@@ -90,7 +76,6 @@ const {
     credits: 0,
     description: '',
     duration: '',
-    instituteId: '',
     isCertified: false,
     name: '',
     abbreviationCareer: '',
@@ -100,7 +85,6 @@ const {
 const onSubmit: SubmitHandler<ICreateCareerInput> = (data: ICreateCareerInput) => {
     setIsButtonDisabld(true);
     data.credits = parseFloat(data.credits);
-    data.instituteId = selectedInstitute;
     reset();
     mutate({ data });
 };
@@ -303,39 +287,6 @@ return (
             />
         </span>
         {errors.isCertified && <small className="p-error">{errors.isCertified?.message}</small>}
-        </div>
-
-        <div className="field">
-        <span className="p-float-label p-input-icon-right">
-            <Controller
-            name="instituteId"
-            control={control}
-            rules={
-                {
-                  // required: t('global.forms.validation.instituteId') as string,
-                }
-            }
-            render={({ field, fieldState }) => (
-                <Dropdown
-                id={field.name}
-                {...field}
-                className={classNames({ 'p-invalid': fieldState.invalid })}
-                value={selectedInstitute}
-                onChange={(e: DropdownChangeEvent) => setSelectedInstitute(e.value)}
-                options={institutedata}
-                optionLabel="name"
-                optionValue="_id"
-                />
-            )}
-            />
-            <label
-            htmlFor="instituteId"
-            className={classNames({ 'p-error': !!errors.instituteId })}
-            >
-            {t('global.dictionary.instituteId')}*
-            </label>
-        </span>
-        {errors.instituteId && <small className="p-error">{errors.instituteId?.message}</small>}
         </div>
     </form>
     </Dialog>

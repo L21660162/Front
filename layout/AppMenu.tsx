@@ -68,7 +68,7 @@ function AppMenu() {
         {
           label: t('sidebar.maintenance.dashboard'),
           icon: 'pi pi-fw pi-wrench',
-          to: '/career/dashboard',
+          to: '/maintenance/dashboard',
         },
       ],
     },

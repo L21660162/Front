@@ -1,13 +1,17 @@
 import React from 'react';
+import PageHeadingUser from '../../components/ui/user/userHeding';
+import UserCrud from '../../components/ui/user/userCrud';
 
 function UserDashboard() {
   return (
     <div className="grid">
       <div className="col-12">
         <div className="card">
-          <h5>Empty Page - User Dashboard</h5>
-          <p>Use this page to start from scratch and place your custom content.</p>
+          <PageHeadingUser />
         </div>
+      </div>
+      <div className="col-12">
+        <UserCrud />
       </div>
     </div>
   );

@@ -32,6 +32,14 @@
       "label": "Instituto",
       "dashboard": "Panel de Instituto"
     },
+    "career": {
+      "label": "Carrera",
+      "dashboard": "Panel de Carrera"
+    },
+    "user": {
+      "label": "Usuario",
+      "dashboard": "Panel de Usuario"
+    },
     "settings": {
       "label": "Configuración",
       "dashboard": "Panel de Configuración",
@@ -56,6 +64,7 @@
   "global": {
     "forms": {
       "submit": "Enviar",
+      "edit": "Editar",
       "validation": {
         "firstName": "El nombre es obligatiorio",
         "lastName": "El apellido es obligatorio",
@@ -72,10 +81,44 @@
     },
     "dictionary": {
       "firstName": "Nombre",
-      "lastName": "Apellido",
+      "lastName": "Apellido paterno",
+      "middleName": "Apellido materno",
+      "fullName": "Nombre completo",
       "email": "Correo electrónico",
+      "edita": "Editar / Borrar",
       "password": "Contraseña",
-      "welcome": "Bienvenido"
+      "passwordRecovery": "Recuperar Contraseña",
+      "welcome": "Bienvenido",
+      "gener": "Sexo:",
+      "rfc": "RFC",
+      "department": "Departamento",
+      "tcareerName": "Nombre",
+      "tcareerDescription": "Descripción",
+      "tduration": "Tiempo estimado",
+      "tisCertified": "Certificado",
+      "tcredits": "Total de creditos",
+      "career": "Información de la carrera",
+      "careerName": "Nombre de la carrera",
+      "careerDescription": "Descripción",
+      "credits": "Cantidad de creditos",
+      "duration": "Tiempo estimado para terminar",
+      "isCertified": "La carrera cuenta con certificado",
+      "instituteId": "Instituto al que pertenece",
+      "Nocareer": "No existen carreras registradas",
+      "careerdirectory": "Lista de carreras vigentes",
+      "abbreviationCareer": "Abrevación de la Carrera",
+      "userdirectory": "Lista de usuarios",
+      "roles": {
+        "rules": "Rol del usuario",
+        "DIRECTOR": "Director Academico",
+        "DOCENTE": "Docente",
+        "JEFE_ACADEMICO": "Jefe Académico",
+        "PREFECTO": "Prefecto",
+        "RRHH": "Recursos Humanos",
+        "SA": "Super Administrador",
+        "SUBDIRECTOR": "Subdirector Académico"
+      },
+      "Nouser": "No existen usuarios registrados"
     },
     "toast": {
       "error": {
@@ -98,6 +141,33 @@
             "header": "Ejemplo de header para el dialogo add"
           }
         }
+      }
+    },
+    "career": {
+      "dashboard": {
+        "addcareer": "Agregar Carrera",
+        "dialog": {
+          "add": {
+            "header": "Crear Carrera"
+          },
+          "edit": {
+            "header": "Editar Carrera"
+          }
+        }
+      }
+    },
+    "user": {
+      "dashboard": {
+        "addUser": "Agregar Usuario",
+        "dialog": {
+          "add": {
+            "header": "Agregar Nuevo Usuario"
+          },
+          "edit": {
+            "header": "Editar Usuario"
+          }
+        },
+        "filter": "Tipo de Usuario"
       }
     }
   }

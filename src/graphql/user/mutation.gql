@@ -1,13 +1,6 @@
-mutation RemoveUser($data: UserIdArgs!, $signInData2: SignInInput!) {
-  removeUser(data: $data) {
+mutation DeleteUser($data: UserIdArgs!) {
+  deleteUser(data: $data) {
     deleted
-  }
-  signIn(data: $signInData2) {
-    accessToken
-    accessTokenExpiresIn
-    refreshToken
-    refreshTokenExpiresIn
-    type
   }
 }
 
@@ -16,12 +9,15 @@ mutation UpdateUser($data: UpdateUserInput!) {
     _id
     createdAt
     deletedAt
+    department
     email
     firstName
+    gender
     isDeleted
     lastName
     middleName
     password
+    rfc
     roles
     updatedAt
   }
@@ -32,12 +28,15 @@ mutation UpsertUser($data: UpsertUserInput!) {
     _id
     createdAt
     deletedAt
+    department
     email
     firstName
+    gender
     isDeleted
     lastName
     middleName
     password
+    rfc
     roles
     updatedAt
   }

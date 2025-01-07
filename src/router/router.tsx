@@ -12,7 +12,7 @@ import OrganizationDashboard from '../pages/organization/index';
 import OrganizationManagement from '../pages/organization/management';
 import VacancyDashboard from '../pages/vacancy/index';
 import VacancyManagement from '../pages/vacancy/management';
-import Career from '../pages/career';
+import Career from '../pages/ maintenance';
 import UserDashboard from '../pages/user';
 import Institute from '../pages/institute';
 import CovenantPage from '../pages/covenant';
@@ -124,9 +124,9 @@ const passwordRecoveryRoute = new Route({
   component: () => <App Component={PasswordRecoveryPage} />,
 });
 
-const careerRoute = new Route({
+const maintenanceRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: '/career/dashboard',
+  path: '/maintenance/dashboard',
   component: () => <App Component={Career} />,
 });
 
@@ -284,7 +284,7 @@ const routeConfig = rootRoute.addChildren([
   organizationDashboard,
   organizationManagement,
   vacancyDashboard,
-  careerRoute,
+  maintenanceRoute,
   userDashboard,
   instituteRoute,
   covenantRoute,

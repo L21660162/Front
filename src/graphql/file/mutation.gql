@@ -1,40 +1,88 @@
 mutation UpdateFile($data: UpdateFile!) {
   updateFile(data: $data) {
     _id
-    approvedBy {
-      status
-      userId
+    approvedBy
+    comments {
+      _id
+      comment
+      createdAt
+      createdBy
     }
     createdAt
     deletedAt
-    description
     extension
     isDeleted
     nameFile
+    path
     size
     type
     updatedAt
-    uploadedBy
+    uploadedBy {
+      _id
+      createdAt
+      deletedAt
+      department
+      email
+      firstName
+      gender
+      isDeleted
+      lastName
+      middleName
+      password
+      rfc
+      roles
+      updatedAt
+    }
   }
 }
 
-mutation CreateFile($data: CreateFile!) {
-  createFile(data: $data) {
+mutation UploadFile($data: UploadFileInput!) {
+  uploadFile(data: $data) {
     _id
-    approvedBy {
-      status
-      userId
-    }
     createdAt
     deletedAt
-    description
     extension
     isDeleted
     nameFile
-    size
+    path
     size
     type
     updatedAt
-    uploadedBy
+    uploadedBy {
+      _id
+      createdAt
+      deletedAt
+      department
+      email
+      firstName
+      gender
+      isDeleted
+      lastName
+      middleName
+      password
+      rfc
+      roles
+      updatedAt
+    }
+  }
+}
+
+mutation CreateFileComment($data: CreateFileCommentInput!) {
+  createFileComment(data: $data) {
+    _id
+    comments {
+      _id
+      comment
+      createdBy
+      createdAt
+    }
+  }
+}
+
+mutation ApproveFile($data: ApproveFileInput!) {
+  approveFile(data: $data) {
+    _id
+    nameFile
+    approvedBy
   }
 }

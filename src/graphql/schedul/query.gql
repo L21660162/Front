@@ -1,0 +1,33 @@
+query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllSchedules(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      createdAt
+      deletedAt
+      finalTime
+      group
+      isDeleted
+      period
+      rfc
+      startTime
+      subject
+      updatedAt
+    }
+  }
+}
+
+query GetScheduleById($id: ID) {
+  getScheduleById(_id: $id) {
+    _id
+    createdAt
+    deletedAt
+    finalTime
+    group
+    isDeleted
+    period
+    rfc
+    startTime
+    subject
+    updatedAt
+  }
+}

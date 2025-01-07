@@ -1,15 +1,18 @@
-query GetAllUsers($page: Int!, $limit: Int!, $offset: Int, $filter: UserArgs) {
-  getAllUsers(page: $page, limit: $limit, offset: $offset, filter: $filter) {
+query GetAllUsers($filter: UserArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllUsers(filter: $filter, limit: $limit, offset: $offset, page: $page) {
     docs {
       _id
       createdAt
       deletedAt
+      department
       email
       firstName
+      gender
       isDeleted
       lastName
       middleName
       password
+      rfc
       roles
       updatedAt
     }
@@ -26,17 +29,20 @@ query GetAllUsers($page: Int!, $limit: Int!, $offset: Int, $filter: UserArgs) {
   }
 }
 
-query GetById($id: ID) {
-  getById(_id: $id) {
+query GetUserById($id: ID) {
+  getUserById(_id: $id) {
     _id
     createdAt
     deletedAt
+    department
     email
     firstName
+    gender
     isDeleted
     lastName
     middleName
     password
+    rfc
     roles
     updatedAt
   }
@@ -47,12 +53,15 @@ query Me {
     _id
     createdAt
     deletedAt
+    department
     email
     firstName
+    gender
     isDeleted
     lastName
     middleName
     password
+    rfc
     roles
     updatedAt
   }

@@ -1,0 +1,37 @@
+mutation CreateSchedule($data: UpsertScheduleInput!) {
+  createSchedule(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    finalTime
+    group
+    isDeleted
+    period
+    rfc
+    startTime
+    subject
+    updatedAt
+  }
+}
+
+mutation UpdateSchedule($data: UpdateScheduleInput!) {
+  updateSchedule(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    finalTime
+    group
+    isDeleted
+    period
+    rfc
+    startTime
+    subject
+    updatedAt
+  }
+}
+
+mutation DeleteSchedule($data: ScheduleIdArgs!) {
+  deleteSchedule(data: $data) {
+    deleted
+  }
+}
