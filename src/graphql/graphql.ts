@@ -51,6 +51,28 @@ export interface IAdress {
   street: Scalars['String']['input'];
 }
 
+/** Buildings */
+export interface IBuilding {
+  _id: Scalars['ID']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt: Scalars['DateTime']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  letter: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+}
+
+export interface IBuildingArgs{
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  isDeleted?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+}
+
+export interface IBuildingIdArgs {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+}
+
+
 /** Career */
 export interface ICareer {
   _id: Scalars['ID']['output'];
@@ -119,6 +141,13 @@ export interface ICreateCareerInput {
   name: Scalars['String']['input'];
   organizationId?: InputMaybe<Scalars['ID']['input']>;
 }
+
+/** Create building */
+export interface ICreateBuildingInput {
+  letter: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+}
+
 
 /** CreateFile */
 export interface ICreateFile {
@@ -310,11 +339,13 @@ export interface IMutation {
   UpdateInstituteInput: IInstitute;
   changePassword: IUser;
   createCareer: ICareer;
+  createBuilding: IBuilding;
   createFile: IFile;
   createInstitute: IInstitute;
   createOrganization: IOrganization;
   createVacancy: IVacancy;
   deletedCareer: ISoftDeleteResponse;
+  deletedBuilding: IBuilding;
   deletedFile: ISoftDeleteResponse;
   passwordRecovery: Scalars['String']['output'];
   passwordReset: IUser;
@@ -333,6 +364,7 @@ export interface IMutation {
   updateVacancyStatus: IVacancy;
   upsertPostulation: IVacancy;
   upsertUser: IUser;
+  updateBuilding: IBuilding;
 }
 
 export interface IMutationUpdateInstituteInputArgs {
@@ -345,6 +377,10 @@ export interface IMutationChangePasswordArgs {
 
 export interface IMutationCreateCareerArgs {
   data: ICreateCareerInput;
+}
+
+export interface IMutationCreateBuildingArgs {
+  data: ICreateBuildingInput;
 }
 
 export interface IMutationCreateFileArgs {
@@ -365,6 +401,10 @@ export interface IMutationCreateVacancyArgs {
 
 export interface IMutationDeletedCareerArgs {
   data: ICareerIdArgs;
+}
+
+export interface IMutationDeltedBuildingArgs {
+  data: IBuildingIdArgs;
 }
 
 export interface IMutationDeletedFileArgs {
@@ -409,6 +449,10 @@ export interface IMutationSignUpArgs {
 
 export interface IMutationUpdateCareerArgs {
   data: IUpdateCareerInput;
+}
+
+export interface IMutationUpdateBuildingArgs {
+  data: IUpdateBuildingInput;
 }
 
 export interface IMutationUpdateFileArgs {
@@ -473,6 +517,20 @@ export interface IOrganizationIdArgs {
 /** Object type for paging results */
 export interface IPaginateCareer {
   docs: Array<ICareer>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  limit: Scalars['Float']['output'];
+  nextPage?: Maybe<Scalars['Float']['output']>;
+  offset?: Maybe<Scalars['Float']['output']>;
+  page: Scalars['Float']['output'];
+  pagingCounter: Scalars['Float']['output'];
+  prevPage?: Maybe<Scalars['Float']['output']>;
+  totalDocs: Scalars['Float']['output'];
+  totalPages: Scalars['Float']['output'];
+}
+
+export interface PaginateBuilding {
+  docs: Array<IBuilding>;
   hasNextPage: Scalars['Boolean']['output'];
   hasPrevPage: Scalars['Boolean']['output'];
   limit: Scalars['Float']['output'];
@@ -603,9 +661,11 @@ export interface IQuery {
   getAllOrganizations: IPaginateOrganization;
   getAllUsers: IPaginateUser;
   getAllVacancies: IPaginateVacancy;
+  getlAllBuildings: PaginateBuilding;
   getById: IUser;
   getCareerById: ICareer;
   getFileById: IFile;
+  getBuildingById: IBuilding;
   getInstituteById: IInstitute;
   getOrganizationById: IOrganization;
   getVacancyById: IVacancy;
@@ -615,6 +675,18 @@ export interface IQuery {
 
 export interface IQueryGetAllCareersArgs {
   filter?: InputMaybe<ICareerArgs>;
+  lean?: InputMaybe<Scalars['Boolean']['input']>;
+  leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
+  limit?: Scalars['Int']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: Scalars['Int']['input'];
+  populate?: InputMaybe<Scalars['String']['input']>;
+  select?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['JSON']['input']>;
+}
+
+export interface IQueryGetAllBuildingsArgs {
+  filter?: InputMaybe<IBuildingArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
   leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: Scalars['Int']['input'];
@@ -678,6 +750,10 @@ export interface IQueryGetByIdArgs {
 }
 
 export interface IQueryGetCareerByIdArgs {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+}
+
+export interface IQueryGetAllBuildingsArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
 }
 
@@ -757,6 +833,12 @@ export interface IUpdateCareerInput {
   organizationId?: InputMaybe<Scalars['ID']['input']>;
 }
 
+export interface IUpdateBuildingInput {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+  letter: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+}
+
 /** UpdateFile */
 export interface IUpdateFile {
   _id?: InputMaybe<Scalars['ID']['input']>;
@@ -823,6 +905,11 @@ export interface IUpsertUserInput {
   middleName?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
   roles?: InputMaybe<Array<IRoles>>;
+}
+
+export interface IUpserBuildingInput {
+  letter: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 }
 
 /** user */
@@ -1020,6 +1107,24 @@ export type ICreateCareerMutation = {
   };
 };
 
+export type ICreateBuildMutationVariables = Exact<{
+  data: ICreateBuildingInput;
+}>;
+
+export type ICreateBuildMutation = {
+  createBuilding: {
+    _id: string;
+    createdAt: any;
+    deletedAt?: any | null;
+    letter: string;
+    name: string;
+  };
+}
+
+export type IUpdateBuildMutationVariables = Exact<{
+  data: IUpserBuildingInput;
+}>;
+
 export type IUpdateCareerMutationVariables = Exact<{
   data: IUpdateCareerInput;
 }>;
@@ -1039,6 +1144,53 @@ export type IUpdateCareerMutation = {
     organizationId: string;
     updatedAt: any;
     location: { address: string; city: string; state: string; suburb: string; postalCode: number };
+  };
+};
+
+export type IUpdateBuildMutation = {
+  updateBuilding: {
+    _id: string;
+    createdAt: any;
+    deletedAt?: any | null;
+    letter: string;
+    name: string;
+    updatedAt: any;
+  };
+};
+
+export type IDeletedBuildMutationVariables = Exact<{
+  data: IBuildingIdArgs;
+}>;
+
+export type IDeletedBuildMutation = { deletedBuilding: { deleted: number } };
+
+export type IGetAllBuildsQueryVariables = Exact<{
+  filter?: InputMaybe<IBuildingArgs>;
+  limit: Scalars['Int']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page: Scalars['Int']['input'];
+}>;
+
+export type IGetAllBuildsQuery = {
+  getlAllBuildings: {
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    limit: number;
+    nextPage?: number | null;
+    offset?: number | null;
+    page: number;
+    pagingCounter: number;
+    prevPage?: number | null;
+    totalDocs: number;
+    totalPages: number;
+    docs: Array<{
+      _id: string;
+      createdAt: any;
+      deletedAt?: any | null;
+      letter: string;
+      name: string;
+      updatedAt: any;
+    }>;
   };
 };
 
@@ -1088,6 +1240,21 @@ export type IGetAllCareersQuery = {
         postalCode: number;
       };
     }>;
+  };
+};
+
+export type IGetBuildsQueryVariables = Exact<{	
+  id?: InputMaybe<Scalars['ID']['input']>; 
+}>;
+
+export type IGetBuildsQuery = {
+  getBuildingById: {
+    _id: string;
+    createdAt: any;
+    deletedAt?: any | null;
+    letter: string;
+    name: string;
+    updatedAt: any;
   };
 };
 
@@ -1425,6 +1592,8 @@ export type IUpsertUserMutation = {
     updatedAt: any;
   };
 };
+
+
 
 export type IGetAllUsersQueryVariables = Exact<{
   page: Scalars['Int']['input'];
@@ -2025,6 +2194,39 @@ useCreateCareerMutation.fetcher = (
     variables,
     headers
   );
+
+  export const useCreateBuildingMutation = <TError = unknown, TContext = unknown>(
+    client: GraphQLClient,
+    options?: UseMutationOptions<
+      ICreateBuildMutation,
+      TError,
+      ICreateBuildMutationVariables,
+      TContext
+    >,
+    headers?: RequestInit['headers']
+  ) =>
+    useMutation<ICreateBuildMutation, TError, ICreateBuildMutationVariables, TContext>(
+      ['CreateBuilding'],
+      (variables?: ICreateBuildMutationVariables) =>
+        fetcher<ICreateBuildMutation, ICreateBuildMutationVariables>(
+          client,
+          //CreateCareerDocument,
+          variables,
+          headers
+        )(),
+      options
+    );
+  useCreateBuildingMutation.fetcher = (
+    client: GraphQLClient,
+    variables: ICreateBuildMutationVariables,
+    headers?: RequestInit['headers']
+  ) =>
+    fetcher<ICreateBuildMutation, ICreateBuildMutationVariables>(
+      client,
+      //CreateCareerDocument,
+      variables,
+      headers
+    );
 export const UpdateCareerDocument = /*#__PURE__*/ `
     mutation UpdateCareer($data: UpdateCareerInput!) {
   updateCareer(data: $data) {
@@ -2175,6 +2377,84 @@ export const useGetAllCareersQuery = <TData = IGetAllCareersQuery, TError = unkn
     options
   );
 
+  export const useGetAllBuildsQuery = <TData = IGetAllBuildsQuery, TError = unknown>(
+    client: GraphQLClient,
+    variables: IGetAllBuildsQueryVariables,
+    options?: UseQueryOptions<IGetAllBuildsQuery, TError, TData>,
+    headers?: RequestInit['headers']
+  ) =>
+    useQuery<IGetAllBuildsQuery, TError, TData>(
+      ['GetAllBuildings', variables],
+      fetcher<IGetAllBuildsQuery, IGetAllBuildsQueryVariables>(
+        client,
+        GetAllFilesDocument,
+        variables,
+        headers
+      ),
+      options
+    );
+
+    export const useUpdateBuildMutation = <TError = unknown, TContext = unknown>(
+      client: GraphQLClient,
+      options?: UseMutationOptions<
+        IUpdateBuildMutation,
+        TError,
+        IUpdateBuildMutationVariables,
+        TContext
+      >,
+      headers?: RequestInit['headers']
+    ) =>
+      useMutation<IUpdateBuildMutation, TError, IUpdateBuildMutationVariables, TContext>(
+        ['UpdateBuildings'],
+        (variables?: IUpdateBuildMutationVariables) =>
+          fetcher<IUpdateBuildMutation, IUpdateBuildMutationVariables>(
+            client,
+            //UpdateCareerDocument,
+            variables,
+            headers
+          )(),
+        options
+      );
+    useUpdateBuildMutation.fetcher = (
+      client: GraphQLClient,
+      variables: IUpdateBuildMutationVariables,
+      headers?: RequestInit['headers']
+    ) =>
+      fetcher<IUpdateBuildMutation, IUpdateBuildMutationVariables>(
+        client,
+        //UpdateCareerDocument,
+        variables,
+        headers
+      );
+
+export const useDeletedBuildMutation = <TError = unknown, TContext = unknown>(
+        client: GraphQLClient,
+        options?: UseMutationOptions<
+          IDeletedBuildMutation,
+          TError,
+          IDeletedBuildMutationVariables,
+          TContext
+        >,
+        headers?: RequestInit['headers']
+    ) =>
+
+  useMutation<IDeletedBuildMutation, TError, IDeletedBuildMutationVariables, TContext>(
+        ['DeletedBuild'],
+        (variables?: IDeletedBuildMutationVariables) =>
+          fetcher<IDeletedBuildMutation, IDeletedBuildMutationVariables>(
+            client,
+            DeletedCareerDocument,
+            variables,
+            headers
+          )(),
+        options
+      );
+    useDeletedBuildMutation.fetcher = (
+      client: GraphQLClient,
+      variables: IDeletedCareerMutationVariables,
+      headers?: RequestInit['headers']
+    ) =>
+
 useGetAllCareersQuery.getKey = (variables: IGetAllCareersQueryVariables) => [
   'GetAllCareers',
   variables,
@@ -2223,6 +2503,25 @@ export const useGetCareerByIdQuery = <TData = IGetCareerByIdQuery, TError = unkn
     ),
     options
   );
+
+  export const useGetBuildsByIdQuery = <TData = IGetBuildsByIdQuery, TError = unknown>(
+    client: GraphQLClient,
+    variables?: IGetBuildsByIdQueryVariables,
+    options?: UseQueryOptions<IGetBuildsByIdQuery, TError, TData>,
+    headers?: RequestInit['headers']
+  ) =>
+    useQuery<IGetBuildsByIdQuery, TError, TData>(
+      variables === undefined ? ['getBuildById'] : ['getBuildById', variables],
+      fetcher<IGetBuildsByIdQuery, IGetBuildsByIdQueryVariables>(
+        client,
+        GetCareerByIdDocument,
+        variables,
+        headers
+      ),
+      options
+    );
+
+   
 
 useGetCareerByIdQuery.getKey = (variables?: IGetCareerByIdQueryVariables) =>
   variables === undefined ? ['getCareerById'] : ['getCareerById', variables];
