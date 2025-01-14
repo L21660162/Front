@@ -76,7 +76,12 @@
         "uppercase": "Al menos una letra mayúscula",
         "numeric": "Al menos una dígito numérico",
         "length": "Al menos 8 caracteres",
-        "pickPassword": "Establece una contraseña"
+        "pickPassword": "Establece una contraseña",
+        "largeName": "Debes colocar el nombre completo",
+        "shortName": "Debes colocar el nombre corto",
+        "schoolarLevel": "Debes colocar el nivel escolar",
+        "subjectType": "Debes colocar el tipo de materia",
+        "areaKey": "Debes colocar el codigo de area"
       }
     },
     "dictionary": {
@@ -108,6 +113,11 @@
       "careerdirectory": "Lista de carreras vigentes",
       "abbreviationCareer": "Abrevación de la Carrera",
       "userdirectory": "Lista de usuarios",
+      "largeName": "Nombre de la materia",
+      "shortName": "Nombre corto de la materia",
+      "schoolarLevel": "Nivel escolar",
+      "subjectType": "Tipo de materia",
+      "areaKey": "Codigo de area",
       "roles": {
         "rules": "Rol del usuario",
         "DIRECTOR": "Director Academico",

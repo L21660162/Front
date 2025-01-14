@@ -300,10 +300,10 @@ export interface IMutation {
   createBuilding: IBuilding;
   createCareer: ICareer;
   createClassroom: IClassroom;
+  createDepartment: IDepartment;
   createFile: IFile;
   createFileComment: IFile;
   createGroup: IGroup;
-  createOrganization: IDepartment;
   createPeriod: IPeriod;
   createSchedule: ISchedule;
   createSubject: ISubject;
@@ -369,6 +369,11 @@ export interface IMutationCreateClassroomArgs {
 }
 
 
+export interface IMutationCreateDepartmentArgs {
+  data: ICreateDepartmentInput;
+}
+
+
 export interface IMutationCreateFileArgs {
   data: ICreateFile;
 }
@@ -381,11 +386,6 @@ export interface IMutationCreateFileCommentArgs {
 
 export interface IMutationCreateGroupArgs {
   data: IUpsertGroupInput;
-}
-
-
-export interface IMutationCreateOrganizationArgs {
-  data: ICreateDepartmentInput;
 }
 
 
@@ -752,7 +752,7 @@ export interface IQuery {
   getAllBuildings: IPaginateBuilding;
   getAllCareers: IPaginateCareer;
   getAllClassrooms: IPaginateClassroom;
-  getAllDepartment: IPaginateDepartment;
+  getAllDepartments: IPaginateDepartment;
   getAllFiles: IPaginateFile;
   getAllGroups: IPaginateGroup;
   getAllPeriods: IPaginatePeriod;
@@ -829,7 +829,7 @@ export interface IQueryGetAllClassroomsArgs {
 }
 
 
-export interface IQueryGetAllDepartmentArgs {
+export interface IQueryGetAllDepartmentsArgs {
   filter?: InputMaybe<IDepartmentArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
   leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1103,7 +1103,6 @@ export interface ISubjectIdArgs {
 
 export interface ISubscription {
   importedUsers: Array<IUser>;
-  organizationAdded: IDepartment;
   userAdded: IUser;
 }
 
@@ -1422,7 +1421,7 @@ export type IGetCareerByIdQueryVariables = Exact<{
 
 export type IGetCareerByIdQuery = { getCareerById: { _id: string, abbreviationCareer: string, createdAt: any, credits: number, deletedAt?: any | null, description: string, duration: string, isCertified: boolean, isDeleted: boolean, name: string, updatedAt: any } };
 
-export type IGetAllDepartmentQueryVariables = Exact<{
+export type IGetAllDepartmentsQueryVariables = Exact<{
   filter?: InputMaybe<IDepartmentArgs>;
   page?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1430,7 +1429,7 @@ export type IGetAllDepartmentQueryVariables = Exact<{
 }>;
 
 
-export type IGetAllDepartmentQuery = { getAllDepartment: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, abbreviationOrg: string, createdAt: any, deletedAt?: any | null, departmentBoss: string, isDeleted: boolean, name: string, updatedAt: any }> } };
+export type IGetAllDepartmentsQuery = { getAllDepartments: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, abbreviationOrg: string, createdAt: any, deletedAt?: any | null, departmentBoss: string, isDeleted: boolean, name: string, updatedAt: any }> } };
 
 export type IUpdateFileMutationVariables = Exact<{
   data: IUpdateFile;
@@ -1937,9 +1936,9 @@ useGetCareerByIdQuery.getKey = (variables?: IGetCareerByIdQueryVariables) => var
 ;
 
 useGetCareerByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetCareerByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetCareerByIdQuery, IGetCareerByIdQueryVariables>(client, GetCareerByIdDocument, variables, headers);
-export const GetAllDepartmentDocument = /*#__PURE__*/ `
-    query GetAllDepartment($filter: DepartmentArgs, $page: Int, $offset: Int, $limit: Int) {
-  getAllDepartment(filter: $filter, page: $page, offset: $offset, limit: $limit) {
+export const GetAllDepartmentsDocument = /*#__PURE__*/ `
+    query GetAllDepartments($filter: DepartmentArgs, $page: Int, $offset: Int, $limit: Int) {
+  getAllDepartments(filter: $filter, page: $page, offset: $offset, limit: $limit) {
     docs {
       _id
       abbreviationOrg
@@ -1963,25 +1962,25 @@ export const GetAllDepartmentDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllDepartmentQuery = <
-      TData = IGetAllDepartmentQuery,
+export const useGetAllDepartmentsQuery = <
+      TData = IGetAllDepartmentsQuery,
       TError = unknown
     >(
       client: GraphQLClient,
-      variables?: IGetAllDepartmentQueryVariables,
-      options?: UseQueryOptions<IGetAllDepartmentQuery, TError, TData>,
+      variables?: IGetAllDepartmentsQueryVariables,
+      options?: UseQueryOptions<IGetAllDepartmentsQuery, TError, TData>,
       headers?: RequestInit['headers']
     ) =>
-    useQuery<IGetAllDepartmentQuery, TError, TData>(
-      variables === undefined ? ['GetAllDepartment'] : ['GetAllDepartment', variables],
-      fetcher<IGetAllDepartmentQuery, IGetAllDepartmentQueryVariables>(client, GetAllDepartmentDocument, variables, headers),
+    useQuery<IGetAllDepartmentsQuery, TError, TData>(
+      variables === undefined ? ['GetAllDepartments'] : ['GetAllDepartments', variables],
+      fetcher<IGetAllDepartmentsQuery, IGetAllDepartmentsQueryVariables>(client, GetAllDepartmentsDocument, variables, headers),
       options
     );
 
-useGetAllDepartmentQuery.getKey = (variables?: IGetAllDepartmentQueryVariables) => variables === undefined ? ['GetAllDepartment'] : ['GetAllDepartment', variables];
+useGetAllDepartmentsQuery.getKey = (variables?: IGetAllDepartmentsQueryVariables) => variables === undefined ? ['GetAllDepartments'] : ['GetAllDepartments', variables];
 ;
 
-useGetAllDepartmentQuery.fetcher = (client: GraphQLClient, variables?: IGetAllDepartmentQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllDepartmentQuery, IGetAllDepartmentQueryVariables>(client, GetAllDepartmentDocument, variables, headers);
+useGetAllDepartmentsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllDepartmentsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllDepartmentsQuery, IGetAllDepartmentsQueryVariables>(client, GetAllDepartmentsDocument, variables, headers);
 export const UpdateFileDocument = /*#__PURE__*/ `
     mutation UpdateFile($data: UpdateFile!) {
   updateFile(data: $data) {

@@ -11,32 +11,61 @@ import { Dialog } from 'primereact/dialog';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Query } from '@tanstack/react-query';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-  ICareer,
-  ICreateCareerInput,
-  IGetAllCareersQuery,
-  useCreateCareerMutation,
+  ICreateSubjectMutation,
+  IDepartment,
+  IUpsertSubjectInput,
+  useCreateSubjectMutation,
+  useGetAllDepartmentsQuery,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
-type CareerFormProps = {
+type SubjectFormProps = {
   headerTitle: string;
 };
-type CareerFormPropsAndDialogStore = CareerFormProps & DialogStore;
+type SubjectFormPropsAndDialogStore = SubjectFormProps & DialogStore;
 
-export default function CareerDialogForm({
+export default function AddSubjectDialogForm({
   headerTitle,
   visible,
   setVisible,
-}: PropsWithChildren<CareerFormPropsAndDialogStore>) {
+}: PropsWithChildren<SubjectFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/settings/career' });
   const toast = useRef<Toast>(null);
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
 
-  const { mutate } = useCreateCareerMutation<IApiError>(GRAPHQL_CLIENT, {
+  const { data: allDepartmentData } = useGetAllDepartmentsQuery(GRAPHQL_CLIENT, {
+    limit: 500,
+    page: 1,
+    offset: 0,
+    filter: {
+      keyword: null,
+    },
+  });
+
+  const schoolarLevel = [
+    { label: 'Bachillerato', value: 'B' },
+    { label: 'Licenciatura', value: 'L' },
+    { label: 'Postgrado', value: 'P' },
+  ];
+
+  const Subjectype = [
+    { label: 'De base', value: '1' },
+    { label: 'Optativa', value: '2' },
+    { label: 'Especialidad', value: '3' },
+    { label: 'Extracurricular', value: '4' },
+  ];
+
+  let departmentData: Array<IDepartment> = [];
+  if (allDepartmentData && Array.isArray(allDepartmentData?.getAllDepartments.docs)) {
+    departmentData = allDepartmentData?.getAllDepartments.docs;
+  }
+
+  const { mutate } = useCreateSubjectMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
       toast.current?.show({
         severity: 'success',
@@ -68,20 +97,18 @@ export default function CareerDialogForm({
     control,
     formState: { errors },
     reset,
-  } = useForm<ICreateCareerInput>({
+  } = useForm<IUpsertSubjectInput>({
     defaultValues: {
-      credits: 0,
-      description: '',
-      duration: '',
-      isCertified: false,
-      name: '',
-      abbreviationCareer: '',
+      areaKey: '',
+      largeName: '',
+      schoolarLevel: '',
+      shortName: '',
+      subjectType: 0,
     },
   });
 
-  const onSubmit: SubmitHandler<ICreateCareerInput> = (data: ICreateCareerInput) => {
+  const onSubmit: SubmitHandler<IUpsertSubjectInput> = (data: IUpsertSubjectInput) => {
     setIsButtonDisabld(true);
-    data.credits = parseFloat(data.credits);
     mutate({ data });
     reset();
   };
@@ -127,10 +154,10 @@ export default function CareerDialogForm({
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-              name="name"
+              name="largeName"
               control={control}
               rules={{
-                required: t('global.forms.validation.careerName') as string,
+                required: t('global.forms.validation.largeName') as string,
               }}
               render={({ field, fieldState }) => (
                 <InputText
@@ -140,21 +167,21 @@ export default function CareerDialogForm({
                 />
               )}
             />
-            <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-              {t('global.dictionary.careerName')}*
+            <label htmlFor="name" className={classNames({ 'p-error': !!errors.largeName })}>
+              {t('global.dictionary.largeName')}*
             </label>
           </span>
-          {errors.name && <small className="p-error">{errors.name?.message}</small>}
+          {errors.largeName && <small className="p-error">{errors.largeName?.message}</small>}
         </div>
 
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-              name="abbreviationCareer"
+              name="shortName"
               control={control}
               rules={{
-                required: t('global.forms.validation.abbreviationCareer') as string,
+                required: t('global.forms.validation.shortName') as string,
               }}
               render={({ field, fieldState }) => (
                 <InputText
@@ -165,125 +192,101 @@ export default function CareerDialogForm({
                 />
               )}
             />
-            <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-              {t('global.dictionary.abbreviationCareer')}*
+            <label htmlFor="name" className={classNames({ 'p-error': !!errors.shortName })}>
+              {t('global.dictionary.shortName')}*
             </label>
           </span>
-          {errors.name && <small className="p-error">{errors.name?.message}</small>}
+          {errors.shortName && <small className="p-error">{errors.shortName?.message}</small>}
         </div>
 
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-              name="description"
+              name="areaKey"
               control={control}
               rules={{
                 required: t('global.forms.validation.careerDescription') as string,
               }}
               render={({ field, fieldState }) => (
-                <InputTextarea
+                <Dropdown
                   id={field.name}
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
-                  rows={3}
-                  cols={20}
-                  autoResize
+                  value={field.value}
+                  onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
+                  options={departmentData}
+                  optionLabel="name"
+                  optionValue="_id"
                 />
               )}
             />
-            <label
-              htmlFor="description"
-              className={classNames({ 'p-error': !!errors.description })}
-            >
+            <label htmlFor="areaKey" className={classNames({ 'p-error': !!errors.areaKey })}>
               {t('global.dictionary.careerDescription')}*
             </label>
           </span>
-          {errors.description && <small className="p-error">{errors.description?.message}</small>}
+          {errors.areaKey && <small className="p-error">{errors.areaKey?.message}</small>}
         </div>
 
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-hashtag" />
             <Controller
-              name="credits"
+              name="schoolarLevel"
               control={control}
               rules={{
-                required: t('global.forms.validation.credits') as string,
+                required: t('global.forms.validation.schoolarLevel') as string,
               }}
               render={({ field, fieldState }) => (
-                <InputText
+                <Dropdown
                   id={field.name}
-                  type="number"
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
+                  value={field.value}
+                  onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
+                  options={schoolarLevel}
+                  optionLabel="label"
+                  optionValue="value"
                 />
               )}
             />
-            <label htmlFor="credits" className={classNames({ 'p-error': !!errors.credits })}>
-              {t('global.dictionary.credits')}*
+            <label
+              htmlFor="schoolarLevel"
+              className={classNames({ 'p-error': !!errors.schoolarLevel })}
+            >
+              {t('global.dictionary.schoolarLevel')}*
             </label>
           </span>
-          {errors.credits && <small className="p-error">{errors.credits?.message}</small>}
+          {errors.schoolarLevel && (
+            <small className="p-error">{errors.schoolarLevel?.message}</small>
+          )}
         </div>
 
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-calendar" />
             <Controller
-              name="duration"
+              name="subjectType"
               control={control}
-              rules={{ required: t('global.forms.validation.duration') as string }}
+              rules={{ required: t('global.forms.validation.subjectType') as string }}
               render={({ field, fieldState }) => (
-                <InputText
+                <Dropdown
                   id={field.name}
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
+                  value={field.value}
+                  onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
+                  options={Subjectype}
+                  optionLabel="label"
+                  optionValue="value"
                 />
               )}
             />
-            <label htmlFor="duration" className={classNames({ 'p-error': errors.duration })}>
-              {t('global.dictionary.duration')}*
+            <label htmlFor="subjectType" className={classNames({ 'p-error': errors.subjectType })}>
+              {t('global.dictionary.subjectType')}*
             </label>
           </span>
-          {errors.duration && <small className="p-error">{errors.duration?.message}</small>}
-        </div>
-
-        <div className="field">
-          <span className="field-radiobutton">
-            <Controller
-              name="isCertified"
-              control={control}
-              rules={{ required: t('global.forms.validation.isCertified') as string }}
-              render={({ field }) => (
-                <div>
-                  <label htmlFor={field.name}>{t('global.dictionary.isCertified')}</label>
-                  <br />
-                  <div className="field-radiobutton">
-                    <RadioButton
-                      id={`${field.name}-true`}
-                      type="checkbox"
-                      value="true"
-                      checked={field.value === true}
-                      onChange={() => field.onChange(true)}
-                    />
-                    <label htmlFor={`${field.name}-true`}>Sí</label>
-                  </div>
-                  <div className="field-radiobutton">
-                    <RadioButton
-                      id={`${field.name}-false`}
-                      type="checkbox"
-                      value="false"
-                      checked={field.value === false}
-                      onChange={() => field.onChange(false)}
-                    />
-                    <label htmlFor={`${field.name}-false`}>No</label>
-                  </div>
-                </div>
-              )}
-            />
-          </span>
-          {errors.isCertified && <small className="p-error">{errors.isCertified?.message}</small>}
+          {errors.subjectType && <small className="p-error">{errors.subjectType?.message}</small>}
         </div>
       </form>
     </Dialog>

@@ -1,5 +1,5 @@
-query GetAllDepartment($filter: DepartmentArgs, $page: Int, $offset: Int, $limit: Int) {
-  getAllDepartment(filter: $filter, page: $page, offset: $offset, limit: $limit) {
+query GetAllDepartments($filter: DepartmentArgs, $page: Int, $offset: Int, $limit: Int) {
+  getAllDepartments(filter: $filter, page: $page, offset: $offset, limit: $limit) {
     docs {
       _id
       abbreviationOrg

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from 'primereact/button';
 import { useTranslation } from 'react-i18next';
-import AddCareerDialogForm from '../../forms/career/dashboard/addCareer';
 import { dialogStore } from '../../../store/global/dialogStore';
+import AddSubjectDialogForm from '../../forms/subjects/dashboard/addSubject';
 
 export default function PageHeading() {
   const { t } = useTranslation('common');
@@ -10,7 +10,7 @@ export default function PageHeading() {
 
   return (
     <>
-      <AddCareerDialogForm
+      <AddSubjectDialogForm
         headerTitle={t('module.career.dashboard.dialog.add.header')}
         visible={visible}
         setVisible={setVisible}

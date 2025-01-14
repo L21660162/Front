@@ -18,7 +18,7 @@ import {
   IRoles,
   useGetAllCareersQuery,
   ICareer,
-  useGetAllDepartmentQuery,
+  useGetAllDepartmentsQuery,
   IDepartment,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
@@ -73,19 +73,20 @@ export default function AddUserDialogForm({
     { value: IRoles.Subdirector, label: t('global.dictionary.roles.SUBDIRECTOR') },
   ];
 
-
-
   const [selecroles, setSelecroles] = React.useState<IRoles[]>([]);
 
-  const { data: allDepartmentData } = useGetAllDepartmentQuery(GRAPHQL_CLIENT, {
+  const { data: allDepartmentData } = useGetAllDepartmentsQuery(GRAPHQL_CLIENT, {
     limit: 500,
     page: 1,
     offset: 0,
+    filter: {
+      keyword: null,
+    },
   });
 
   let departmentData: Array<IDepartment> = [];
-  if (allDepartmentData && Array.isArray(allDepartmentData?.getAllDepartment.docs)) {
-    departmentData = allDepartmentData?.getAllDepartment.docs;
+  if (allDepartmentData && Array.isArray(allDepartmentData?.getAllDepartments.docs)) {
+    departmentData = allDepartmentData?.getAllDepartments.docs;
   }
 
   const handleCheckboxChange = (e: { checked: any }, value: IRoles) => {
@@ -391,59 +392,55 @@ export default function AddUserDialogForm({
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-lock" />
             <Controller
-            name="rfc"
-            control={control}
-            rules={{
+              name="rfc"
+              control={control}
+              rules={{
                 required: t('global.forms.validation.rfc') as string,
-            }}
-            render={({ field, fieldState }) => (
-            <InputText
-                id={field.name}
-                {...field}
-                className={classNames({ 'p-invalid': fieldState.invalid })}
+              }}
+              render={({ field, fieldState }) => (
+                <InputText
+                  id={field.name}
+                  {...field}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
                 />
-            )}
+              )}
             />
-            <label
-            htmlFor="rfc"
-            className={classNames({ 'p-error': !!errors.rfc })}
-            >
-            {t('global.dictionary.rfc')}*
+            <label htmlFor="rfc" className={classNames({ 'p-error': !!errors.rfc })}>
+              {t('global.dictionary.rfc')}*
             </label>
-        </span>
-        {errors.rfc && <small className="p-error">{errors.rfc?.message}</small>}
+          </span>
+          {errors.rfc && <small className="p-error">{errors.rfc?.message}</small>}
         </div>
 
         <div className="field">
-        <span className="p-float-label p-input-icon-right">
+          <span className="p-float-label p-input-icon-right">
             <i className="pi pi-hashtag" />
             <Controller
-            name="department"
-            control={control}
-            rules={{
-            required: t('global.forms.validation.department') as string,
-            }}
-            render={({ field, fieldState }) => (
-              <Dropdown
-              id={field.name}
-              {...field}
-              className={classNames({ 'p-invalid': fieldState.invalid })}
-              value={field.value}
-              onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
-              options={departmentData}
-              optionLabel="name"
-              optionValue="_id"
-            />
-                )}
+              name="department"
+              control={control}
+              rules={{
+                required: t('global.forms.validation.department') as string,
+              }}
+              render={({ field, fieldState }) => (
+                <Dropdown
+                  id={field.name}
+                  {...field}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
+                  value={field.value}
+                  onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
+                  options={departmentData}
+                  optionLabel="name"
+                  optionValue="_id"
+                />
+              )}
             />
             <label htmlFor="department" className={classNames({ 'p-error': !!errors.department })}>
-            {t('global.dictionary.department')}*
+              {t('global.dictionary.department')}*
             </label>
-            </span>
-            {errors.department && <small className="p-error">{errors.department?.message}</small>}
+          </span>
+          {errors.department && <small className="p-error">{errors.department?.message}</small>}
         </div>
-
-    </form>
+      </form>
     </Dialog>
-);
+  );
 }
