@@ -54,16 +54,18 @@ export default function AddSubjectDialogForm({
   ];
 
   const Subjectype = [
-    { label: 'De base', value: '1' },
-    { label: 'Optativa', value: '2' },
-    { label: 'Especialidad', value: '3' },
-    { label: 'Extracurricular', value: '4' },
+    { label: 'De base', value: 1 },
+    { label: 'Optativa', value: 2 },
+    { label: 'Especialidad', value: 3 },
+    { label: 'Extracurricular', value: 4 },
   ];
 
   let departmentData: Array<IDepartment> = [];
   if (allDepartmentData && Array.isArray(allDepartmentData?.getAllDepartments.docs)) {
     departmentData = allDepartmentData?.getAllDepartments.docs;
   }
+
+  console.log('departmentData', departmentData);
 
   const { mutate } = useCreateSubjectMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -103,7 +105,7 @@ export default function AddSubjectDialogForm({
       largeName: '',
       schoolarLevel: '',
       shortName: '',
-      subjectType: 0,
+      subjectType: '',
     },
   });
 
@@ -146,7 +148,7 @@ export default function AddSubjectDialogForm({
       <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.career')}</b> <br />
+            <b>{t('global.dictionary.subject')}</b> <br />
           </label>
         </div>
         <hr />
@@ -186,7 +188,6 @@ export default function AddSubjectDialogForm({
               render={({ field, fieldState }) => (
                 <InputText
                   id={field.name}
-                  maxLength={5}
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
                 />
@@ -206,7 +207,7 @@ export default function AddSubjectDialogForm({
               name="areaKey"
               control={control}
               rules={{
-                required: t('global.forms.validation.careerDescription') as string,
+                required: t('global.forms.validation.areaKey') as string,
               }}
               render={({ field, fieldState }) => (
                 <Dropdown
@@ -222,7 +223,7 @@ export default function AddSubjectDialogForm({
               )}
             />
             <label htmlFor="areaKey" className={classNames({ 'p-error': !!errors.areaKey })}>
-              {t('global.dictionary.careerDescription')}*
+              {t('global.dictionary.areaKey')}*
             </label>
           </span>
           {errors.areaKey && <small className="p-error">{errors.areaKey?.message}</small>}

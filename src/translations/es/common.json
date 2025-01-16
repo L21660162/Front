@@ -40,6 +40,10 @@
       "label": "Usuario",
       "dashboard": "Panel de Usuario"
     },
+    "subject": {
+      "label": "Materia",
+      "dashboard": "Panel de Materia"
+    },
     "settings": {
       "label": "Configuración",
       "dashboard": "Panel de Configuración",
@@ -103,6 +107,7 @@
       "tisCertified": "Certificado",
       "tcredits": "Total de creditos",
       "career": "Información de la carrera",
+      "subject": "Información de la materia",
       "careerName": "Nombre de la carrera",
       "careerDescription": "Descripción",
       "credits": "Cantidad de creditos",
@@ -111,6 +116,7 @@
       "instituteId": "Instituto al que pertenece",
       "Nocareer": "No existen carreras registradas",
       "careerdirectory": "Lista de carreras vigentes",
+      "subjectdirectory": "Lista de materias",
       "abbreviationCareer": "Abrevación de la Carrera",
       "userdirectory": "Lista de usuarios",
       "largeName": "Nombre de la materia",
@@ -178,6 +184,19 @@
           }
         },
         "filter": "Tipo de Usuario"
+      }
+    },
+    "subject": {
+      "dashboard": {
+        "addSubject": "Agregar Materia",
+        "dialog": {
+          "add": {
+            "header": "Agregar Nueva Materia"
+          },
+          "edit": {
+            "header": "Editar Materia"
+          }
+        }
       }
     }
   }

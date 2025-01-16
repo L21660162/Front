@@ -8,7 +8,7 @@ query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: I
       group
       isDeleted
       period
-      rfc
+      teacher
       startTime
       subject
       updatedAt
@@ -25,7 +25,7 @@ query GetScheduleById($id: ID) {
     group
     isDeleted
     period
-    rfc
+    teacher
     startTime
     subject
     updatedAt

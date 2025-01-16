@@ -2,10 +2,8 @@ query GetAllDepartments($filter: DepartmentArgs, $page: Int, $offset: Int, $limi
   getAllDepartments(filter: $filter, page: $page, offset: $offset, limit: $limit) {
     docs {
       _id
-      abbreviationOrg
       createdAt
       deletedAt
-      departmentBoss
       isDeleted
       name
       updatedAt
@@ -20,5 +18,17 @@ query GetAllDepartments($filter: DepartmentArgs, $page: Int, $offset: Int, $limi
     prevPage
     totalDocs
     totalPages
+  }
+}
+
+query GetDepartmentById($id: ID) {
+  getDepartmentById(_id: $id) {
+    _id
+    areaKey
+    createdAt
+    deletedAt
+    isDeleted
+    name
+    updatedAt
   }
 }
