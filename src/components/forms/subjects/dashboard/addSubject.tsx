@@ -1,21 +1,16 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
-import { Divider } from 'primereact/divider';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { RadioButton } from 'primereact/radiobutton';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { Query } from '@tanstack/react-query';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-  ICreateSubjectMutation,
   IDepartment,
   IUpsertSubjectInput,
   useCreateSubjectMutation,
@@ -64,8 +59,6 @@ export default function AddSubjectDialogForm({
   if (allDepartmentData && Array.isArray(allDepartmentData?.getAllDepartments.docs)) {
     departmentData = allDepartmentData?.getAllDepartments.docs;
   }
-
-  console.log('departmentData', departmentData);
 
   const { mutate } = useCreateSubjectMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {

@@ -1520,6 +1520,16 @@ export type IGetCareerByIdQueryVariables = Exact<{
 
 export type IGetCareerByIdQuery = { getCareerById: { _id: string, abbreviationCareer: string, createdAt: any, credits: number, deletedAt?: any | null, description: string, duration: string, isCertified: boolean, isDeleted: boolean, name: string, updatedAt: any } };
 
+export type IGetAllClassroomsQueryVariables = Exact<{
+  filter?: InputMaybe<IClassroomArgs>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type IGetAllClassroomsQuery = { getAllClassrooms: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, building: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, updatedAt?: any | null }> } };
+
 export type IGetAllDepartmentsQueryVariables = Exact<{
   filter?: InputMaybe<IDepartmentArgs>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -1579,6 +1589,26 @@ export type IGetFileByIdQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type IGetFileByIdQuery = { getFileById: { _id: string, approvedBy?: any | null, createdAt: any, deletedAt?: any | null, extension: string, isDeleted: boolean, nameFile: string, path: string, size: number, type: IFileType, updatedAt: any, comments?: Array<{ _id?: string | null, comment?: string | null, createdAt?: any | null, createdBy?: any | null }> | null, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } } };
+
+export type IGetAllGroupsQueryVariables = Exact<{
+  filter?: InputMaybe<IGroupArgs>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type IGetAllGroupsQuery = { getAllGroups: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, career: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, period: string, semester: string, updatedAt?: any | null }> } };
+
+export type IGetAllPeriodsQueryVariables = Exact<{
+  filter?: InputMaybe<IPeriodArgs>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type IGetAllPeriodsQuery = { getAllPeriods: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, createdAt?: any | null, deletedAt?: any | null, finalDate: any, isDeleted: boolean, largeIdentifier: string, name: string, shortIdentifier: string, startDate: any, updatedAt?: any | null }> } };
 
 export type ICreateScheduleMutationVariables = Exact<{
   data: IUpsertScheduleInput;
@@ -2042,6 +2072,50 @@ useGetCareerByIdQuery.getKey = (variables?: IGetCareerByIdQueryVariables) => var
 ;
 
 useGetCareerByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetCareerByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetCareerByIdQuery, IGetCareerByIdQueryVariables>(client, GetCareerByIdDocument, variables, headers);
+export const GetAllClassroomsDocument = /*#__PURE__*/ `
+    query GetAllClassrooms($filter: ClassroomArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllClassrooms(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      building
+      createdAt
+      deletedAt
+      identifier
+      isDeleted
+      updatedAt
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+    `;
+export const useGetAllClassroomsQuery = <
+      TData = IGetAllClassroomsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllClassroomsQueryVariables,
+      options?: UseQueryOptions<IGetAllClassroomsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllClassroomsQuery, TError, TData>(
+      variables === undefined ? ['GetAllClassrooms'] : ['GetAllClassrooms', variables],
+      fetcher<IGetAllClassroomsQuery, IGetAllClassroomsQueryVariables>(client, GetAllClassroomsDocument, variables, headers),
+      options
+    );
+
+useGetAllClassroomsQuery.getKey = (variables?: IGetAllClassroomsQueryVariables) => variables === undefined ? ['GetAllClassrooms'] : ['GetAllClassrooms', variables];
+;
+
+useGetAllClassroomsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllClassroomsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllClassroomsQuery, IGetAllClassroomsQueryVariables>(client, GetAllClassroomsDocument, variables, headers);
 export const GetAllDepartmentsDocument = /*#__PURE__*/ `
     query GetAllDepartments($filter: DepartmentArgs, $page: Int, $offset: Int, $limit: Int) {
   getAllDepartments(filter: $filter, page: $page, offset: $offset, limit: $limit) {
@@ -2394,6 +2468,99 @@ useGetFileByIdQuery.getKey = (variables?: IGetFileByIdQueryVariables) => variabl
 ;
 
 useGetFileByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetFileByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetFileByIdQuery, IGetFileByIdQueryVariables>(client, GetFileByIdDocument, variables, headers);
+export const GetAllGroupsDocument = /*#__PURE__*/ `
+    query GetAllGroups($filter: GroupArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllGroups(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      career
+      createdAt
+      deletedAt
+      identifier
+      isDeleted
+      period
+      semester
+      updatedAt
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+    `;
+export const useGetAllGroupsQuery = <
+      TData = IGetAllGroupsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllGroupsQueryVariables,
+      options?: UseQueryOptions<IGetAllGroupsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllGroupsQuery, TError, TData>(
+      variables === undefined ? ['GetAllGroups'] : ['GetAllGroups', variables],
+      fetcher<IGetAllGroupsQuery, IGetAllGroupsQueryVariables>(client, GetAllGroupsDocument, variables, headers),
+      options
+    );
+
+useGetAllGroupsQuery.getKey = (variables?: IGetAllGroupsQueryVariables) => variables === undefined ? ['GetAllGroups'] : ['GetAllGroups', variables];
+;
+
+useGetAllGroupsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllGroupsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllGroupsQuery, IGetAllGroupsQueryVariables>(client, GetAllGroupsDocument, variables, headers);
+export const GetAllPeriodsDocument = /*#__PURE__*/ `
+    query GetAllPeriods($filter: PeriodArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllPeriods(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      createdAt
+      deletedAt
+      finalDate
+      isDeleted
+      largeIdentifier
+      name
+      shortIdentifier
+      startDate
+      updatedAt
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+    `;
+export const useGetAllPeriodsQuery = <
+      TData = IGetAllPeriodsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllPeriodsQueryVariables,
+      options?: UseQueryOptions<IGetAllPeriodsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllPeriodsQuery, TError, TData>(
+      variables === undefined ? ['GetAllPeriods'] : ['GetAllPeriods', variables],
+      fetcher<IGetAllPeriodsQuery, IGetAllPeriodsQueryVariables>(client, GetAllPeriodsDocument, variables, headers),
+      options
+    );
+
+useGetAllPeriodsQuery.getKey = (variables?: IGetAllPeriodsQueryVariables) => variables === undefined ? ['GetAllPeriods'] : ['GetAllPeriods', variables];
+;
+
+useGetAllPeriodsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllPeriodsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllPeriodsQuery, IGetAllPeriodsQueryVariables>(client, GetAllPeriodsDocument, variables, headers);
 export const CreateScheduleDocument = /*#__PURE__*/ `
     mutation CreateSchedule($data: UpsertScheduleInput!) {
   createSchedule(data: $data) {

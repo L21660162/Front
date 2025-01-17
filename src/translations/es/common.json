@@ -85,7 +85,15 @@
         "shortName": "Debes colocar el nombre corto",
         "schoolarLevel": "Debes colocar el nivel escolar",
         "subjectType": "Debes colocar el tipo de materia",
-        "areaKey": "Debes colocar el codigo de area"
+        "areaKey": "Debes colocar el codigo de area",
+        "subject": "Debes colocar el nombre de la materia",
+        "classroom": "Debes colocar el nombre del aula",
+        "group": "Debes colocar el grupo",
+        "period": "Debes colocar el periodo",
+        "teacher": "Debes colocar el docente",
+        "finalTime": "Debes colocar la hora de finalización",
+        "startTime": "Debes colocar la hora de inicio",
+        "weekday": "Debes colocar el día de la semana"
       }
     },
     "dictionary": {
@@ -124,6 +132,14 @@
       "schoolarLevel": "Nivel escolar",
       "subjectType": "Tipo de materia",
       "areaKey": "Codigo de area",
+      "subjectname": "Nombre de la materia",
+      "classroom": "Nombre del aula",
+      "group": "Grupo",
+      "period": "Periodo",
+      "teacher": "Docente",
+      "finalTime": "Hora de finalización",
+      "startTime": "Hora de inicio",
+      "weekday": "Día de la semana",
       "roles": {
         "rules": "Rol del usuario",
         "DIRECTOR": "Director Academico",

@@ -16,8 +16,6 @@ import {
   IUser,
   useUpsertUserMutation,
   IRoles,
-  useGetAllCareersQuery,
-  ICareer,
   useGetAllDepartmentsQuery,
   IDepartment,
 } from '../../../../graphql/graphql';

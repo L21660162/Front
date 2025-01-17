@@ -1,24 +1,17 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
-import {
-  IGetCareerByIdQuery,
-  IUpdateCareerInput,
-  useGetCareerByIdQuery,
-  useUpdateCareerMutation,
-  ICareer,
-} from '../../../../graphql/graphql';
+import { IUpdateCareerInput, useUpdateCareerMutation, ICareer } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
 type CareerFormProps = {

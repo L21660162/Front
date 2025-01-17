@@ -2,14 +2,12 @@ import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { RadioButton } from 'primereact/radiobutton';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
@@ -20,7 +18,6 @@ import {
   useGetAllUsersQuery,
   useGetUserByIdQuery,
   useUpdateUserMutation,
-  IRoles,
   useGetAllCareersQuery,
   ICareer,
 } from '../../../../graphql/graphql';
@@ -47,6 +44,7 @@ export default function UserDialogForm({
   const navigate = useNavigate({ from: '/user/dashboard' });
   const toast = useRef<Toast>(null);
   const { _id: actuallyUser } = useAccessTokenData() as TokenData;
+  const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
 
   const { mutate } = useUpdateUserMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -74,9 +72,6 @@ export default function UserDialogForm({
       setIsButtonDisabld(false);
     },
   });
-
-  const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<null>(null);
 
   const { data: UserData } = useGetUserByIdQuery<IGetUserByIdQuery>(GRAPHQL_CLIENT, {
     id,
