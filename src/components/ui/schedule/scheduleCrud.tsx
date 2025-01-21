@@ -6,22 +6,21 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Demo } from '../../../../types/types';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
-  IGetAllSubjectsQuery,
   ISchedule,
   ISubject,
   useDeleteScheduleMutation,
-  useDeleteSubjectMutation,
   useGetAllSchedulesQuery,
-  useGetAllSubjectsQuery,
-  useGetDepartmentByIdQuery,
+  useGetClassroomByIdQuery,
   useGetSubjectByIdQuery,
+  useGetUserByIdQuery,
+  IGetAllSchedulesQuery,
+  useGetGroupByIdQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import EditSubjectDialogForm from '../../forms/subjects/dashboard/editSubject';
@@ -57,7 +56,7 @@ function ScheduleCrud() {
   const [selectedSchedule, setSelectedSchedule] = useState<ISubject | null>(null);
   const [visibleEditSchedule, setVisibleEditSchedule] = useState(false);
 
-  const { data } = useGetAllSchedulesQuery<IGetAllSubjectsQuery>(GRAPHQL_CLIENT, {
+  const { data } = useGetAllSchedulesQuery<IGetAllSchedulesQuery>(GRAPHQL_CLIENT, {
     limit: 500,
     page: 1,
     offset: 0,
@@ -82,7 +81,7 @@ function ScheduleCrud() {
         severity: 'error',
         summary: t('global.toast.error.summary'),
         detail: errorResponse.response.errors[0].message,
-        life: 5000,
+        life: 9999,
       });
     },
   });
@@ -91,13 +90,13 @@ function ScheduleCrud() {
     setDeleteScheduleDialog(false);
   };
 
-  const editSchedule = (subject_camp: ISchedule) => {
-    setSelectedSchedule(subject_camp);
+  const editSchedule = (schedule__camp: ISchedule) => {
+    setSelectedSchedule(schedule__camp);
     setVisibleEditSchedule(true);
   };
 
-  const confirmDeleteCareer = (subject_camp: ISchedule) => {
-    setSchedule(subject_camp);
+  const confirmDeleteSchedule = (schedule__camp: ISchedule) => {
+    setSchedule(schedule__camp);
     setDeleteScheduleDialog(true);
   };
 
@@ -112,51 +111,73 @@ function ScheduleCrud() {
     dt.current?.exportCSV();
   };
 
-  const nameBodyTemplate = (subject_camp: ISubject) => {
+  const classroomTemlate = (schedule__camp: ISchedule) => {
+    const { data: dataClassroom } = useGetClassroomByIdQuery(GRAPHQL_CLIENT, {
+      id: schedule__camp.classroom,
+    });
     return (
       <>
-        <span className="p-column-title">Name</span>
-        {subject_camp.largeName}
+        <span className="p-column-title">Classroom</span>
+        {dataClassroom?.getClassroomById.identifier}
       </>
     );
   };
 
-  const descriptionBodyTemplate = (subject_camp: ISubject) => {
+  const teacherBodyTemplate = (schedule__camp: ISchedule) => {
+    const { data: dataTeacher } = useGetUserByIdQuery(GRAPHQL_CLIENT, {
+      id: schedule__camp.teacher,
+    });
     return (
       <>
-        <span className="p-column-title">Abrebiatura</span>
-        {subject_camp.shortName}
+        <span className="p-column-title">Teacher</span>
+        {`${dataTeacher?.getUserById.firstName} ${dataTeacher?.getUserById.lastName} ${dataTeacher?.getUserById.middleName}`}
       </>
     );
   };
 
-  const durationBodyTemplate = (subject_camp: ISubject) => {
-    const schoolarLevel = [
-      { label: 'Bachillerato', value: 'B' },
-      { label: 'Licenciatura', value: 'L' },
-      { label: 'Postgrado', value: 'P' },
-    ];
-
-    const schoolarLevelFilter = schoolarLevel.filter(
-      (item) => item.value === subject_camp.schoolarLevel
-    );
+  const subjectBodyTemplate = (schedule__camp: ISchedule) => {
+    const { data: dataSubject } = useGetSubjectByIdQuery(GRAPHQL_CLIENT, {
+      id: schedule__camp.subject,
+    });
     return (
       <>
-        <span className="p-column-title">Nivel</span>
-        {schoolarLevelFilter[0].label}
+        <span className="p-column-title">Subject</span>
+        {dataSubject?.getSubjectById.largeName}
       </>
     );
   };
 
-  const creditsBodyTemplate = (subject_camp: ISubject) => {
-    const { data } = useGetDepartmentByIdQuery(GRAPHQL_CLIENT, {
-      id: subject_camp.areaKey,
+  const groupBodyTemplate = (schedule__camp: ISchedule) => {
+    const { data: groupData } = useGetGroupByIdQuery(GRAPHQL_CLIENT, {
+      id: schedule__camp.classGroup,
     });
 
     return (
       <>
-        <span className="p-column-title">Departamento</span>
-        {data?.getDepartmentById.name}
+        <span className="p-column-title">Group</span>
+        {groupData?.getGroupById.identifier}
+      </>
+    );
+  };
+
+  const timeStartBodyTemplate = (schedule__camp: ISchedule) => {
+    const startTime = new Date(schedule__camp.startTime).toLocaleTimeString();
+
+    return (
+      <>
+        <span className="p-column-title">Start Time</span>
+        {startTime}
+      </>
+    );
+  };
+
+  const timeEndBodyTemplate = (schedule__camp: ISchedule) => {
+    const endTime = new Date(schedule__camp.finalTime).toLocaleTimeString();
+
+    return (
+      <>
+        <span className="p-column-title">End Time</span>
+        {endTime}
       </>
     );
   };
@@ -180,7 +201,7 @@ function ScheduleCrud() {
             rounded
             outlined
             severity="danger"
-            onClick={() => confirmDeleteCareer(rowData)}
+            onClick={() => confirmDeleteSchedule(rowData)}
           />
         )}
       </div>
@@ -225,7 +246,7 @@ function ScheduleCrud() {
 
           <DataTable
             ref={dt}
-            value={data?.getAllSubjects.docs}
+            value={data?.getAllSchedules.docs}
             selection={selectedSchedules}
             onSelectionChange={(e) => setSelectedSchedules(e.value as any)}
             dataKey="_id"
@@ -242,9 +263,9 @@ function ScheduleCrud() {
           >
             <Column
               field="name"
-              header={t('global.dictionary.largeName')}
+              header={t('global.dictionary.classroomdirectory')}
               sortable
-              body={nameBodyTemplate}
+              body={classroomTemlate}
               headerStyle={{
                 minWidth: '15rem',
                 border: '1px solid #2a497b',
@@ -255,9 +276,9 @@ function ScheduleCrud() {
             />
             <Column
               field="description"
-              header={t('global.dictionary.shortName')}
+              header={t('global.dictionary.teacher')}
               sortable
-              body={descriptionBodyTemplate}
+              body={teacherBodyTemplate}
               headerStyle={{
                 minWidth: '15rem',
                 border: '1px solid #2a497b',
@@ -268,9 +289,9 @@ function ScheduleCrud() {
             />
             <Column
               field="duration"
-              header={t('global.dictionary.schoolarLevel')}
+              header={t('global.dictionary.subjectdirector')}
               sortable
-              body={durationBodyTemplate}
+              body={subjectBodyTemplate}
               headerStyle={{
                 minWidth: '15rem',
                 border: '1px solid #2a497b',
@@ -281,9 +302,35 @@ function ScheduleCrud() {
             />
             <Column
               field="institute"
-              header={t('global.dictionary.areaKey')}
+              header={t('global.dictionary.group')}
               sortable
-              body={creditsBodyTemplate}
+              body={groupBodyTemplate}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
+            />
+            <Column
+              field="institute"
+              header={t('global.dictionary.TimeStart')}
+              sortable
+              body={timeStartBodyTemplate}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
+            />
+            <Column
+              field="institute"
+              header={t('global.dictionary.TimeEnd')}
+              sortable
+              body={timeEndBodyTemplate}
               headerStyle={{
                 minWidth: '15rem',
                 border: '1px solid #2a497b',

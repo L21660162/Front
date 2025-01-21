@@ -94,8 +94,6 @@ function UserCrud() {
     offset: 0,
   });
 
-  
-
   const { mutate } = useDeleteUserMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
       toast.current?.show({

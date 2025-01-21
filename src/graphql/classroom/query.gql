@@ -21,3 +21,15 @@ query GetAllClassrooms($filter: ClassroomArgs, $limit: Int, $offset: Int, $page:
     totalPages
   }
 }
+
+query GetClassroomById($id: ID) {
+  getClassroomById(_id: $id) {
+    _id
+    building
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    updatedAt
+  }
+}

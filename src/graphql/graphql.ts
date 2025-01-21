@@ -193,6 +193,7 @@ export interface IDepartment {
 }
 
 export interface IDepartmentArgs {
+  areaKey?: InputMaybe<Scalars['String']['input']>;
   bossId?: InputMaybe<Scalars['ID']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -280,21 +281,21 @@ export interface IGroupIdArgs {
 }
 
 export interface IGrupos {
-  carrera: Scalars['String']['output'];
-  identificador: Scalars['String']['output'];
-  periodo: Scalars['String']['output'];
-  semestre: Scalars['String']['output'];
+  career: Scalars['String']['output'];
+  identifier: Scalars['String']['output'];
+  period: Scalars['String']['output'];
+  semester: Scalars['String']['output'];
 }
 
 export interface IHorarios {
-  dia: Scalars['String']['output'];
-  docente: Scalars['String']['output'];
-  final: Scalars['String']['output'];
-  grupo: Scalars['String']['output'];
-  inicio: Scalars['String']['output'];
-  materia: Scalars['String']['output'];
-  periodo: Scalars['String']['output'];
-  salon: Scalars['String']['output'];
+  classGroup: Scalars['String']['output'];
+  classroom: Scalars['String']['output'];
+  finalTime: Scalars['String']['output'];
+  period: Scalars['String']['output'];
+  startTime: Scalars['String']['output'];
+  subject: Scalars['String']['output'];
+  teacher: Scalars['String']['output'];
+  weekday: Scalars['String']['output'];
 }
 
 /** Model for access token after user refresh token */
@@ -314,9 +315,11 @@ export interface IJwtUserTokens {
 }
 
 export interface IMaterias {
-  clave: Scalars['String']['output'];
-  department: Scalars['String']['output'];
-  nombre: Scalars['String']['output'];
+  areaKey: Scalars['String']['output'];
+  largeName: Scalars['String']['output'];
+  schoolarLevel: Scalars['String']['output'];
+  shortName: Scalars['String']['output'];
+  subjectType: Scalars['Float']['output'];
 }
 
 export interface IMutation {
@@ -344,6 +347,10 @@ export interface IMutation {
   deleteUser: ISoftDeleteResponse;
   deletedCareer: ISoftDeleteResponse;
   deletedFile: ISoftDeleteResponse;
+  importGroups: Array<IGroup>;
+  importPeriods: Array<IPeriod>;
+  importSchedules: Array<ISchedule>;
+  importSubjects: Array<ISubject>;
   importTeachers: Array<IUser>;
   passwordRecovery: Scalars['String']['output'];
   passwordReset: IUser;
@@ -766,6 +773,7 @@ export interface IPeriod {
 }
 
 export interface IPeriodArgs {
+  identifier?: InputMaybe<Scalars['String']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
 }
 
@@ -804,11 +812,11 @@ export interface IPeriodoActual {
 }
 
 export interface IPeriodos {
-  corta: Scalars['String']['output'];
-  final: Scalars['String']['output'];
-  inicio: Scalars['String']['output'];
-  larga: Scalars['String']['output'];
-  periodo: Scalars['String']['output'];
+  finalDate: Scalars['DateTime']['output'];
+  largeIdentifier: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  shortIdentifier: Scalars['String']['output'];
+  startDate: Scalars['DateTime']['output'];
 }
 
 export interface IProfesores {
@@ -848,7 +856,7 @@ export interface IQuery {
   getLastPeriod: IPeriod;
   getMaterias: Array<IMaterias>;
   getPeriodById: IPeriod;
-  getPeriodoActual: Array<IPeriodoActual>;
+  getPeriodoActual: IPeriodoActual;
   getPeriodos: Array<IPeriodos>;
   getProfesores: Array<IProfesores>;
   getScheduleById: ISchedule;
@@ -1126,11 +1134,11 @@ export enum IRoles {
 /** schedule */
 export interface ISchedule {
   _id: Scalars['ID']['output'];
+  classGroup: Scalars['ID']['output'];
   classroom: Scalars['ID']['output'];
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   finalTime: Scalars['DateTime']['output'];
-  group: Scalars['ID']['output'];
   isDeleted: Scalars['Boolean']['output'];
   period: Scalars['ID']['output'];
   startTime: Scalars['DateTime']['output'];
@@ -1141,11 +1149,13 @@ export interface ISchedule {
 }
 
 export interface IScheduleArgs {
-  group?: InputMaybe<Scalars['ID']['input']>;
+  classGroup?: InputMaybe<Scalars['ID']['input']>;
+  classroom?: InputMaybe<Scalars['ID']['input']>;
   keyword?: InputMaybe<Scalars['String']['input']>;
   period?: InputMaybe<Scalars['ID']['input']>;
   subject?: InputMaybe<Scalars['ID']['input']>;
   teacher?: InputMaybe<Scalars['ID']['input']>;
+  weekday?: InputMaybe<Scalars['Float']['input']>;
 }
 
 export interface IScheduleIdArgs {
@@ -1357,9 +1367,9 @@ export interface IUpsertPeriodInput {
 
 /** Create schedule input */
 export interface IUpsertScheduleInput {
+  classGroup: Scalars['ID']['input'];
   classroom: Scalars['ID']['input'];
   finalTime: Scalars['DateTime']['input'];
-  group: Scalars['ID']['input'];
   period: Scalars['ID']['input'];
   startTime: Scalars['DateTime']['input'];
   subject: Scalars['ID']['input'];
@@ -1530,6 +1540,13 @@ export type IGetAllClassroomsQueryVariables = Exact<{
 
 export type IGetAllClassroomsQuery = { getAllClassrooms: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, building: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, updatedAt?: any | null }> } };
 
+export type IGetClassroomByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type IGetClassroomByIdQuery = { getClassroomById: { _id: string, building: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, updatedAt?: any | null } };
+
 export type IGetAllDepartmentsQueryVariables = Exact<{
   filter?: InputMaybe<IDepartmentArgs>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -1600,6 +1617,13 @@ export type IGetAllGroupsQueryVariables = Exact<{
 
 export type IGetAllGroupsQuery = { getAllGroups: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, career: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, period: string, semester: string, updatedAt?: any | null }> } };
 
+export type IGetGroupByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type IGetGroupByIdQuery = { getGroupById: { _id: string, career: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, period: string, semester: string, updatedAt?: any | null } };
+
 export type IGetAllPeriodsQueryVariables = Exact<{
   filter?: InputMaybe<IPeriodArgs>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1610,19 +1634,26 @@ export type IGetAllPeriodsQueryVariables = Exact<{
 
 export type IGetAllPeriodsQuery = { getAllPeriods: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, createdAt?: any | null, deletedAt?: any | null, finalDate: any, isDeleted: boolean, largeIdentifier: string, name: string, shortIdentifier: string, startDate: any, updatedAt?: any | null }> } };
 
+export type IGetPeriodByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type IGetPeriodByIdQuery = { getPeriodById: { _id: string, createdAt?: any | null, deletedAt?: any | null, finalDate: any, isDeleted: boolean, largeIdentifier: string, name: string, shortIdentifier: string, startDate: any, updatedAt?: any | null } };
+
 export type ICreateScheduleMutationVariables = Exact<{
   data: IUpsertScheduleInput;
 }>;
 
 
-export type ICreateScheduleMutation = { createSchedule: { _id: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, group: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
+export type ICreateScheduleMutation = { createSchedule: { _id: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
 
 export type IUpdateScheduleMutationVariables = Exact<{
   data: IUpdateScheduleInput;
 }>;
 
 
-export type IUpdateScheduleMutation = { updateSchedule: { _id: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, group: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
+export type IUpdateScheduleMutation = { updateSchedule: { _id: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
 
 export type IDeleteScheduleMutationVariables = Exact<{
   data: IScheduleIdArgs;
@@ -1639,14 +1670,14 @@ export type IGetAllSchedulesQueryVariables = Exact<{
 }>;
 
 
-export type IGetAllSchedulesQuery = { getAllSchedules: { docs: Array<{ _id: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, group: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null }> } };
+export type IGetAllSchedulesQuery = { getAllSchedules: { docs: Array<{ _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null }> } };
 
 export type IGetScheduleByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
-export type IGetScheduleByIdQuery = { getScheduleById: { _id: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, group: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
+export type IGetScheduleByIdQuery = { getScheduleById: { _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
 
 export type ICreateSubjectMutationVariables = Exact<{
   data: IUpsertSubjectInput;
@@ -2116,6 +2147,38 @@ useGetAllClassroomsQuery.getKey = (variables?: IGetAllClassroomsQueryVariables) 
 ;
 
 useGetAllClassroomsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllClassroomsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllClassroomsQuery, IGetAllClassroomsQueryVariables>(client, GetAllClassroomsDocument, variables, headers);
+export const GetClassroomByIdDocument = /*#__PURE__*/ `
+    query GetClassroomById($id: ID) {
+  getClassroomById(_id: $id) {
+    _id
+    building
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    updatedAt
+  }
+}
+    `;
+export const useGetClassroomByIdQuery = <
+      TData = IGetClassroomByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetClassroomByIdQueryVariables,
+      options?: UseQueryOptions<IGetClassroomByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetClassroomByIdQuery, TError, TData>(
+      variables === undefined ? ['GetClassroomById'] : ['GetClassroomById', variables],
+      fetcher<IGetClassroomByIdQuery, IGetClassroomByIdQueryVariables>(client, GetClassroomByIdDocument, variables, headers),
+      options
+    );
+
+useGetClassroomByIdQuery.getKey = (variables?: IGetClassroomByIdQueryVariables) => variables === undefined ? ['GetClassroomById'] : ['GetClassroomById', variables];
+;
+
+useGetClassroomByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetClassroomByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetClassroomByIdQuery, IGetClassroomByIdQueryVariables>(client, GetClassroomByIdDocument, variables, headers);
 export const GetAllDepartmentsDocument = /*#__PURE__*/ `
     query GetAllDepartments($filter: DepartmentArgs, $page: Int, $offset: Int, $limit: Int) {
   getAllDepartments(filter: $filter, page: $page, offset: $offset, limit: $limit) {
@@ -2514,6 +2577,40 @@ useGetAllGroupsQuery.getKey = (variables?: IGetAllGroupsQueryVariables) => varia
 ;
 
 useGetAllGroupsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllGroupsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllGroupsQuery, IGetAllGroupsQueryVariables>(client, GetAllGroupsDocument, variables, headers);
+export const GetGroupByIdDocument = /*#__PURE__*/ `
+    query GetGroupById($id: ID) {
+  getGroupById(_id: $id) {
+    _id
+    career
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    period
+    semester
+    updatedAt
+  }
+}
+    `;
+export const useGetGroupByIdQuery = <
+      TData = IGetGroupByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetGroupByIdQueryVariables,
+      options?: UseQueryOptions<IGetGroupByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetGroupByIdQuery, TError, TData>(
+      variables === undefined ? ['GetGroupById'] : ['GetGroupById', variables],
+      fetcher<IGetGroupByIdQuery, IGetGroupByIdQueryVariables>(client, GetGroupByIdDocument, variables, headers),
+      options
+    );
+
+useGetGroupByIdQuery.getKey = (variables?: IGetGroupByIdQueryVariables) => variables === undefined ? ['GetGroupById'] : ['GetGroupById', variables];
+;
+
+useGetGroupByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetGroupByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetGroupByIdQuery, IGetGroupByIdQueryVariables>(client, GetGroupByIdDocument, variables, headers);
 export const GetAllPeriodsDocument = /*#__PURE__*/ `
     query GetAllPeriods($filter: PeriodArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllPeriods(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -2561,6 +2658,41 @@ useGetAllPeriodsQuery.getKey = (variables?: IGetAllPeriodsQueryVariables) => var
 ;
 
 useGetAllPeriodsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllPeriodsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllPeriodsQuery, IGetAllPeriodsQueryVariables>(client, GetAllPeriodsDocument, variables, headers);
+export const GetPeriodByIdDocument = /*#__PURE__*/ `
+    query GetPeriodById($id: ID) {
+  getPeriodById(_id: $id) {
+    _id
+    createdAt
+    deletedAt
+    finalDate
+    isDeleted
+    largeIdentifier
+    name
+    shortIdentifier
+    startDate
+    updatedAt
+  }
+}
+    `;
+export const useGetPeriodByIdQuery = <
+      TData = IGetPeriodByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetPeriodByIdQueryVariables,
+      options?: UseQueryOptions<IGetPeriodByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetPeriodByIdQuery, TError, TData>(
+      variables === undefined ? ['GetPeriodById'] : ['GetPeriodById', variables],
+      fetcher<IGetPeriodByIdQuery, IGetPeriodByIdQueryVariables>(client, GetPeriodByIdDocument, variables, headers),
+      options
+    );
+
+useGetPeriodByIdQuery.getKey = (variables?: IGetPeriodByIdQueryVariables) => variables === undefined ? ['GetPeriodById'] : ['GetPeriodById', variables];
+;
+
+useGetPeriodByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetPeriodByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetPeriodByIdQuery, IGetPeriodByIdQueryVariables>(client, GetPeriodByIdDocument, variables, headers);
 export const CreateScheduleDocument = /*#__PURE__*/ `
     mutation CreateSchedule($data: UpsertScheduleInput!) {
   createSchedule(data: $data) {
@@ -2568,7 +2700,7 @@ export const CreateScheduleDocument = /*#__PURE__*/ `
     createdAt
     deletedAt
     finalTime
-    group
+    classGroup
     isDeleted
     period
     teacher
@@ -2599,7 +2731,7 @@ export const UpdateScheduleDocument = /*#__PURE__*/ `
     createdAt
     deletedAt
     finalTime
-    group
+    classGroup
     isDeleted
     period
     teacher
@@ -2649,10 +2781,11 @@ export const GetAllSchedulesDocument = /*#__PURE__*/ `
   getAllSchedules(filter: $filter, limit: $limit, offset: $offset, page: $page) {
     docs {
       _id
+      classroom
       createdAt
       deletedAt
       finalTime
-      group
+      classGroup
       isDeleted
       period
       teacher
@@ -2686,10 +2819,11 @@ export const GetScheduleByIdDocument = /*#__PURE__*/ `
     query GetScheduleById($id: ID) {
   getScheduleById(_id: $id) {
     _id
+    classroom
     createdAt
     deletedAt
     finalTime
-    group
+    classGroup
     isDeleted
     period
     teacher

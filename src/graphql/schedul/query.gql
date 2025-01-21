@@ -2,10 +2,11 @@ query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: I
   getAllSchedules(filter: $filter, limit: $limit, offset: $offset, page: $page) {
     docs {
       _id
+      classroom
       createdAt
       deletedAt
       finalTime
-      group
+      classGroup
       isDeleted
       period
       teacher
@@ -19,10 +20,11 @@ query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: I
 query GetScheduleById($id: ID) {
   getScheduleById(_id: $id) {
     _id
+    classroom
     createdAt
     deletedAt
     finalTime
-    group
+    classGroup
     isDeleted
     period
     teacher

@@ -1,14 +1,16 @@
 import React from 'react';
+import ScheduleView from '../../components/ui/schedule/scheduleView';
 
 function Schedule() {
   return (
     <div className="grid">
       <div className="col-12">
-        <div className="card">
-          <h5>Empty Page - Dashboard the schedule</h5>
-
-          <p>Use this page to start from scratch and place your custom content.</p>
-        </div>
+        {/* <div className="card">
+          <PageHeadingVacancy isAdmin={isAdminUser} />
+        </div> */}
+      </div>
+      <div className="col-12">
+        <ScheduleView />
       </div>
     </div>
   );

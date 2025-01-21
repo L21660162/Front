@@ -140,6 +140,10 @@
       "finalTime": "Hora de finalización",
       "startTime": "Hora de inicio",
       "weekday": "Día de la semana",
+      "classroomdirectory": "Aulas",
+      "subjectdirector": "Materias",
+      "TimeStart": "Hora de inicio",
+      "TimeEnd": "Hora de finalización",
       "roles": {
         "rules": "Rol del usuario",
         "DIRECTOR": "Director Academico",

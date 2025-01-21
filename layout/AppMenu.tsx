@@ -6,7 +6,6 @@ import { AppMenuItem } from '../types/types';
 import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 import { TokenData } from '../src/store/auth/type';
 import { useAccessTokenData } from '../src/store/auth/store';
-import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 
 function AppMenu() {
   const { t } = useTranslation('common');
@@ -16,20 +15,21 @@ function AppMenu() {
     {
       label: t('sidebar.home.label'),
       items: [
-        { 
-          label: t('sidebar.home.dashboard'), 
-          icon: 'pi pi-fw pi-home', 
-          to: '/home/dashboard' 
+        {
+          label: t('sidebar.home.dashboard'),
+          icon: 'pi pi-fw pi-home',
+          to: '/home/dashboard',
         },
       ],
     },
     {
       label: t('sidebar.app.label'),
-      items: [ 
-        { label: t('sidebar.app.users'),
+      items: [
+        {
+          label: t('sidebar.app.users'),
           icon: 'pi pi-fw pi-list',
-          to: '/user/dashboard' 
-        }
+          to: '/user/dashboard',
+        },
       ],
     },
     {
@@ -38,7 +38,7 @@ function AppMenu() {
         {
           label: t('sidebar.schedules.dashboard'),
           icon: 'pi pi-fw pi-calendar',
-          to: '/organization/dashboard',
+          to: '/schedule/dashboard',
         },
       ],
     },

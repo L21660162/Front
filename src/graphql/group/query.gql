@@ -23,3 +23,17 @@ query GetAllGroups($filter: GroupArgs, $limit: Int, $offset: Int, $page: Int) {
     totalPages
   }
 }
+
+query GetGroupById($id: ID) {
+  getGroupById(_id: $id) {
+    _id
+    career
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    period
+    semester
+    updatedAt
+  }
+}

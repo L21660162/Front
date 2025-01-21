@@ -4,7 +4,7 @@ mutation CreateSchedule($data: UpsertScheduleInput!) {
     createdAt
     deletedAt
     finalTime
-    group
+    classGroup
     isDeleted
     period
     teacher
@@ -20,7 +20,7 @@ mutation UpdateSchedule($data: UpdateScheduleInput!) {
     createdAt
     deletedAt
     finalTime
-    group
+    classGroup
     isDeleted
     period
     teacher

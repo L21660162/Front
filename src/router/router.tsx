@@ -73,15 +73,7 @@ const justifiyRoute = new Route({
 const scheduleRoute = new Route({
   getParentRoute: () => rootRoute,
   path: 'schedule/dashboard',
-  component: () => {
-    const { roles } = useAccessTokenData() as TokenData;
-    const allowedroles = ['DIRTECTOR_ACADEMICO', 'SUBDIRECTOR_ACADEMICO', 'JEFE_ACADEMICO'];
-
-    if (allowedroles.some((role) => roles.includes(role))) {
-      return <App Component={Schedule} />;
-    }
-    return <App Component={NotFoundPage} />;
-  },
+  component: () => <App Component={Schedule} />,
 });
 
 const eventsRoute = new Route({

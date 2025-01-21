@@ -24,3 +24,18 @@ query GetAllPeriods($filter: PeriodArgs, $limit: Int, $offset: Int, $page: Int) 
     totalPages
   }
 }
+
+query GetPeriodById($id: ID) {
+  getPeriodById(_id: $id) {
+    _id
+    createdAt
+    deletedAt
+    finalDate
+    isDeleted
+    largeIdentifier
+    name
+    shortIdentifier
+    startDate
+    updatedAt
+  }
+}
