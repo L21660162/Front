@@ -13,6 +13,7 @@ query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: I
       startTime
       subject
       updatedAt
+      weekday
     }
   }
 }

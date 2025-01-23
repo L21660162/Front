@@ -22,6 +22,11 @@ interface ITeacherSearchResult {
   fullName?: string;
 }
 
+interface ITeacherSearchResult {
+  teacher?: string | null;
+  schedule?: [ISchedule] | null;
+}
+
 function ScheduleView() {
   const { _id: userId } = useAccessTokenData() as TokenData;
   const { t } = useTranslation('common');
@@ -45,6 +50,8 @@ function ScheduleView() {
   // );
   // const [filterTeacher, setFilterTeacher] = useState<string[] | undefined>([]);
   const [filterstudents, setFilterStudents] = useState<string[] | undefined>([]);
+  const [dataTeacherSerch, setDatsTeacherSerch] = useState<ITeacherSearchResult[] | undefined>();
+  const [schedule, setSchedules] = useState<ISchedule>();
   const [code, setCode] = useState<string>('');
 
   const {
@@ -86,7 +93,7 @@ function ScheduleView() {
 
   const search = (event) => {
     setTimeout(() => {
-      let query
+      let query;
       if (!event.query.trim().length) {
         query = [...teacherSearchResult];
       } else {
@@ -94,7 +101,7 @@ function ScheduleView() {
           return (
             teacher.fullName.toLowerCase().includes(event.query.toLowerCase()) ||
             teacher.code.toLowerCase().includes(event.query.toLowerCase())
-          )
+          );
         });
       }
       setFilterStudents(query);
@@ -138,6 +145,36 @@ function ScheduleView() {
       setTeacherSelectedId(userId);
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (allScheduleData) {
+      const { docs } = allScheduleData.getAllSchedules;
+      setDatsTeacherSerch({
+        teacher: teacherSelectId,
+        schedule: docs,
+      });
+    }
+  }, [allScheduleData]);
+
+  useEffect(() => {
+    if (dataTeacherSerch) {
+      const Alldata = dataTeacherSerch;
+      const allSchedules = Alldata.schedule;
+      const grouped = allSchedules.reduce((acc, schedule) => {
+        if (schedule && schedule.weekday) {
+          if (acc[schedule.weekday]) {
+            acc[schedule.weekday].push(schedule);
+          } else {
+            acc[schedule.weekday] = [schedule];
+          }
+        }
+        return acc;
+      }, {});
+      setSchedules(grouped);
+    }
+  }, [dataTeacherSerch]);
+
+  console.log('dataTeacherSerch', dataTeacherSerch);
 
   // useEffect(() => {
   //   if (StudentServiceStatusData) {
@@ -185,8 +222,6 @@ function ScheduleView() {
   //   }
   // };
 
-
-
   // // LOGICA PARA ABRIR LOS MODALES 1 SOLA VEZ
   // const showDetails = (vacancy: IVacancy) => {
   //   setSelectedSchedule(vacancy);
@@ -205,38 +240,48 @@ function ScheduleView() {
   //   setVisibleDeleteConfirm(true);
   // };
 
+  const dataviewGridItem = () => {
+    const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const time = (data) => {
+      return new Date(data).toLocaleTimeString();
+    };
 
-  const dataviewGridItem = (data: ISchedule) => {
     return (
       <div className="flex gap-4">
-        {Object.entries(groupedProducts).map(([day, schedules]) => (
-          <div key={day} className="flex flex-column gap-3">
-            <h3 className="text-center">Día {day}</h3>
-            {schedules.map((product) => (
-              <div
-                key={`${product.dia}-${product.hora_inicio}-${product.grupo}`}
-                className="p-2 border-1 surface-border border-round"
-              >
-                <div className="flex flex-wrap align-items-center justify-content-between gap-2">
-                  <div className="flex align-items-center gap-2">
-                    <i className="pi pi-tag"></i>
-                    <span className="font-semibold">{product.hora_inicio}</span>
+        {schedule && Object.keys(schedule).length > 0 ? (
+          Object.entries(schedule).map(([day, schedules]) => (
+            <div key={day} className="flex flex-column gap-3">
+              <h3 className="text-center">{daysOfWeek[day - 1]}</h3>
+              {schedules.map((product) => (
+                <div
+                  key={`${product.weekday}-${product.startTime}-${product.grupo}`}
+                  className="p-2 border-1 surface-border border-round"
+                >
+                  <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+                    <div className="flex align-items-center gap-2">
+                      <i className="pi pi-tag"></i>
+                      <span className="font-semibold">{time(product.startTime)}</span>
+                    </div>
+                    <div className="flex align-items-center gap-2">
+                      <i className="pi pi-tag"></i>
+                      <span className="font-semibold">{product.hora_fin}</span>
+                    </div>
                   </div>
-                  <div className="flex align-items-center gap-2">
-                    <i className="pi pi-tag"></i>
-                    <span className="font-semibold">{product.hora_fin}</span>
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <div className="font-bold">{product.materia}</div>
+                  </div>
+                  <div className="">
+                    <span className="font-semibold text-center">{product.aula}</span>
                   </div>
                 </div>
-                <div className="flex flex-column align-items-center gap-3 py-5">
-                  <div className="font-bold">{product.materia}</div>
-                </div>
-                <div className="">
-                  <span className="font-semibold text-center">{product.aula}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          ))
+        ) : (
+          <div className="text-center">
+            <h3>No hay registros disponibles</h3>
           </div>
-        ))}
+        )}
       </div>
     );
   };
@@ -324,10 +369,10 @@ function ScheduleView() {
         <div className="card">
           <h5>{t('global.dictionary.vacancyList')}</h5>
           <DataView
-            value={filteredValue} //  || listValue
+            value={[dataTeacherSerch]} //  || listValue
             layout={layout}
             //sortField={sortField}
-            itemTemplate={(data) => itemTemplate(data, layout, selectedStatus)}
+            itemTemplate={(data) => itemTemplate(data, layout, null)}
             emptyMessage={String(t('global.dictionary.Novacancy'))}
           />
         </div>

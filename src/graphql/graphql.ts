@@ -1670,7 +1670,7 @@ export type IGetAllSchedulesQueryVariables = Exact<{
 }>;
 
 
-export type IGetAllSchedulesQuery = { getAllSchedules: { docs: Array<{ _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null }> } };
+export type IGetAllSchedulesQuery = { getAllSchedules: { docs: Array<{ _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null, weekday: number }> } };
 
 export type IGetScheduleByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -2792,6 +2792,7 @@ export const GetAllSchedulesDocument = /*#__PURE__*/ `
       startTime
       subject
       updatedAt
+      weekday
     }
   }
 }
