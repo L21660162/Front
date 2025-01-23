@@ -1,0 +1,47 @@
+query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllSchedules(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      classGroup
+      classroom
+      createdAt
+      deletedAt
+      finalTime
+      isDeleted
+      period
+      startTime
+      subject
+      teacher
+      updatedAt
+      weekday
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+
+query GetScheduleById($id: ID) {
+  getScheduleById(_id: $id) {
+    _id
+    classGroup
+    classroom
+    createdAt
+    deletedAt
+    finalTime
+    isDeleted
+    period
+    startTime
+    subject
+    teacher
+    updatedAt
+    weekday
+  }
+}

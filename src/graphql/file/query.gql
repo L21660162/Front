@@ -1,41 +1,39 @@
-query GetAllFiles(
-  $filter: FileArgs
-  $lean: Boolean
-  $leanWithId: Boolean
-  $limit: Int!
-  $offset: Int
-  $page: Int!
-  $populate: String
-  $select: String
-  $sort: JSON
-) {
-  getAllFiles(
-    filter: $filter
-    lean: $lean
-    leanWithId: $leanWithId
-    limit: $limit
-    offset: $offset
-    page: $page
-    populate: $populate
-    select: $select
-    sort: $sort
-  ) {
+query GetAllFiles($filter: FileArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllFiles(filter: $filter, limit: $limit, offset: $offset, page: $page) {
     docs {
       _id
-      approvedBy {
-        status
-        userId
+      approvedBy
+      comments {
+        _id
+        comment
+        createdAt
+        createdBy
       }
       createdAt
       deletedAt
-      description
       extension
       isDeleted
       nameFile
+      path
       size
       type
       updatedAt
-      uploadedBy
+      uploadedBy {
+        _id
+        createdAt
+        deletedAt
+        department
+        email
+        firstName
+        gender
+        isDeleted
+        lastName
+        middleName
+        password
+        rfc
+        roles
+        updatedAt
+      }
     }
     hasNextPage
     hasPrevPage
@@ -53,19 +51,37 @@ query GetAllFiles(
 query GetFileById($id: ID) {
   getFileById(_id: $id) {
     _id
-    approvedBy {
-      status
-      userId
+    approvedBy
+    comments {
+      _id
+      comment
+      createdAt
+      createdBy
     }
     createdAt
     deletedAt
-    description
     extension
     isDeleted
     nameFile
+    path
     size
     type
     updatedAt
-    uploadedBy
+    uploadedBy {
+      _id
+      createdAt
+      deletedAt
+      department
+      email
+      firstName
+      gender
+      isDeleted
+      lastName
+      middleName
+      password
+      rfc
+      roles
+      updatedAt
+    }
   }
 }

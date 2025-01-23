@@ -1,14 +1,17 @@
 import React from 'react';
+import DepartamentCrud from '../../components/ui/departament/departamentCrud';
+import PageHeadingDepartament from '../../components/ui/departament/departamentHeading';
 
 function DepartmentsSettings() {
   return (
     <div className="grid">
       <div className="col-12">
         <div className="card">
-          <h5>Empty Page - Dashboard the Departament</h5>
-
-          <p>Use this page to start from scratch and place your custom content.</p>
+          <PageHeadingDepartament />
         </div>
+      </div>
+      <div className="col-12">
+        <DepartamentCrud />
       </div>
     </div>
   );

@@ -14,39 +14,37 @@ import { Query } from '@tanstack/react-query';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-IBuilding,
-    IUpdateBuildingInput,
-    IGetAllBuildingsQuery,
-useCreateBuildingMutation,
+    IDepartment,
+    ICreateDepartmentInput,
+    IGetAllDepartmentsQuery,
+    useCreateDepartmentMutation,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
-type buildingFormProps = {
+type departmentFormProps = {
 headerTitle: string;
 };
-type buildingFormPropsAndDialogStore = buildingFormProps & DialogStore;
+type departmentFormPropsAndDialogStore = departmentFormProps & DialogStore;
 
-export default function buildingDialogForm({
+export default function departmentDialogForm({
 headerTitle,
 visible,
 setVisible,
-}: PropsWithChildren<buildingFormPropsAndDialogStore>) {
+}: PropsWithChildren<departmentFormPropsAndDialogStore>) {
 const { t } = useTranslation('common');
-const navigate = useNavigate({ from: '/settings/building' });
+const navigate = useNavigate({ from: '/settings/career' });
 const toast = useRef<Toast>(null);
 
-const { mutate } = useCreateBuildingMutation<IApiError>(GRAPHQL_CLIENT, {
+const { mutate } = useCreateDepartmentMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
     toast.current?.show({
         severity: 'success',
         summary: t('global.toast.success.summary'),
-        detail: t('global.toast.success.detail.buildingCreateSuccess'),
+        detail: t('global.toast.success.detail.departmentCreateSuccess'),
     });
-
     setTimeout(() => {
-        navigate({ to: '/settings/building' });
         window.location.reload();
-    }, 200);
+      }, 50);
     setIsButtonDisabld(false);
     },
     onError: (errorResponse: IApiError) => {
@@ -67,15 +65,14 @@ const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
 
 
 const {
-    handleSubmit,
     control,
     formState: { errors },
     reset,
-} = useForm<IUpdateBuildingInput>({
+} = useForm<ICreateDepartmentInput>({
     defaultValues: {
-    letter: '',
-    name: '',
-
+        areaKey: '',
+        name: '',
+        departmentBoss: null,
     },
 });
 
@@ -111,7 +108,7 @@ return (
     <form className="p-fluid">
         <div className="label">
         <label htmlFor="contact">
-            <b>{t('global.dictionary.building')}</b> <br />
+            <b>{t('global.dictionary.department')}</b> <br />
         </label>
         </div>
         <hr />
@@ -122,7 +119,7 @@ return (
             name="name"
             control={control}
             rules={{
-                required: t('global.forms.validation.buildingName') as string,
+                required: t('global.forms.validation.departmentName') as string,
             }}
             render={({ field, fieldState }) => (
                 <InputText
@@ -133,7 +130,7 @@ return (
             )}
             />
             <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-            {t('global.dictionary.buildingName')}*
+            {t('global.dictionary.departmentName')}*
             </label>
         </span>
         {errors.name && <small className="p-error">{errors.name?.message}</small>}
@@ -143,10 +140,10 @@ return (
         <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-            name="letter"
+            name="areaKey"
             control={control}
             rules={{
-                required: t('global.forms.validation.abbreviationbuilding') as string,
+                required: t('global.forms.validation.abbreviationdepartment') as string,
             }}
             render={({ field, fieldState }) => (
                 <InputText
@@ -158,7 +155,7 @@ return (
             )}
             />
             <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-            {t('global.dictionary.abbreviationbuilding')}*
+            {t('global.dictionary.abbreviationdepartment')}*
             </label>
         </span>
         {errors.name && <small className="p-error">{errors.name?.message}</small>}

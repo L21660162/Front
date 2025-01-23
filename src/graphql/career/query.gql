@@ -1,25 +1,17 @@
-query GetAllCareers($filter: CareerArgs, $limit: Int!, $offset: Int, $page: Int!) {
+query GetAllCareers($filter: CareerArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllCareers(filter: $filter, limit: $limit, offset: $offset, page: $page) {
     docs {
       _id
-      name
+      abbreviationCareer
+      createdAt
+      credits
+      deletedAt
       description
       duration
-      credits
-      organizationId
-      instituteId
-      location {
-        address
-        city
-        state
-        suburb
-        postalCode
-      }
       isCertified
-      createdAt
-      updatedAt
       isDeleted
-      deletedAt
+      name
+      updatedAt
     }
     hasNextPage
     hasPrevPage
@@ -34,18 +26,18 @@ query GetAllCareers($filter: CareerArgs, $limit: Int!, $offset: Int, $page: Int!
   }
 }
 
-query getCareerById($id: ID) {
-  getFileById(_id: $id) {
+query GetCareerById($id: ID) {
+  getCareerById(_id: $id) {
     _id
+    abbreviationCareer
     createdAt
+    credits
     deletedAt
     description
-    extension
+    duration
+    isCertified
     isDeleted
-    nameFile
-    size
-    type
+    name
     updatedAt
-    uploadedBy
   }
 }

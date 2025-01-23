@@ -1,40 +1,151 @@
 mutation UpdateFile($data: UpdateFile!) {
   updateFile(data: $data) {
     _id
-    approvedBy {
-      status
-      userId
+    approvedBy
+    comments {
+      _id
+      comment
+      createdAt
+      createdBy
     }
     createdAt
     deletedAt
-    description
     extension
     isDeleted
     nameFile
+    path
     size
     type
     updatedAt
-    uploadedBy
+    uploadedBy {
+      _id
+      createdAt
+      deletedAt
+      department
+      email
+      firstName
+      gender
+      isDeleted
+      lastName
+      middleName
+      password
+      rfc
+      roles
+      updatedAt
+    }
   }
 }
 
-mutation CreateFile($data: CreateFile!) {
-  createFile(data: $data) {
+mutation UpdateFile($data: UpdateFile!) {
+  updateFile(data: $data) {
     _id
-    approvedBy {
-      status
-      userId
+    approvedBy
+    comments {
+      _id
+      comment
+      createdAt
+      createdBy
     }
     createdAt
     deletedAt
-    description
     extension
     isDeleted
     nameFile
-    size
+    path
     size
     type
     updatedAt
-    uploadedBy
+    uploadedBy {
+      _id
+      createdAt
+      deletedAt
+      department
+      email
+      firstName
+      gender
+      isDeleted
+      lastName
+      middleName
+      password
+      rfc
+      roles
+      updatedAt
+    }
+  }
+}
+
+mutation CreateFileComment($data: CreateFileCommentInput!) {
+  createFileComment(data: $data) {
+    _id
+    approvedBy
+    comments {
+      _id
+      comment
+      createdAt
+      createdBy
+    }
+    createdAt
+    deletedAt
+    extension
+    isDeleted
+    nameFile
+    path
+    size
+    type
+    updatedAt
+    uploadedBy {
+      _id
+      createdAt
+      deletedAt
+      department
+      email
+      firstName
+      gender
+      isDeleted
+      lastName
+      middleName
+      password
+      rfc
+      roles
+      updatedAt
+    }
+  }
+}
+
+mutation ApproveFile($data: ApproveFileInput!) {
+  approveFile(data: $data) {
+    _id
+    approvedBy
+    comments {
+      _id
+      comment
+      createdAt
+      createdBy
+    }
+    createdAt
+    deletedAt
+    extension
+    isDeleted
+    nameFile
+    path
+    size
+    type
+    updatedAt
+    uploadedBy {
+      _id
+      createdAt
+      deletedAt
+      department
+      email
+      firstName
+      gender
+      isDeleted
+      lastName
+      middleName
+      password
+      rfc
+      roles
+      updatedAt
+    }
   }
 }

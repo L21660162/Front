@@ -1,11 +1,18 @@
-subscription Subscription {
+subscription UserAdded {
   userAdded {
     _id
     createdAt
+    deletedAt
+    department
     email
     firstName
+    gender
+    isDeleted
     lastName
     middleName
+    password
+    rfc
     roles
+    updatedAt
   }
 }

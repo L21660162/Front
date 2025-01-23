@@ -1,0 +1,35 @@
+mutation CreateSubject($data: UpsertSubjectInput!) {
+  createSubject(data: $data) {
+    _id
+    areaKey
+    createdAt
+    deletedAt
+    isDeleted
+    largeName
+    schoolarLevel
+    shortName
+    subjectType
+    updatedAt
+  }
+}
+
+mutation UpdateSubject($data: UpdateSubjectInput!) {
+  updateSubject(data: $data) {
+    _id
+    areaKey
+    createdAt
+    deletedAt
+    isDeleted
+    largeName
+    schoolarLevel
+    shortName
+    subjectType
+    updatedAt
+  }
+}
+
+mutation DeleteSubject($data: SubjectIdArgs!) {
+  deleteSubject(data: $data) {
+    deleted
+  }
+}

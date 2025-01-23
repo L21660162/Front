@@ -1,0 +1,31 @@
+mutation CreateDepartment($data: createDepartmentInput!) {
+  createDepartment(data: $data) {
+    _id
+    areaKey
+    createdAt
+    deletedAt
+    departmentBoss
+    isDeleted
+    name
+    updatedAt
+  }
+}
+
+mutation UpdateDepartment($data: UpdateDepartmentInput!) {
+  updateDepartment(data: $data) {
+    _id
+    areaKey
+    createdAt
+    deletedAt
+    departmentBoss
+    isDeleted
+    name
+    updatedAt
+  }
+}
+
+mutation DeleteDepartment($data: DepartmentIdArgs!) {
+  deleteDepartment(data: $data) {
+    deleted
+  }
+}

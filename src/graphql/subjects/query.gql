@@ -1,0 +1,41 @@
+query GetAllSubjects($filter: SubjectArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllSubjects(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      areaKey
+      createdAt
+      deletedAt
+      isDeleted
+      largeName
+      schoolarLevel
+      shortName
+      subjectType
+      updatedAt
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+
+query GetSubjectById($id: ID) {
+  getSubjectById(_id: $id) {
+    _id
+    areaKey
+    createdAt
+    deletedAt
+    isDeleted
+    largeName
+    schoolarLevel
+    shortName
+    subjectType
+    updatedAt
+  }
+}

@@ -1,23 +1,15 @@
 mutation CreateCareer($data: CreateCareerInput!) {
   createCareer(data: $data) {
     _id
+    abbreviationCareer
     createdAt
     credits
     deletedAt
     description
     duration
-    instituteId
     isCertified
     isDeleted
-    location {
-      address
-      city
-      state
-      suburb
-      postalCode
-    }
     name
-    organizationId
     updatedAt
   }
 }
@@ -25,23 +17,15 @@ mutation CreateCareer($data: CreateCareerInput!) {
 mutation UpdateCareer($data: UpdateCareerInput!) {
   updateCareer(data: $data) {
     _id
+    abbreviationCareer
     createdAt
     credits
     deletedAt
     description
     duration
-    instituteId
     isCertified
     isDeleted
-    location {
-      address
-      city
-      state
-      suburb
-      postalCode
-    }
     name
-    organizationId
     updatedAt
   }
 }
