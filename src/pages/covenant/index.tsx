@@ -1,17 +1,20 @@
 import React from 'react';
+import PageHeading from '../../components/ui/schedule/scheduleHeding';
+import ScheduleCrud from '../../components/ui/user/CourseForm';
 
-function Dashboard() {
+function ScheduleSettings() {
   return (
     <div className="grid">
       <div className="col-12">
         <div className="card">
-          <h5>Empty Page - Dashboard the Covenant</h5>
-
-          <p>Use this page to start from scratch and place your custom content.</p>
+          <PageHeading />
         </div>
+      </div>
+      <div className="col-12">
+        <ScheduleCrud />
       </div>
     </div>
   );
 }
 
-export default Dashboard;
+export default ScheduleSettings;

@@ -81,6 +81,7 @@ export interface IBuilding {
   isDeleted: Scalars['Boolean']['output'];
   letter?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  picturePath?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 }
 
@@ -134,6 +135,7 @@ export interface IClassroom {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   identifier: Scalars['String']['output'];
   isDeleted: Scalars['Boolean']['output'];
+  picturePath?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 }
 
@@ -244,7 +246,6 @@ export interface IFileIdArgs {
 
 /** Define the file type that was uploaded by the student */
 export enum IFileType {
-  /** Foto de perfil */
   FotoPerfil = 'FOTO_PERFIL',
   /** Justificante */
   Justificante = 'JUSTIFICANTE',
@@ -368,6 +369,8 @@ export interface IMutation {
   updateSchedule: ISchedule;
   updateSubject: ISubject;
   updateUser: IUser;
+  uploadBuildingPicture: IBuilding;
+  uploadClassroomPicture: IClassroom;
   uploadFile: IFile;
   upsertUser: IUser;
 }
@@ -570,6 +573,16 @@ export interface IMutationUpdateSubjectArgs {
 
 export interface IMutationUpdateUserArgs {
   data: IUpdateUserInput;
+}
+
+
+export interface IMutationUploadBuildingPictureArgs {
+  data: IUploadPictureBuildingInput;
+}
+
+
+export interface IMutationUploadClassroomPictureArgs {
+  data: IUploadPictureClassroomInput;
 }
 
 
@@ -1324,6 +1337,20 @@ export interface IUploadFileInput {
   userId: Scalars['ID']['input'];
 }
 
+/** Update building info input */
+export interface IUploadPictureBuildingInput {
+  _id: Scalars['ID']['input'];
+  picture: Scalars['Upload']['input'];
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+/** Update classroom info input */
+export interface IUploadPictureClassroomInput {
+  _id: Scalars['ID']['input'];
+  picture: Scalars['Upload']['input'];
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
 /** Create attendance input */
 export interface IUpsertAttendanceInput {
   firstPass: IAttendanceStatus;
@@ -1492,6 +1519,13 @@ export type IRefreshTokenQueryVariables = Exact<{
 
 export type IRefreshTokenQuery = { refreshToken: { accessToken: string, accessTokenExpiresIn: string, type: string } };
 
+export type IUploadBuildingPictureMutationVariables = Exact<{
+  data: IUploadPictureBuildingInput;
+}>;
+
+
+export type IUploadBuildingPictureMutation = { uploadBuildingPicture: { _id: string, createdAt?: any | null, deletedAt?: any | null, isDeleted: boolean, letter?: string | null, name: string, picturePath?: string | null, updatedAt?: any | null } };
+
 export type ICreateCareerMutationVariables = Exact<{
   data: ICreateCareerInput;
 }>;
@@ -1529,6 +1563,13 @@ export type IGetCareerByIdQueryVariables = Exact<{
 
 
 export type IGetCareerByIdQuery = { getCareerById: { _id: string, abbreviationCareer: string, createdAt: any, credits: number, deletedAt?: any | null, description: string, duration: string, isCertified: boolean, isDeleted: boolean, name: string, updatedAt: any } };
+
+export type IUploadClassroomPictureMutationVariables = Exact<{
+  data: IUploadPictureClassroomInput;
+}>;
+
+
+export type IUploadClassroomPictureMutation = { uploadClassroomPicture: { _id: string, building: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, picturePath?: string | null, updatedAt?: any | null } };
 
 export type IGetAllClassroomsQueryVariables = Exact<{
   filter?: InputMaybe<IClassroomArgs>;
@@ -1936,6 +1977,34 @@ useRefreshTokenQuery.getKey = (variables: IRefreshTokenQueryVariables) => ['Refr
 ;
 
 useRefreshTokenQuery.fetcher = (client: GraphQLClient, variables: IRefreshTokenQueryVariables, headers?: RequestInit['headers']) => fetcher<IRefreshTokenQuery, IRefreshTokenQueryVariables>(client, RefreshTokenDocument, variables, headers);
+export const UploadBuildingPictureDocument = /*#__PURE__*/ `
+    mutation UploadBuildingPicture($data: UploadPictureBuildingInput!) {
+  uploadBuildingPicture(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    isDeleted
+    letter
+    name
+    picturePath
+    updatedAt
+  }
+}
+    `;
+export const useUploadBuildingPictureMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUploadBuildingPictureMutation, TError, IUploadBuildingPictureMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUploadBuildingPictureMutation, TError, IUploadBuildingPictureMutationVariables, TContext>(
+      ['UploadBuildingPicture'],
+      (variables?: IUploadBuildingPictureMutationVariables) => fetcher<IUploadBuildingPictureMutation, IUploadBuildingPictureMutationVariables>(client, UploadBuildingPictureDocument, variables, headers)(),
+      options
+    );
+useUploadBuildingPictureMutation.fetcher = (client: GraphQLClient, variables: IUploadBuildingPictureMutationVariables, headers?: RequestInit['headers']) => fetcher<IUploadBuildingPictureMutation, IUploadBuildingPictureMutationVariables>(client, UploadBuildingPictureDocument, variables, headers);
 export const CreateCareerDocument = /*#__PURE__*/ `
     mutation CreateCareer($data: CreateCareerInput!) {
   createCareer(data: $data) {
@@ -2103,6 +2172,34 @@ useGetCareerByIdQuery.getKey = (variables?: IGetCareerByIdQueryVariables) => var
 ;
 
 useGetCareerByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetCareerByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetCareerByIdQuery, IGetCareerByIdQueryVariables>(client, GetCareerByIdDocument, variables, headers);
+export const UploadClassroomPictureDocument = /*#__PURE__*/ `
+    mutation UploadClassroomPicture($data: UploadPictureClassroomInput!) {
+  uploadClassroomPicture(data: $data) {
+    _id
+    building
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    picturePath
+    updatedAt
+  }
+}
+    `;
+export const useUploadClassroomPictureMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUploadClassroomPictureMutation, TError, IUploadClassroomPictureMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUploadClassroomPictureMutation, TError, IUploadClassroomPictureMutationVariables, TContext>(
+      ['UploadClassroomPicture'],
+      (variables?: IUploadClassroomPictureMutationVariables) => fetcher<IUploadClassroomPictureMutation, IUploadClassroomPictureMutationVariables>(client, UploadClassroomPictureDocument, variables, headers)(),
+      options
+    );
+useUploadClassroomPictureMutation.fetcher = (client: GraphQLClient, variables: IUploadClassroomPictureMutationVariables, headers?: RequestInit['headers']) => fetcher<IUploadClassroomPictureMutation, IUploadClassroomPictureMutationVariables>(client, UploadClassroomPictureDocument, variables, headers);
 export const GetAllClassroomsDocument = /*#__PURE__*/ `
     query GetAllClassrooms($filter: ClassroomArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllClassrooms(filter: $filter, limit: $limit, offset: $offset, page: $page) {
