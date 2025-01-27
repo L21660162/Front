@@ -1,5 +1,5 @@
-query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: Int) {
-  getAllSchedules(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: Int, $sort: JSON) {
+  getAllSchedules(filter: $filter, limit: $limit, offset: $offset, page: $page, sort: $sort) {
     docs {
       _id
       classroom
@@ -29,8 +29,26 @@ query GetScheduleById($id: ID) {
     isDeleted
     period
     teacher
+    weekday
     startTime
     subject
     updatedAt
+  }
+}
+
+query GetSchedulesFormatted($id: ID) {
+  getSchedulesFormatted(_id: $id) {
+    _id
+    classroomIdentifier
+    finalTime
+    groupIdentifier
+    startTime
+    subjectLargeName
+    subjectShortName
+    teacherFirstName
+    teacherLastName
+    teacherMiddleName
+    teacherRfc
+    weekday
   }
 }

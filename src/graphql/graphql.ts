@@ -81,6 +81,7 @@ export interface IBuilding {
   isDeleted: Scalars['Boolean']['output'];
   letter?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  picturePath?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 }
 
@@ -134,6 +135,7 @@ export interface IClassroom {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   identifier: Scalars['String']['output'];
   isDeleted: Scalars['Boolean']['output'];
+  picturePath?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 }
 
@@ -244,7 +246,6 @@ export interface IFileIdArgs {
 
 /** Define the file type that was uploaded by the student */
 export enum IFileType {
-  /** Foto de perfil */
   FotoPerfil = 'FOTO_PERFIL',
   /** Justificante */
   Justificante = 'JUSTIFICANTE',
@@ -368,6 +369,8 @@ export interface IMutation {
   updateSchedule: ISchedule;
   updateSubject: ISubject;
   updateUser: IUser;
+  uploadBuildingPicture: IBuilding;
+  uploadClassroomPicture: IClassroom;
   uploadFile: IFile;
   upsertUser: IUser;
 }
@@ -570,6 +573,16 @@ export interface IMutationUpdateSubjectArgs {
 
 export interface IMutationUpdateUserArgs {
   data: IUpdateUserInput;
+}
+
+
+export interface IMutationUploadBuildingPictureArgs {
+  data: IUploadPictureBuildingInput;
+}
+
+
+export interface IMutationUploadClassroomPictureArgs {
+  data: IUploadPictureClassroomInput;
 }
 
 
@@ -860,6 +873,7 @@ export interface IQuery {
   getPeriodos: Array<IPeriodos>;
   getProfesores: Array<IProfesores>;
   getScheduleById: ISchedule;
+  getSchedulesFormatted: Array<ISchedulesFormatted>;
   getSubjectById: ISubject;
   getUserById: IUser;
   me: IUser;
@@ -1092,6 +1106,12 @@ export interface IQueryGetScheduleByIdArgs {
 }
 
 
+export interface IQueryGetSchedulesFormattedArgs {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+
 export interface IQueryGetSubjectByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
@@ -1161,6 +1181,22 @@ export interface IScheduleArgs {
 export interface IScheduleIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+/** Object type for dashboard statistics */
+export interface ISchedulesFormatted {
+  _id: Scalars['ID']['output'];
+  classroomIdentifier: Scalars['String']['output'];
+  finalTime: Scalars['DateTime']['output'];
+  groupIdentifier: Scalars['String']['output'];
+  startTime: Scalars['DateTime']['output'];
+  subjectLargeName: Scalars['String']['output'];
+  subjectShortName: Scalars['String']['output'];
+  teacherFirstName: Scalars['String']['output'];
+  teacherLastName: Scalars['String']['output'];
+  teacherMiddleName?: Maybe<Scalars['String']['output']>;
+  teacherRfc: Scalars['String']['output'];
+  weekday: Scalars['Float']['output'];
 }
 
 /** Input for user SignIn */
@@ -1324,6 +1360,20 @@ export interface IUploadFileInput {
   userId: Scalars['ID']['input'];
 }
 
+/** Upload picture of the building input */
+export interface IUploadPictureBuildingInput {
+  _id: Scalars['ID']['input'];
+  picture: Scalars['Upload']['input'];
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+/** Upload picture of the classroom input */
+export interface IUploadPictureClassroomInput {
+  _id: Scalars['ID']['input'];
+  picture: Scalars['Upload']['input'];
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
 /** Create attendance input */
 export interface IUpsertAttendanceInput {
   firstPass: IAttendanceStatus;
@@ -1417,6 +1467,7 @@ export interface IUser {
   lastName: Scalars['String']['output'];
   middleName?: Maybe<Scalars['String']['output']>;
   password: Scalars['String']['output'];
+  profilePicture?: Maybe<Scalars['String']['output']>;
   rfc: Scalars['String']['output'];
   roles: Array<IRoles>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -1667,6 +1718,7 @@ export type IGetAllSchedulesQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Scalars['JSON']['input']>;
 }>;
 
 
@@ -1677,7 +1729,14 @@ export type IGetScheduleByIdQueryVariables = Exact<{
 }>;
 
 
-export type IGetScheduleByIdQuery = { getScheduleById: { _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
+export type IGetScheduleByIdQuery = { getScheduleById: { _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, weekday: number, startTime: any, subject: string, updatedAt?: any | null } };
+
+export type IGetSchedulesFormattedQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type IGetSchedulesFormattedQuery = { getSchedulesFormatted: Array<{ _id: string, classroomIdentifier: string, finalTime: any, groupIdentifier: string, startTime: any, subjectLargeName: string, subjectShortName: string, teacherFirstName: string, teacherLastName: string, teacherMiddleName?: string | null, teacherRfc: string, weekday: number }> };
 
 export type ICreateSubjectMutationVariables = Exact<{
   data: IUpsertSubjectInput;
@@ -2777,8 +2836,14 @@ export const useDeleteScheduleMutation = <
     );
 useDeleteScheduleMutation.fetcher = (client: GraphQLClient, variables: IDeleteScheduleMutationVariables, headers?: RequestInit['headers']) => fetcher<IDeleteScheduleMutation, IDeleteScheduleMutationVariables>(client, DeleteScheduleDocument, variables, headers);
 export const GetAllSchedulesDocument = /*#__PURE__*/ `
-    query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: Int) {
-  getAllSchedules(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: Int, $sort: JSON) {
+  getAllSchedules(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    page: $page
+    sort: $sort
+  ) {
     docs {
       _id
       classroom
@@ -2828,6 +2893,7 @@ export const GetScheduleByIdDocument = /*#__PURE__*/ `
     isDeleted
     period
     teacher
+    weekday
     startTime
     subject
     updatedAt
@@ -2853,6 +2919,43 @@ useGetScheduleByIdQuery.getKey = (variables?: IGetScheduleByIdQueryVariables) =>
 ;
 
 useGetScheduleByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetScheduleByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetScheduleByIdQuery, IGetScheduleByIdQueryVariables>(client, GetScheduleByIdDocument, variables, headers);
+export const GetSchedulesFormattedDocument = /*#__PURE__*/ `
+    query GetSchedulesFormatted($id: ID) {
+  getSchedulesFormatted(_id: $id) {
+    _id
+    classroomIdentifier
+    finalTime
+    groupIdentifier
+    startTime
+    subjectLargeName
+    subjectShortName
+    teacherFirstName
+    teacherLastName
+    teacherMiddleName
+    teacherRfc
+    weekday
+  }
+}
+    `;
+export const useGetSchedulesFormattedQuery = <
+      TData = IGetSchedulesFormattedQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetSchedulesFormattedQueryVariables,
+      options?: UseQueryOptions<IGetSchedulesFormattedQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetSchedulesFormattedQuery, TError, TData>(
+      variables === undefined ? ['GetSchedulesFormatted'] : ['GetSchedulesFormatted', variables],
+      fetcher<IGetSchedulesFormattedQuery, IGetSchedulesFormattedQueryVariables>(client, GetSchedulesFormattedDocument, variables, headers),
+      options
+    );
+
+useGetSchedulesFormattedQuery.getKey = (variables?: IGetSchedulesFormattedQueryVariables) => variables === undefined ? ['GetSchedulesFormatted'] : ['GetSchedulesFormatted', variables];
+;
+
+useGetSchedulesFormattedQuery.fetcher = (client: GraphQLClient, variables?: IGetSchedulesFormattedQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetSchedulesFormattedQuery, IGetSchedulesFormattedQueryVariables>(client, GetSchedulesFormattedDocument, variables, headers);
 export const CreateSubjectDocument = /*#__PURE__*/ `
     mutation CreateSubject($data: UpsertSubjectInput!) {
   createSubject(data: $data) {

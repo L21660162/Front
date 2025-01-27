@@ -12,10 +12,16 @@ import {
   ISchedule,
   useGetAllSchedulesQuery,
   useGetAllUsersQuery,
+  useGetClassroomByIdQuery,
+  useGetScheduleByIdQuery,
+  useGetSchedulesFormattedQuery,
+  useGetSubjectByIdQuery,
 } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import { TokenData } from '../../../store/auth/type';
+import { dialogStore } from '../../../store/global/dialogStore';
+import EditScheduleViewDialogForm from '../../forms/Schedule/dashboard/editScheduleView';
 
 interface ITeacherSearchResult {
   _id?: string | null | undefined;
@@ -52,7 +58,10 @@ function ScheduleView() {
   const [filterstudents, setFilterStudents] = useState<string[] | undefined>([]);
   const [dataTeacherSerch, setDatsTeacherSerch] = useState<ITeacherSearchResult[] | undefined>();
   const [schedule, setSchedules] = useState<ISchedule>();
+  const [selectSchedule, setSelectSchedule] = useState<ISchedule>();
   const [code, setCode] = useState<string>('');
+  const { visible, setVisible } = dialogStore();
+  const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
   const {
     data: allTeacherData,
@@ -67,15 +76,10 @@ function ScheduleView() {
     },
   });
 
-  const { data: allScheduleData, refetch: requestUserById } = useGetAllSchedulesQuery(
+  const { data: allScheduleData, refetch: requestUserById } = useGetSchedulesFormattedQuery(
     GRAPHQL_CLIENT,
     {
-      limit: 500,
-      page: 1,
-      offset: 0,
-      filter: {
-        teacher: teacherSelectId, //'678fdf61e5dab4d5b006401d',
-      },
+      id: teacherSelectId,
     }
   );
 
@@ -148,7 +152,7 @@ function ScheduleView() {
 
   useEffect(() => {
     if (allScheduleData) {
-      const { docs } = allScheduleData.getAllSchedules;
+      const docs = allScheduleData.getSchedulesFormatted;
       setDatsTeacherSerch({
         teacher: teacherSelectId,
         schedule: docs,
@@ -160,22 +164,23 @@ function ScheduleView() {
     if (dataTeacherSerch) {
       const Alldata = dataTeacherSerch;
       const allSchedules = Alldata.schedule;
-      const grouped = allSchedules.reduce((acc, schedule) => {
-        if (schedule && schedule.weekday) {
-          if (acc[schedule.weekday]) {
-            acc[schedule.weekday].push(schedule);
-          } else {
-            acc[schedule.weekday] = [schedule];
-          }
-        }
+      const grouped = daysOfWeek.reduce((acc, day, index) => {
+        acc[index + 1] = []; // Inicializa cada día de la semana con un array vacío
         return acc;
       }, {});
+
+      allSchedules.forEach((schedule) => {
+        if (schedule && schedule.weekday) {
+          grouped[schedule.weekday].push(schedule);
+        }
+      });
       setSchedules(grouped);
     }
   }, [dataTeacherSerch]);
 
-  console.log('dataTeacherSerch', dataTeacherSerch);
-
+  const handleEdit = (data: ISchedule) => {
+    console.log('data', data);
+  };
   // useEffect(() => {
   //   if (StudentServiceStatusData) {
   //     const { firstName, lastName, middleName, processStep } = StudentServiceStatusData.getUserById;
@@ -241,39 +246,48 @@ function ScheduleView() {
   // };
 
   const dataviewGridItem = () => {
-    const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const time = (data) => {
-      return new Date(data).toLocaleTimeString();
+      return new Date(data).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
     };
 
     return (
       <div className="flex gap-4">
         {schedule && Object.keys(schedule).length > 0 ? (
           Object.entries(schedule).map(([day, schedules]) => (
-            <div key={day} className="flex flex-column gap-3">
+            <div key={day} className="flex flex-column gap-3 flex-1">
               <h3 className="text-center">{daysOfWeek[day - 1]}</h3>
               {schedules.map((product) => (
-                <div
-                  key={`${product.weekday}-${product.startTime}-${product.grupo}`}
-                  className="p-2 border-1 surface-border border-round"
+                <Button
+                  key={`${product._id}`}
+                  className="p-2 surface-border border-round text-left p-button-text"
+                  onClick={() => handleEdit(product._id)}
                 >
-                  <div className="flex flex-wrap align-items-center justify-content-between gap-2">
-                    <div className="flex align-items-center gap-2">
-                      <i className="pi pi-tag"></i>
-                      <span className="font-semibold">{time(product.startTime)}</span>
+                  <div key={`${product._id}`} className="p-2 border-1 surface-border border-round">
+                    <div className="gap-2">
+                      <div className="flex align-items-center gap-2">
+                        <i className="pi pi-clock" />
+                        <span className="font-semibold text-center text-sm">
+                          {time(product.startTime)} - {time(product.finalTime)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex align-items-center gap-2">
-                      <i className="pi pi-tag"></i>
-                      <span className="font-semibold">{product.hora_fin}</span>
+                    <div className=" gap-3 py-5">
+                      <div className="font-bold text-center">{product.subjectLargeName}</div>
+                    </div>
+                    <div className="grid ">
+                      <div className="col-6">
+                        <span className="font-semibold text-center text-sm">
+                          {product.classroomIdentifier}
+                        </span>
+                      </div>
+                      <div className="col-6 text-right">
+                        <span className="font-semibold text-right text-sm">
+                          {product.groupIdentifier}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <div className="font-bold">{product.materia}</div>
-                  </div>
-                  <div className="">
-                    <span className="font-semibold text-center">{product.aula}</span>
-                  </div>
-                </div>
+                </Button>
               ))}
             </div>
           ))
@@ -284,6 +298,11 @@ function ScheduleView() {
         )}
       </div>
     );
+  };
+
+  const handleEdit = (id) => {
+    // Lógica para manejar la edición del producto usando el ID
+    console.log('Editar producto con ID:', id);
   };
 
   const itemTemplate = (data: IVacancy, layout: 'grid', selectedStatus: IVacancyStatus | null) => {
