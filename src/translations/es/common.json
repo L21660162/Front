@@ -44,6 +44,10 @@
       "label": "Materia",
       "dashboard": "Panel de Materia"
     },
+    "schedule": {
+      "label": "Horario",
+      "dashboard": "Panel de Horario"
+    },
     "settings": {
       "label": "Configuración",
       "dashboard": "Panel de Configuración",
@@ -144,6 +148,7 @@
       "subjectdirector": "Materias",
       "TimeStart": "Hora de inicio",
       "TimeEnd": "Hora de finalización",
+      "schedule": "Horario",
       "roles": {
         "rules": "Rol del usuario",
         "DIRECTOR": "Director Academico",

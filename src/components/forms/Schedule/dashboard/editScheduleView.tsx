@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useRef, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
@@ -28,6 +28,8 @@ import {
   useGetAllUsersQuery,
   IUpdateScheduleInput,
   useGetScheduleByIdQuery,
+  useUpdateScheduleMutation,
+  IUpsertScheduleInput,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
@@ -121,9 +123,11 @@ export default function EditScheduleViewDialogForm({
     id: schedule,
   });
 
-  console.log('dataSchedule', dataSchedule, schedule);
+  const settime = (data) => {
+    return new Date(data);
+  };
 
-  const { mutate } = useUpdateSubjectMutation<IApiError>(GRAPHQL_CLIENT, {
+  const { mutate } = useUpdateScheduleMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
       toast.current?.show({
         severity: 'success',
@@ -157,7 +161,7 @@ export default function EditScheduleViewDialogForm({
     reset,
     watch,
     setValue,
-  } = useForm<IUpdateScheduleInput>({
+  } = useForm<IUpsertScheduleInput>({
     defaultValues: {
       _id: dataSchedule?.getScheduleById._id || '',
       classroom: dataSchedule?.getScheduleById.classroom || '',
@@ -167,12 +171,36 @@ export default function EditScheduleViewDialogForm({
       subject: dataSchedule?.getScheduleById.subject || '',
       teacher: dataSchedule?.getScheduleById.teacher || '',
       weekday: dataSchedule?.getScheduleById.weekday || 0,
+      classGroup: dataSchedule?.getScheduleById.classGroup || '',
     },
   });
 
-  const onSubmit: SubmitHandler<IUpdateSubjectInput> = (data: IUpdateSubjectInput) => {
+  useEffect(() => {
+    if (dataSchedule) {
+      setValue('_id', dataSchedule?.getScheduleById._id);
+      setValue('classroom', dataSchedule?.getScheduleById.classroom);
+      setValue('finalTime', settime(dataSchedule?.getScheduleById.finalTime));
+      setValue('period', dataSchedule?.getScheduleById.period);
+      setValue('startTime', settime(dataSchedule?.getScheduleById.startTime));
+      setValue('subject', dataSchedule?.getScheduleById.subject);
+      setValue('teacher', dataSchedule?.getScheduleById.teacher);
+      setValue('weekday', dataSchedule?.getScheduleById.weekday);
+      setValue('classGroup', dataSchedule?.getScheduleById.classGroup);
+    }
+  }, [dataSchedule, setValue]);
+
+  const onSubmit: SubmitHandler<IUpdateScheduleInput> = (data: IUpdateScheduleInput) => {
+    const { _id, classroom, finalTime, startTime } = data;
+    const start = new Date(finalTime).toISOString();
+    const final = new Date(startTime).toISOString();
+    const docs = {
+      _id,
+      classroom,
+      finalTime: start,
+      startTime: final,
+    };
     setIsButtonDisabld(true);
-    mutate({ data });
+    mutate({ data: docs });
     reset();
   };
 
@@ -235,6 +263,8 @@ export default function EditScheduleViewDialogForm({
                   options={subjectData}
                   optionLabel="largeName"
                   optionValue="_id"
+                  readOnly
+                  disabled
                 />
               )}
             />
@@ -278,10 +308,10 @@ export default function EditScheduleViewDialogForm({
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-              name="group"
+              name="classGroup"
               control={control}
               rules={{
-                required: t('global.forms.validation.group') as string,
+                required: t('global.forms.validation.classGroup') as string,
               }}
               render={({ field, fieldState }) => (
                 <Dropdown
@@ -293,14 +323,15 @@ export default function EditScheduleViewDialogForm({
                   options={groupData}
                   optionLabel="identifier"
                   optionValue="_id"
+                  disabled
                 />
               )}
             />
-            <label htmlFor="group" className={classNames({ 'p-error': !!errors.group })}>
+            <label htmlFor="classGroup" className={classNames({ 'p-error': !!errors.classGroup })}>
               {t('global.dictionary.group')}*
             </label>
           </span>
-          {errors.group && <small className="p-error">{errors.group?.message}</small>}
+          {errors.classGroup && <small className="p-error">{errors.classGroup?.message}</small>}
         </div>
 
         <div className="field">
@@ -322,6 +353,7 @@ export default function EditScheduleViewDialogForm({
                   options={periodData}
                   optionLabel="name"
                   optionValue="_id"
+                  disabled
                 />
               )}
             />
@@ -347,8 +379,11 @@ export default function EditScheduleViewDialogForm({
                   value={field.value}
                   onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
                   options={teacherData}
-                  optionLabel={'firstName' + ' ' + 'lastName'}
+                  optionLabel={(option: IUser) =>
+                    `${option.firstName} ${option.lastName} ${option.middleName}`
+                  }
                   optionValue="_id"
+                  disabled
                 />
               )}
             />
@@ -357,33 +392,6 @@ export default function EditScheduleViewDialogForm({
             </label>
           </span>
           {errors.teacher && <small className="p-error">{errors.teacher?.message}</small>}
-        </div>
-
-        <div className="field">
-          <span className="p-float-label p-input-icon-right">
-            <i className="pi pi-book" />
-            <Controller
-              name="finalTime"
-              control={control}
-              rules={{
-                required: t('global.forms.validation.finalTime') as string,
-              }}
-              render={({ field, fieldState }) => (
-                <Calendar
-                  id={field.name}
-                  {...field}
-                  className={classNames({ 'p-invalid': fieldState.invalid })}
-                  value={time}
-                  onChange={(e: CalendarChangeEvent) => setTime(e.value)}
-                  timeOnly
-                />
-              )}
-            />
-            <label htmlFor="finalTime" className={classNames({ 'p-error': !!errors.finalTime })}>
-              {t('global.dictionary.finalTime')}*
-            </label>
-          </span>
-          {errors.finalTime && <small className="p-error">{errors.finalTime?.message}</small>}
         </div>
 
         <div className="field">
@@ -400,9 +408,10 @@ export default function EditScheduleViewDialogForm({
                   id={field.name}
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
-                  value={time}
-                  onChange={(e: CalendarChangeEvent) => setTime(e.value)}
+                  value={field.value}
+                  onChange={(e: CalendarChangeEvent) => field.onChange(e.value)}
                   timeOnly
+                  hourFormat="12"
                 />
               )}
             />
@@ -411,6 +420,34 @@ export default function EditScheduleViewDialogForm({
             </label>
           </span>
           {errors.startTime && <small className="p-error">{errors.startTime?.message}</small>}
+        </div>
+
+        <div className="field">
+          <span className="p-float-label p-input-icon-right">
+            <i className="pi pi-book" />
+            <Controller
+              name="finalTime"
+              control={control}
+              rules={{
+                required: t('global.forms.validation.finalTime') as string,
+              }}
+              render={({ field, fieldState }) => (
+                <Calendar
+                  id={field.name}
+                  {...field}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
+                  value={field.value}
+                  onChange={(e: CalendarChangeEvent) => field.onChange(e.value)}
+                  timeOnly
+                  hourFormat="12"
+                />
+              )}
+            />
+            <label htmlFor="finalTime" className={classNames({ 'p-error': !!errors.finalTime })}>
+              {t('global.dictionary.finalTime')}*
+            </label>
+          </span>
+          {errors.finalTime && <small className="p-error">{errors.finalTime?.message}</small>}
         </div>
 
         <div className="field">
@@ -427,6 +464,7 @@ export default function EditScheduleViewDialogForm({
                   id={field.name}
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
+                  disabled
                 />
               )}
             />
