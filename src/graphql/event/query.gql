@@ -1,0 +1,43 @@
+query GetAllEvents($filter: EventArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllEvents(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      activity
+      createdAt
+      deletedAt
+      finishDate
+      groupsIncluded
+      isDeleted
+      period
+      startDate
+      updatedAt
+      uploadedBy
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+
+query GetEventById($id: ID) {
+  getEventById(_id: $id) {
+    _id
+    activity
+    createdAt
+    deletedAt
+    finishDate
+    groupsIncluded
+    isDeleted
+    period
+    startDate
+    updatedAt
+    uploadedBy
+  }
+}

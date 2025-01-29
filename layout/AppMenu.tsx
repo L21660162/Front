@@ -58,7 +58,7 @@ function AppMenu() {
         {
           label: t('sidebar.events.dashboard'),
           icon: 'pi pi-fw pi-calendar-plus',
-          to: '/institute/dashboard',
+          to: '/event/dashboard',
         },
       ],
     },

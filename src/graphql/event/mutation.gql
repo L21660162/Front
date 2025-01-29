@@ -1,0 +1,37 @@
+mutation CreateEvent($data: UpsertEventInput!) {
+  createEvent(data: $data) {
+    _id
+    activity
+    createdAt
+    deletedAt
+    finishDate
+    groupsIncluded
+    isDeleted
+    period
+    startDate
+    updatedAt
+    uploadedBy
+  }
+}
+
+mutation UpdateEvent($data: UpdateEventInput!) {
+  updateEvent(data: $data) {
+    _id
+    activity
+    createdAt
+    deletedAt
+    finishDate
+    groupsIncluded
+    isDeleted
+    period
+    startDate
+    updatedAt
+    uploadedBy
+  }
+}
+
+mutation DeleteEvent($data: EventIdArgs!) {
+  deleteEvent(data: $data) {
+    deleted
+  }
+}

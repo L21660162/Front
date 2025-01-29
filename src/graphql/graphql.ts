@@ -44,7 +44,7 @@ export interface IAttendance {
   schedule: Scalars['ID']['output'];
   secondPass: IAttendanceStatus;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  uploadedBy: IUser;
+  uploadedBy: Scalars['ID']['output'];
 }
 
 export interface IAttendanceArgs {
@@ -53,7 +53,7 @@ export interface IAttendanceArgs {
   period?: InputMaybe<Scalars['ID']['input']>;
   schedule?: InputMaybe<Scalars['ID']['input']>;
   secondPass?: InputMaybe<IAttendanceStatus>;
-  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+  uploadedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
 export interface IAttendanceIdArgs {
@@ -206,6 +206,35 @@ export interface IDepartmentIdArgs {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+/** event */
+export interface IEvent {
+  _id: Scalars['ID']['output'];
+  activity: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  finishDate: Scalars['DateTime']['output'];
+  groupsIncluded: Array<Scalars['ID']['output']>;
+  isDeleted: Scalars['Boolean']['output'];
+  period: Scalars['ID']['output'];
+  startDate: Scalars['DateTime']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  uploadedBy: Scalars['ID']['output'];
+}
+
+export interface IEventArgs {
+  finishDate?: InputMaybe<Scalars['DateTime']['input']>;
+  groupsIncluded?: InputMaybe<Array<Scalars['ID']['input']>>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
+  period?: InputMaybe<Scalars['ID']['input']>;
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
+  uploadedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+export interface IEventIdArgs {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
 /** File */
 export interface IFile {
   _id: Scalars['ID']['output'];
@@ -331,6 +360,7 @@ export interface IMutation {
   createCareer: ICareer;
   createClassroom: IClassroom;
   createDepartment: IDepartment;
+  createEvent: IEvent;
   createFile: IFile;
   createFileComment: IFile;
   createGroup: IGroup;
@@ -341,6 +371,7 @@ export interface IMutation {
   deleteBuilding: ISoftDeleteResponse;
   deleteClassroom: ISoftDeleteResponse;
   deleteDepartment: ISoftDeleteResponse;
+  deleteEvent: ISoftDeleteResponse;
   deleteGroup: ISoftDeleteResponse;
   deletePeriod: ISoftDeleteResponse;
   deleteSchedule: ISoftDeleteResponse;
@@ -363,6 +394,7 @@ export interface IMutation {
   updateCareer: ICareer;
   updateClassroom: IClassroom;
   updateDepartment: IDepartment;
+  updateEvent: IEvent;
   updateFile: IFile;
   updateGroup: IGroup;
   updatePeriod: IPeriod;
@@ -408,6 +440,11 @@ export interface IMutationCreateClassroomArgs {
 
 export interface IMutationCreateDepartmentArgs {
   data: ICreateDepartmentInput;
+}
+
+
+export interface IMutationCreateEventArgs {
+  data: IUpsertEventInput;
 }
 
 
@@ -458,6 +495,11 @@ export interface IMutationDeleteClassroomArgs {
 
 export interface IMutationDeleteDepartmentArgs {
   data: IDepartmentIdArgs;
+}
+
+
+export interface IMutationDeleteEventArgs {
+  data: IEventIdArgs;
 }
 
 
@@ -543,6 +585,11 @@ export interface IMutationUpdateClassroomArgs {
 
 export interface IMutationUpdateDepartmentArgs {
   data: IUpdateDepartmentInput;
+}
+
+
+export interface IMutationUpdateEventArgs {
+  data: IUpdateEventInput;
 }
 
 
@@ -658,6 +705,21 @@ export interface IPaginateClassroom {
 /** Object type for paging results */
 export interface IPaginateDepartment {
   docs: Array<IDepartment>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  limit: Scalars['Float']['output'];
+  nextPage?: Maybe<Scalars['Float']['output']>;
+  offset?: Maybe<Scalars['Float']['output']>;
+  page: Scalars['Float']['output'];
+  pagingCounter: Scalars['Float']['output'];
+  prevPage?: Maybe<Scalars['Float']['output']>;
+  totalDocs: Scalars['Float']['output'];
+  totalPages: Scalars['Float']['output'];
+}
+
+/** Object type for paging results */
+export interface IPaginateEvent {
+  docs: Array<IEvent>;
   hasNextPage: Scalars['Boolean']['output'];
   hasPrevPage: Scalars['Boolean']['output'];
   limit: Scalars['Float']['output'];
@@ -850,6 +912,7 @@ export interface IQuery {
   getAllCareers: IPaginateCareer;
   getAllClassrooms: IPaginateClassroom;
   getAllDepartments: IPaginateDepartment;
+  getAllEvents: IPaginateEvent;
   getAllFiles: IPaginateFile;
   getAllGroups: IPaginateGroup;
   getAllPeriods: IPaginatePeriod;
@@ -862,6 +925,7 @@ export interface IQuery {
   getCareerById: ICareer;
   getClassroomById: IClassroom;
   getDepartmentById: IDepartment;
+  getEventById: IEvent;
   getFileById: IFile;
   getGroupById: IGroup;
   getGrupos: Array<IGrupos>;
@@ -935,6 +999,19 @@ export interface IQueryGetAllClassroomsArgs {
 
 export interface IQueryGetAllDepartmentsArgs {
   filter?: InputMaybe<IDepartmentArgs>;
+  lean?: InputMaybe<Scalars['Boolean']['input']>;
+  leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  populate?: InputMaybe<Scalars['String']['input']>;
+  select?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['JSON']['input']>;
+}
+
+
+export interface IQueryGetAllEventsArgs {
+  filter?: InputMaybe<IEventArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
   leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1059,6 +1136,12 @@ export interface IQueryGetDepartmentByIdArgs {
 }
 
 
+export interface IQueryGetEventByIdArgs {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+
 export interface IQueryGetFileByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
@@ -1107,8 +1190,8 @@ export interface IQueryGetScheduleByIdArgs {
 
 
 export interface IQueryGetSchedulesFormattedArgs {
-  _id?: InputMaybe<Scalars['ID']['input']>;
-  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+  classroom?: InputMaybe<Scalars['ID']['input']>;
+  teacher?: InputMaybe<Scalars['ID']['input']>;
 }
 
 
@@ -1251,6 +1334,7 @@ export interface IUpdateAttendanceInput {
   _id: Scalars['ID']['input'];
   secondPass: IAttendanceStatus;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+  uploadedBy: Scalars['ID']['input'];
 }
 
 /** Update building info input */
@@ -1287,6 +1371,16 @@ export interface IUpdateDepartmentInput {
   departmentBoss?: InputMaybe<Scalars['ID']['input']>;
   name: Scalars['String']['input'];
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+/** Update event info input */
+export interface IUpdateEventInput {
+  _id: Scalars['ID']['input'];
+  activity: Scalars['String']['input'];
+  finishDate: Scalars['DateTime']['input'];
+  groupsIncluded: Array<Scalars['ID']['input']>;
+  startDate: Scalars['DateTime']['input'];
+  uploadedBy: Scalars['ID']['input'];
 }
 
 /** UpdateFile */
@@ -1380,6 +1474,7 @@ export interface IUpsertAttendanceInput {
   period: Scalars['ID']['input'];
   schedule: Scalars['ID']['input'];
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+  uploadedBy: Scalars['ID']['input'];
 }
 
 /** Create building input */
@@ -1394,6 +1489,16 @@ export interface IUpsertClassroomInput {
   building: Scalars['ID']['input'];
   identifier: Scalars['String']['input'];
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+/** Create event input */
+export interface IUpsertEventInput {
+  activity: Scalars['String']['input'];
+  finalDate: Scalars['DateTime']['input'];
+  groupsIncluded: Array<Scalars['ID']['input']>;
+  period: Scalars['ID']['input'];
+  startDate: Scalars['DateTime']['input'];
+  uploadedBy: Scalars['ID']['input'];
 }
 
 /** Create group input */
@@ -1615,6 +1720,44 @@ export type IGetDepartmentByIdQueryVariables = Exact<{
 
 export type IGetDepartmentByIdQuery = { getDepartmentById: { _id: string, areaKey: string, createdAt: any, deletedAt?: any | null, isDeleted: boolean, name: string, updatedAt: any } };
 
+export type ICreateEventMutationVariables = Exact<{
+  data: IUpsertEventInput;
+}>;
+
+
+export type ICreateEventMutation = { createEvent: { _id: string, activity: string, createdAt?: any | null, deletedAt?: any | null, finishDate: any, groupsIncluded: Array<string>, isDeleted: boolean, period: string, startDate: any, updatedAt?: any | null, uploadedBy: string } };
+
+export type IUpdateEventMutationVariables = Exact<{
+  data: IUpdateEventInput;
+}>;
+
+
+export type IUpdateEventMutation = { updateEvent: { _id: string, activity: string, createdAt?: any | null, deletedAt?: any | null, finishDate: any, groupsIncluded: Array<string>, isDeleted: boolean, period: string, startDate: any, updatedAt?: any | null, uploadedBy: string } };
+
+export type IDeleteEventMutationVariables = Exact<{
+  data: IEventIdArgs;
+}>;
+
+
+export type IDeleteEventMutation = { deleteEvent: { deleted: number } };
+
+export type IGetAllEventsQueryVariables = Exact<{
+  filter?: InputMaybe<IEventArgs>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type IGetAllEventsQuery = { getAllEvents: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, activity: string, createdAt?: any | null, deletedAt?: any | null, finishDate: any, groupsIncluded: Array<string>, isDeleted: boolean, period: string, startDate: any, updatedAt?: any | null, uploadedBy: string }> } };
+
+export type IGetEventByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type IGetEventByIdQuery = { getEventById: { _id: string, activity: string, createdAt?: any | null, deletedAt?: any | null, finishDate: any, groupsIncluded: Array<string>, isDeleted: boolean, period: string, startDate: any, updatedAt?: any | null, uploadedBy: string } };
+
 export type IUpdateFileMutationVariables = Exact<{
   data: IUpdateFile;
 }>;
@@ -1732,7 +1875,7 @@ export type IGetScheduleByIdQueryVariables = Exact<{
 export type IGetScheduleByIdQuery = { getScheduleById: { _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, weekday: number, startTime: any, subject: string, updatedAt?: any | null } };
 
 export type IGetSchedulesFormattedQueryVariables = Exact<{
-  id?: InputMaybe<Scalars['ID']['input']>;
+  teacher?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
@@ -2313,6 +2456,173 @@ useGetDepartmentByIdQuery.getKey = (variables?: IGetDepartmentByIdQueryVariables
 ;
 
 useGetDepartmentByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetDepartmentByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetDepartmentByIdQuery, IGetDepartmentByIdQueryVariables>(client, GetDepartmentByIdDocument, variables, headers);
+export const CreateEventDocument = /*#__PURE__*/ `
+    mutation CreateEvent($data: UpsertEventInput!) {
+  createEvent(data: $data) {
+    _id
+    activity
+    createdAt
+    deletedAt
+    finishDate
+    groupsIncluded
+    isDeleted
+    period
+    startDate
+    updatedAt
+    uploadedBy
+  }
+}
+    `;
+export const useCreateEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ICreateEventMutation, TError, ICreateEventMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ICreateEventMutation, TError, ICreateEventMutationVariables, TContext>(
+      ['CreateEvent'],
+      (variables?: ICreateEventMutationVariables) => fetcher<ICreateEventMutation, ICreateEventMutationVariables>(client, CreateEventDocument, variables, headers)(),
+      options
+    );
+useCreateEventMutation.fetcher = (client: GraphQLClient, variables: ICreateEventMutationVariables, headers?: RequestInit['headers']) => fetcher<ICreateEventMutation, ICreateEventMutationVariables>(client, CreateEventDocument, variables, headers);
+export const UpdateEventDocument = /*#__PURE__*/ `
+    mutation UpdateEvent($data: UpdateEventInput!) {
+  updateEvent(data: $data) {
+    _id
+    activity
+    createdAt
+    deletedAt
+    finishDate
+    groupsIncluded
+    isDeleted
+    period
+    startDate
+    updatedAt
+    uploadedBy
+  }
+}
+    `;
+export const useUpdateEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUpdateEventMutation, TError, IUpdateEventMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUpdateEventMutation, TError, IUpdateEventMutationVariables, TContext>(
+      ['UpdateEvent'],
+      (variables?: IUpdateEventMutationVariables) => fetcher<IUpdateEventMutation, IUpdateEventMutationVariables>(client, UpdateEventDocument, variables, headers)(),
+      options
+    );
+useUpdateEventMutation.fetcher = (client: GraphQLClient, variables: IUpdateEventMutationVariables, headers?: RequestInit['headers']) => fetcher<IUpdateEventMutation, IUpdateEventMutationVariables>(client, UpdateEventDocument, variables, headers);
+export const DeleteEventDocument = /*#__PURE__*/ `
+    mutation DeleteEvent($data: EventIdArgs!) {
+  deleteEvent(data: $data) {
+    deleted
+  }
+}
+    `;
+export const useDeleteEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IDeleteEventMutation, TError, IDeleteEventMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IDeleteEventMutation, TError, IDeleteEventMutationVariables, TContext>(
+      ['DeleteEvent'],
+      (variables?: IDeleteEventMutationVariables) => fetcher<IDeleteEventMutation, IDeleteEventMutationVariables>(client, DeleteEventDocument, variables, headers)(),
+      options
+    );
+useDeleteEventMutation.fetcher = (client: GraphQLClient, variables: IDeleteEventMutationVariables, headers?: RequestInit['headers']) => fetcher<IDeleteEventMutation, IDeleteEventMutationVariables>(client, DeleteEventDocument, variables, headers);
+export const GetAllEventsDocument = /*#__PURE__*/ `
+    query GetAllEvents($filter: EventArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllEvents(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      activity
+      createdAt
+      deletedAt
+      finishDate
+      groupsIncluded
+      isDeleted
+      period
+      startDate
+      updatedAt
+      uploadedBy
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+    `;
+export const useGetAllEventsQuery = <
+      TData = IGetAllEventsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllEventsQueryVariables,
+      options?: UseQueryOptions<IGetAllEventsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllEventsQuery, TError, TData>(
+      variables === undefined ? ['GetAllEvents'] : ['GetAllEvents', variables],
+      fetcher<IGetAllEventsQuery, IGetAllEventsQueryVariables>(client, GetAllEventsDocument, variables, headers),
+      options
+    );
+
+useGetAllEventsQuery.getKey = (variables?: IGetAllEventsQueryVariables) => variables === undefined ? ['GetAllEvents'] : ['GetAllEvents', variables];
+;
+
+useGetAllEventsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllEventsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllEventsQuery, IGetAllEventsQueryVariables>(client, GetAllEventsDocument, variables, headers);
+export const GetEventByIdDocument = /*#__PURE__*/ `
+    query GetEventById($id: ID) {
+  getEventById(_id: $id) {
+    _id
+    activity
+    createdAt
+    deletedAt
+    finishDate
+    groupsIncluded
+    isDeleted
+    period
+    startDate
+    updatedAt
+    uploadedBy
+  }
+}
+    `;
+export const useGetEventByIdQuery = <
+      TData = IGetEventByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetEventByIdQueryVariables,
+      options?: UseQueryOptions<IGetEventByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetEventByIdQuery, TError, TData>(
+      variables === undefined ? ['GetEventById'] : ['GetEventById', variables],
+      fetcher<IGetEventByIdQuery, IGetEventByIdQueryVariables>(client, GetEventByIdDocument, variables, headers),
+      options
+    );
+
+useGetEventByIdQuery.getKey = (variables?: IGetEventByIdQueryVariables) => variables === undefined ? ['GetEventById'] : ['GetEventById', variables];
+;
+
+useGetEventByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetEventByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetEventByIdQuery, IGetEventByIdQueryVariables>(client, GetEventByIdDocument, variables, headers);
 export const UpdateFileDocument = /*#__PURE__*/ `
     mutation UpdateFile($data: UpdateFile!) {
   updateFile(data: $data) {
@@ -2920,8 +3230,8 @@ useGetScheduleByIdQuery.getKey = (variables?: IGetScheduleByIdQueryVariables) =>
 
 useGetScheduleByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetScheduleByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetScheduleByIdQuery, IGetScheduleByIdQueryVariables>(client, GetScheduleByIdDocument, variables, headers);
 export const GetSchedulesFormattedDocument = /*#__PURE__*/ `
-    query GetSchedulesFormatted($id: ID) {
-  getSchedulesFormatted(_id: $id) {
+    query GetSchedulesFormatted($teacher: ID) {
+  getSchedulesFormatted(teacher: $teacher) {
     _id
     classroomIdentifier
     finalTime

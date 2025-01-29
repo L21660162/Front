@@ -14,7 +14,6 @@ import VacancyDashboard from '../pages/vacancy/index';
 import VacancyManagement from '../pages/vacancy/management';
 import Career from '../pages/ maintenance';
 import UserDashboard from '../pages/user';
-import Institute from '../pages/institute';
 import CovenantPage from '../pages/covenant';
 import Justify from '../pages/justifies';
 import Schedule from '../pages/ schedule';
@@ -122,10 +121,10 @@ const maintenanceRoute = new Route({
   component: () => <App Component={Career} />,
 });
 
-const instituteRoute = new Route({
+const eventRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: '/institute/dashboard',
-  component: () => <App Component={Institute} />,
+  path: '/event/dashboard',
+  component: () => <App Component={Events} />,
 });
 
 const notFoundRoute = new Route({
@@ -278,7 +277,6 @@ const routeConfig = rootRoute.addChildren([
   vacancyDashboard,
   maintenanceRoute,
   userDashboard,
-  instituteRoute,
   covenantRoute,
   justifiyRoute,
   scheduleRoute,
@@ -290,6 +288,7 @@ const routeConfig = rootRoute.addChildren([
   departamntSettings,
   periodSettings,
   careerSettings,
+  eventRoute,
 ]);
 
 

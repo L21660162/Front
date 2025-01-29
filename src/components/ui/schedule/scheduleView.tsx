@@ -60,7 +60,7 @@ function ScheduleView() {
   const { data: allScheduleData, refetch: requestUserById } = useGetSchedulesFormattedQuery(
     GRAPHQL_CLIENT,
     {
-      id: teacherSelectId,
+      teacher: teacherSelectId,
     }
   );
 
