@@ -5,11 +5,6 @@ function Schedule() {
   return (
     <div className="grid">
       <div className="col-12">
-        {/* <div className="card">
-          <PageHeadingVacancy isAdmin={isAdminUser} />
-        </div> */}
-      </div>
-      <div className="col-12">
         <ScheduleView />
       </div>
     </div>

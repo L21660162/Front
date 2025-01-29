@@ -7,12 +7,21 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { RadioButton } from 'primereact/radiobutton';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import { MultiSelect } from 'primereact/multiselect';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
-import { ICreateCareerInput, useCreateCareerMutation } from '../../../../graphql/graphql';
+import {
+  IGroup,
+  IPeriod,
+  IUpsertEventInput,
+  useCreateEventMutation,
+  useGetAllGroupsQuery,
+  useGetAllPeriodsQuery,
+} from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
+import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 
 type EventFormProps = {
   headerTitle: string;
@@ -28,8 +37,13 @@ export default function EventDialogForm({
   const navigate = useNavigate({ from: '/settings/career' });
   const toast = useRef<Toast>(null);
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
+  let periodData: Array<IPeriod> = [];
+  const [selecGroups, setSelecGroups] = React.useState<IGroup[]>([]);
+  let groupsLabels: Array<{ label: string; value: string }> = [];
+  const [startData, setStartData] = useState<string | Date | Date[] | null>(null);
+  const [finalData, setFinalData] = useState<string | Date | Date[] | null>(null);
 
-  const { mutate } = useCreateCareerMutation<IApiError>(GRAPHQL_CLIENT, {
+  const { mutate } = useCreateEventMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
       toast.current?.show({
         severity: 'success',
@@ -56,25 +70,53 @@ export default function EventDialogForm({
     },
   });
 
+  const { data: period } = useGetAllPeriodsQuery(GRAPHQL_CLIENT, {
+    limit: 100,
+    offset: 0,
+    page: 1,
+    filter: {
+      keyword: null,
+    },
+  });
+
+  const { data: groups } = useGetAllGroupsQuery(GRAPHQL_CLIENT, {
+    limit: 100,
+    offset: 0,
+    page: 1,
+    filter: {
+      keyword: null,
+    },
+  });
+
+  if (period && Array.isArray(period?.getAllPeriods.docs)) {
+    periodData = period?.getAllPeriods.docs;
+  }
+
+  if (groups && Array.isArray(groups?.getAllGroups.docs)) {
+    groupsLabels = groups?.getAllGroups.docs.map((group: IGroup) => ({
+      label: group.identifier,
+      value: group._id,
+    }));
+  }
+
   const {
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
     reset,
-  } = useForm<ICreateCareerInput>({
+  } = useForm<IUpsertEventInput>({
     defaultValues: {
-      credits: 0,
-      description: '',
-      duration: '',
-      isCertified: false,
-      name: '',
-      abbreviationCareer: '',
+      activity: '',
+      startDate: '',
+      finishDate: '',
+      period: '',
+      groupsIncluded: [],
     },
   });
 
-  const onSubmit: SubmitHandler<ICreateCareerInput> = (data: ICreateCareerInput) => {
+  const onSubmit: SubmitHandler<IUpsertEventInput> = (data: IUpsertEventInput) => {
     setIsButtonDisabld(true);
-    data.credits = parseFloat(data.credits);
     mutate({ data });
     reset();
   };
@@ -120,10 +162,10 @@ export default function EventDialogForm({
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-              name="name"
+              name="activity"
               control={control}
               rules={{
-                required: t('global.forms.validation.careerName') as string,
+                required: t('global.forms.validation.activity') as string,
               }}
               render={({ field, fieldState }) => (
                 <InputText
@@ -133,150 +175,125 @@ export default function EventDialogForm({
                 />
               )}
             />
-            <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-              {t('global.dictionary.careerName')}*
+            <label htmlFor="activity" className={classNames({ 'p-error': !!errors.activity })}>
+              {t('global.dictionary.activity')}*
             </label>
           </span>
-          {errors.name && <small className="p-error">{errors.name?.message}</small>}
+          {errors.activity && <small className="p-error">{errors.activity?.message}</small>}
         </div>
 
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-              name="abbreviationCareer"
+              name="startDate"
               control={control}
               rules={{
-                required: t('global.forms.validation.abbreviationCareer') as string,
+                required: t('global.forms.validation.startDate') as string,
               }}
               render={({ field, fieldState }) => (
-                <InputText
-                  id={field.name}
-                  maxLength={5}
-                  {...field}
-                  className={classNames({ 'p-invalid': fieldState.invalid })}
+                <Calendar
+                  value={startData}
+                  onChange={(e: CalendarChangeEvent) => setStartData(e.value)}
                 />
               )}
             />
-            <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-              {t('global.dictionary.abbreviationCareer')}*
+            <label htmlFor="startDate" className={classNames({ 'p-error': !!errors.startDate })}>
+              {t('global.dictionary.startDate')}*
             </label>
           </span>
-          {errors.name && <small className="p-error">{errors.name?.message}</small>}
+          {errors.startDate && <small className="p-error">{errors.startDate?.message}</small>}
         </div>
 
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-              name="description"
+              name="finishDate"
               control={control}
               rules={{
-                required: t('global.forms.validation.careerDescription') as string,
+                required: t('global.forms.validation.finishDate') as string,
               }}
               render={({ field, fieldState }) => (
-                <InputTextarea
-                  id={field.name}
-                  {...field}
-                  className={classNames({ 'p-invalid': fieldState.invalid })}
-                  rows={3}
-                  cols={20}
-                  autoResize
+                <Calendar
+                  value={finalData}
+                  onChange={(e: CalendarChangeEvent) => setFinalData(e.value)}
                 />
               )}
             />
-            <label
-              htmlFor="description"
-              className={classNames({ 'p-error': !!errors.description })}
-            >
-              {t('global.dictionary.careerDescription')}*
+            <label htmlFor="finishDate" className={classNames({ 'p-error': !!errors.finishDate })}>
+              {t('global.dictionary.finalDate')}*
             </label>
           </span>
-          {errors.description && <small className="p-error">{errors.description?.message}</small>}
+          {errors.finishDate && <small className="p-error">{errors.finishDate?.message}</small>}
         </div>
 
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-hashtag" />
             <Controller
-              name="credits"
+              name="period"
               control={control}
               rules={{
-                required: t('global.forms.validation.credits') as string,
+                required: t('global.forms.validation.period') as string,
               }}
               render={({ field, fieldState }) => (
-                <InputText
+                <Dropdown
                   id={field.name}
-                  type="number"
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
+                  value={field.value}
+                  onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
+                  options={periodData}
+                  optionLabel="name"
+                  optionValue="_id"
                 />
               )}
             />
-            <label htmlFor="credits" className={classNames({ 'p-error': !!errors.credits })}>
-              {t('global.dictionary.credits')}*
+            <label htmlFor="period" className={classNames({ 'p-error': !!errors.period })}>
+              {t('global.dictionary.period')}*
             </label>
           </span>
-          {errors.credits && <small className="p-error">{errors.credits?.message}</small>}
+          {errors.period && <small className="p-error">{errors.period?.message}</small>}
         </div>
 
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-calendar" />
             <Controller
-              name="duration"
+              name="groupsIncluded"
               control={control}
-              rules={{ required: t('global.forms.validation.duration') as string }}
+              rules={{ required: t('global.forms.validation.groupsIncluded') as string }}
               render={({ field, fieldState }) => (
-                <InputText
+                <MultiSelect
                   id={field.name}
                   {...field}
+                  options={groupsLabels}
+                  optionLabel="label"
+                  optionValue="value"
+                  display="chip"
                   className={classNames({ 'p-invalid': fieldState.invalid })}
+                  onChange={(e) => {
+                    setSelecGroups(e.value);
+                    setValue('groupsIncluded', e.value, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    });
+                  }}
                 />
               )}
             />
-            <label htmlFor="duration" className={classNames({ 'p-error': errors.duration })}>
-              {t('global.dictionary.duration')}*
+            <label
+              htmlFor="groupsIncluded"
+              className={classNames({ 'p-error': errors.groupsIncluded })}
+            >
+              {t('global.dictionary.groupsIncluded')}*
             </label>
           </span>
-          {errors.duration && <small className="p-error">{errors.duration?.message}</small>}
-        </div>
-
-        <div className="field">
-          <span className="field-radiobutton">
-            <Controller
-              name="isCertified"
-              control={control}
-              rules={{ required: t('global.forms.validation.isCertified') as string }}
-              render={({ field }) => (
-                <div>
-                  <label htmlFor={field.name}>{t('global.dictionary.isCertified')}</label>
-                  <br />
-                  <div className="field-radiobutton">
-                    <RadioButton
-                      id={`${field.name}-true`}
-                      type="checkbox"
-                      value="true"
-                      checked={field.value === true}
-                      onChange={() => field.onChange(true)}
-                    />
-                    <label htmlFor={`${field.name}-true`}>Sí</label>
-                  </div>
-                  <div className="field-radiobutton">
-                    <RadioButton
-                      id={`${field.name}-false`}
-                      type="checkbox"
-                      value="false"
-                      checked={field.value === false}
-                      onChange={() => field.onChange(false)}
-                    />
-                    <label htmlFor={`${field.name}-false`}>No</label>
-                  </div>
-                </div>
-              )}
-            />
-          </span>
-          {errors.isCertified && <small className="p-error">{errors.isCertified?.message}</small>}
+          {errors.groupsIncluded && (
+            <small className="p-error">{errors.groupsIncluded?.message}</small>
+          )}
         </div>
       </form>
     </Dialog>

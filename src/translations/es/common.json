@@ -48,6 +48,10 @@
       "label": "Horario",
       "dashboard": "Panel de Horario"
     },
+    "event": {
+      "label": "Evento",
+      "dashboard": "Panel de Evento"
+    },
     "settings": {
       "label": "Configuración",
       "dashboard": "Panel de Configuración",
@@ -97,7 +101,11 @@
         "teacher": "Debes colocar el docente",
         "finalTime": "Debes colocar la hora de finalización",
         "startTime": "Debes colocar la hora de inicio",
-        "weekday": "Debes colocar el día de la semana"
+        "weekday": "Debes colocar el día de la semana",
+        "startDate": "Debes colocar la fecha de inicio",
+        "finishDate": "Debes colocar la fecha de finalización",
+        "activity": "Debes colocar la actividad",
+        "groupsIncluded": "Debes colocar los grupos incluidos"
       }
     },
     "dictionary": {
@@ -123,6 +131,10 @@
       "careerName": "Nombre de la carrera",
       "careerDescription": "Descripción",
       "credits": "Cantidad de creditos",
+      "activity": "Actividad",
+      "startDate": "Fecha de inicio",
+      "finalDate": "Fecha de finalización",
+      "groupsIncluded": "Grupos incluidos",
       "duration": "Tiempo estimado para terminar",
       "isCertified": "La carrera cuenta con certificado",
       "instituteId": "Instituto al que pertenece",
@@ -220,6 +232,19 @@
           },
           "edit": {
             "header": "Editar Materia"
+          }
+        }
+      }
+    },
+    "event": {
+      "dashboard": {
+        "addEvent": "Agregar Evento",
+        "dialog": {
+          "add": {
+            "header": "Agregar Nuevo Evento"
+          },
+          "edit": {
+            "header": "Editar Evento"
           }
         }
       }

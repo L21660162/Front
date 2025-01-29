@@ -1494,7 +1494,7 @@ export interface IUpsertClassroomInput {
 /** Create event input */
 export interface IUpsertEventInput {
   activity: Scalars['String']['input'];
-  finalDate: Scalars['DateTime']['input'];
+  finishDate: Scalars['DateTime']['input'];
   groupsIncluded: Array<Scalars['ID']['input']>;
   period: Scalars['ID']['input'];
   startDate: Scalars['DateTime']['input'];
