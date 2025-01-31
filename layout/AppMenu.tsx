@@ -48,7 +48,7 @@ function AppMenu() {
         {
           label: t('sidebar.justifications.dashboard'),
           icon: 'pi pi-fw pi-file-pdf',
-          to: '/vacancy/dashboard',
+          to: '/justify/dashboard',
         },
       ],
     },

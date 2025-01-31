@@ -1,7 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
-'use client';
-
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -9,62 +5,60 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Demo } from '../../../../types/types';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
   ICareer,
-  IGetAllCareersQuery,
+  IEvent,
+  IGetAllEventsQuery,
+  IGetGroupByIdQuery,
   useDeletedCareerMutation,
-  useGetAllCareersQuery,
+  useDeleteEventMutation,
+  useGetAllEventsQuery,
+  useGetGroupByIdQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import { dialogStore } from '../../../store/global/dialogStore';
 import EditCareerDialogForm from '../../forms/career/dashboard/editcareer';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
-import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
+import EditEventDialogForm from '../../forms/event/dashbord/editEvent';
 
 function EventCrud() {
-  const emptyCareer: ICareer = {
-    credits: 0,
-    description: '',
-    duration: '',
-    isCertified: false,
-    name: '',
+  const emptyEvent: IEvent = {
     _id: '',
-    createdAt: undefined,
+    activity: '',
+    startDate: '',
+    finishDate: '',
+    groupsIncluded: [],
+    period: '',
     isDeleted: false,
-    updatedAt: undefined,
-    abbreviationCareer: '',
+    uploadedBy: '',
   };
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/settings/career' });
   const { roles } = useAccessTokenData() as TokenData;
 
-  const [careers, setCareers] = useState(null);
-  const [deleteCareerDialog, setDeleteCareerDialog] = useState(false);
-  const [career, setCareer] = useState<Demo.IGetAllCareersQuery.docs>(emptyCareer);
-  const [selectedCareers, setSelectedCareers] = useState(null);
+  const [events, setEvents] = useState(null);
+  const [deleteEventDialog, setDeleteEventDialog] = useState(false);
+  const [event, setEvent] = useState<Demo.IGetAllEventsQuery.docs>(emptyEvent);
+  const [selectedEvents, setSelectedEvents] = useState(null);
   const [globalFilter, setGlobalFilter] = useState('');
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<any>>(null);
-  const [selectedCareer, setSelectedCareer] = useState<ICareer | null>(null);
-  const [visibleEditCareer, setVisibleEditCareer] = useState(false);
-  const [date, setDate] = useState<string | Date | Date[] | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
+  const [visibleEditEvent, setVisibleEditEvent] = useState(false);
 
-  const { data } = useGetAllCareersQuery<IGetAllCareersQuery>(GRAPHQL_CLIENT, {
+  const { data: Eventdata } = useGetAllEventsQuery<IGetAllEventsQuery>(GRAPHQL_CLIENT, {
     limit: 500,
     page: 1,
     offset: 0,
-    filter: {
-      isDeleted: false,
-    },
   });
 
-  const { mutate } = useDeletedCareerMutation<IApiError>(GRAPHQL_CLIENT, {
+  const { mutate } = useDeleteEventMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
       toast.current?.show({
         severity: 'success',
@@ -88,78 +82,81 @@ function EventCrud() {
     },
   });
 
-  const hideDeleteCareerDialog = () => {
-    setDeleteCareerDialog(false);
+  const hideDeleteEventDialog = () => {
+    setDeleteEventDialog(false);
   };
 
-  const editCareer = (career: ICareer) => {
-    setSelectedCareer(career);
-    setVisibleEditCareer(true);
+  const editEvent = (event: IEvent) => {
+    setSelectedEvent(event);
+    setVisibleEditEvent(true);
   };
 
-  const confirmDeleteCareer = (career: ICareer) => {
-    setCareer(career);
-    setDeleteCareerDialog(true);
+  const confirmDeleteEvent = (event: IEvent) => {
+    setEvent(event);
+    setDeleteEventDialog(true);
   };
 
-  const deleteCareer = () => {
-    const _careers = career._id;
-    setCareers(_careers);
-    mutate({ data: { _id: _careers } });
-    setDeleteCareerDialog(false);
+  const deleteEvent = () => {
+    const _events = event._id;
+    setEvents(_events);
+    mutate({ data: { _id: _events } });
+    setDeleteEventDialog(false);
   };
 
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
 
-  const nameBodyTemplate = (career: ICareer) => {
+  const activityBodyTemplate = (event: IEvent) => {
     return (
       <>
-        <span className="p-column-title">Name</span>
-        {career.name}
+        <span className="p-column-title">Activity</span>
+        {event.activity}
       </>
     );
   };
 
-  const descriptionBodyTemplate = (career: ICareer) => {
+  const startDateBodyTemplate = (event: IEvent) => {
+    const startDate = new Date(event.startDate).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
     return (
       <>
-        <span className="p-column-title">Description</span>
-        {career.description}
+        <span className="p-column-title">StartDate</span>
+        {startDate}
       </>
     );
   };
 
-  const durationBodyTemplate = (career: ICareer) => {
+  const finishDataBodyTemplate = (event: IEvent) => {
+    const finishDate = new Date(event.finishDate).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
     return (
       <>
-        <span className="p-column-title">Duration</span>
-        {career.duration}
+        <span className="p-column-title">finishData</span>
+        {finishDate}
       </>
     );
   };
 
-  const creditsBodyTemplate = (career: ICareer) => {
+  const groupsBodyTemplate = (event: IEvent) => {
+    if (!event.groupsIncluded || !Array.isArray(event.groupsIncluded)) {
+      return <span className="p-column-title">groupsIncluded</span>;
+    }
+  
+    const groupQueries = event.groupsIncluded.map((group) =>
+      useGetGroupByIdQuery<IGetGroupByIdQuery>(GRAPHQL_CLIENT, { id: group })
+    );
+  
+    const groups = groupQueries.map(({ data }) => data?.getGroupById?.identifier || "").join(", ");
+  
     return (
       <>
-        <span className="p-column-title">Credits</span>
-        {career.credits}
+        <span className="p-column-title">groupsIncluded</span>
+        {groups}
       </>
     );
   };
 
-  const certificateBodyTemplate = (career: ICareer) => {
-    return (
-      <i
-        className={classNames('pi', {
-          'text-green-500 pi-check-circle': career.isCertified,
-          'text-pink-500 pi-times-circle': !career.isCertified,
-        })}
-      />
-    );
-  };
-  const actionBodyTemplate = (rowData: Demo.career) => {
+  const actionBodyTemplate = (rowData: Demo.event) => {
+
     return (
       <div className="flex align-items-center">
         <Button
@@ -168,7 +165,7 @@ function EventCrud() {
           rounded
           outlined
           severity="warning"
-          onClick={() => editCareer(rowData)}
+          onClick={() => editEvent(rowData)}
           style={{ marginRight: '10px' }}
         />
         {roles.includes('SUPER_ADMINISTRATOR') && (
@@ -178,7 +175,7 @@ function EventCrud() {
             rounded
             outlined
             severity="danger"
-            onClick={() => confirmDeleteCareer(rowData)}
+            onClick={() => confirmDeleteEvent(rowData)}
           />
         )}
       </div>
@@ -199,59 +196,124 @@ function EventCrud() {
     </div>
   );
 
+  console.log('Eventdata', selectedEvent);
+
   const deletecareerDialogFooter = () => (
     <>
-      <Button label="No" icon="pi pi-times" text onClick={hideDeleteCareerDialog} />
-      <Button label="Yes" icon="pi pi-check" text onClick={deleteCareer} />
+      <Button label="No" icon="pi pi-times" text onClick={hideDeleteEventDialog} />
+      <Button label="Yes" icon="pi pi-check" text onClick={deleteEvent} />
     </>
   );
 
   return (
-    <div className="grid">
+    <div className="grid crud-demo">
       <div className="col-12">
-        <div className="card grid">
+        <div className="card">
           <Toast ref={toast} />
 
-          {selectedCareer && visibleEditCareer && (
-            <EditCareerDialogForm
+          {selectedEvent && visibleEditEvent && (
+            <EditEventDialogForm
               headerTitle={t('module.career.dashboard.dialog.edit.header')}
-              visible={visibleEditCareer}
-              setVisible={setVisibleEditCareer}
-              career={selectedCareer}
+              visible={visibleEditEvent}
+              setVisible={setVisibleEditEvent}
+              event={selectedEvent}
             />
           )}
-          <div className="col-8">
-            <Calendar
-              value={date}
-              onChange={(e: CalendarChangeEvent) => setDate(e.value)}
-              inline
+
+          <DataTable
+            ref={dt}
+            value={Eventdata?.getAllEvents.docs}
+            selection={selectedEvents}
+            onSelectionChange={(e) => setSelectedEvents(e.value as any)}
+            dataKey="_id"
+            paginator
+            rows={10}
+            rowsPerPageOptions={[5, 10, 25]}
+            className="datatable-responsive"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} carreras"
+            globalFilter={globalFilter}
+            emptyMessage={t('global.dictionary.Nocareer')}
+            header={header}
+            responsiveLayout="scroll"
+          >
+            <Column
+              field="name"
+              header={t('global.dictionary.tcareerName')}
+              sortable
+              body={activityBodyTemplate}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
             />
-          </div>
-          <div className="col-4">
-            <div className="flex align-items-center justify-content-between">
-              <h1 className="m-0">{t('global.dictionary.careerdirectory')}</h1>
-              <Button
-                label={t('global.dictionary.export')}
-                icon="pi pi-upload"
-                className="p-button-rounded p-button-raised"
-                onClick={exportCSV}
-              />
-            </div>
-          </div>
+            <Column
+              field="description"
+              header={t('global.dictionary.tcareerDescription')}
+              sortable
+              body={startDateBodyTemplate}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
+            />
+            <Column
+              field="duration"
+              header={t('global.dictionary.tduration')}
+              sortable
+              body={finishDataBodyTemplate}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
+            />
+            <Column
+              field="institute"
+              header={t('global.dictionary.tcredits')}
+              sortable
+              body={groupsBodyTemplate}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
+            />
+            <Column
+              body={actionBodyTemplate}
+              header="Editar / Borrar"
+              headerStyle={{
+                minWidth: '10rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+            />
+          </DataTable>
 
           <Dialog
-            visible={deleteCareerDialog}
+            visible={deleteEventDialog}
             style={{ width: '450px' }}
             header="Confirm"
             modal
             footer={deletecareerDialogFooter}
-            onHide={hideDeleteCareerDialog}
+            onHide={hideDeleteEventDialog}
           >
             <div className="flex align-items-center justify-content-center">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {career && (
+              {event && (
                 <span>
-                  ¿Estás seguro de que quieres eliminar <b>{career.name}</b>?
+                  ¿Estás seguro de que quieres eliminar <b>{event.name}</b>?
                 </span>
               )}
             </div>

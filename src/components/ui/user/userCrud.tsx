@@ -285,6 +285,8 @@ function UserCrud() {
     </div>
   );
 
+  console.log(selectedUser);
+
   const deleteuserDialogFooter = () => (
     <>
       <Button label="No" icon="pi pi-times" text onClick={hideDeleteUserDialog} />

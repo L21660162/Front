@@ -1,0 +1,54 @@
+query GetAllAttendances($filter: AttendanceArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllAttendances(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      createdAt
+      deletedAt
+      firstPass
+      isDeleted
+      period
+      schedule
+      secondPass
+      updatedAt
+      uploadedBy
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+
+query GetAllAttendances($filter: AttendanceArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllAttendances(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      createdAt
+      deletedAt
+      firstPass
+      isDeleted
+      period
+      schedule
+      secondPass
+      updatedAt
+      uploadedBy
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useRef, useState } from 'react';
+import React, { PropsWithChildren, useRef, useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
@@ -14,8 +14,9 @@ import { IUpdateCareerInput, IEvent, useUpdateEventMutation, IUpdateEventInput, 
 import { DialogStore } from '../../../../store/global/types';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
-import React from 'react';
-import React from 'react';
+import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
+import { useAccessTokenData } from '../../../../store/auth/store';
+import { TokenData } from '../../../../store/auth/type';
 
 type EventsFormProps = {
   headerTitle: string;
@@ -33,10 +34,15 @@ export default function EditEventDialogForm({
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/settings/career' });
   const toast = useRef<Toast>(null);
+  const { _id } = useAccessTokenData() as TokenData;
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
-  let periodData: Array<IPeriod> = [];
-  const [selecGroups, setSelecGroups] = React.useState<IGroup[]>([]);
-  let groupsLabels: Array<{ label: string; value: string }> = [];
+  const [periodData, setPeriodData] = useState<IPeriod[]>([]);
+  const [groupsLabels, setGroupsLabels] = useState<{ label: string; value: string }[]>([]);
+  const [selecGroups, setSelecGroups] = useState<IGroup[]>([]);
+
+  const settime = (data) => {
+    return new Date(data);
+  };
 
   const { data: period } = useGetAllPeriodsQuery(GRAPHQL_CLIENT, {
     limit: 100,
@@ -56,16 +62,22 @@ export default function EditEventDialogForm({
     },
   });
 
-  if (period && Array.isArray(period?.getAllPeriods.docs)) {
-    periodData = period?.getAllPeriods.docs;
-  }
+  useEffect(() => {
+    if (period && Array.isArray(period?.getAllPeriods.docs)) {
+      setPeriodData(period?.getAllPeriods.docs);
+    }
+  }, [period]);
 
-  if (groups && Array.isArray(groups?.getAllGroups.docs)) {
-    groupsLabels = groups?.getAllGroups.docs.map((group: IGroup) => ({
-      label: group.identifier,
-      value: group._id,
-    }));
-  }
+  useEffect(() => {
+    if (groups && Array.isArray(groups?.getAllGroups.docs)) {
+      setGroupsLabels(
+        groups?.getAllGroups.docs.map((group: IGroup) => ({
+          label: group.identifier,
+          value: group._id,
+        }))
+      );
+    }
+  }, [groups]);
 
   const { mutate } = useUpdateEventMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -94,7 +106,6 @@ export default function EditEventDialogForm({
     },
   });
 
-
   const {
     handleSubmit,
     control,
@@ -106,16 +117,29 @@ export default function EditEventDialogForm({
     defaultValues: {
       _id: event._id,
       activity: event.activity,
-      startDate: event.startDate,
-      finishDate: event.finishDate,
+      startDate: settime(event.startDate),
+      finishDate: settime(event.finishDate),
+      period: event.period,
       groupsIncluded: event.groupsIncluded,
+      uploadedBy: _id,
     },
   });
 
   const onSubmit: SubmitHandler<IUpdateEventInput> = (data: IUpdateEventInput) => {
+    const { _id, activity, startDate, finishDate, groupsIncluded, uploadedBy } = data;
+
+    const payload: IUpdateEventInput = {
+      _id,
+      activity,
+      startDate,
+      finishDate,
+      groupsIncluded,
+      uploadedBy,
+    };
+
     setIsButtonDisabld(true);
+    mutate({ data: payload });
     reset();
-    mutate({ data });
   };
 
   const footerContent = (
@@ -192,15 +216,18 @@ export default function EditEventDialogForm({
                 required: t('global.forms.validation.startDate') as string,
               }}
               render={({ field, fieldState }) => (
-                <InputText
-                  id={field.name}
-                  {...field}
+                <Calendar
+                  value={field.value}
+                  onChange={(e: CalendarChangeEvent) => field.onChange(e.value)}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
+                  locale="es"
+                  showTime
+                  hourFormat="12"
                 />
               )}
             />
             <label htmlFor="startDate" className={classNames({ 'p-error': !!errors.startDate })}>
-              {t('global.dictionary.abbreviationCareer')}*
+              {t('global.dictionary.startDate')}*
             </label>
           </span>
           {errors.startDate && <small className="p-error">{errors.startDate?.message}</small>}
@@ -216,15 +243,18 @@ export default function EditEventDialogForm({
                 required: t('global.forms.validation.finishDate') as string,
               }}
               render={({ field, fieldState }) => (
-                <InputText
-                  id={field.name}
-                  {...field}
+                <Calendar
+                  value={field.value}
+                  onChange={(e: CalendarChangeEvent) => field.onChange(e.value)}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
+                  locale="es"
+                  showTime
+                  hourFormat="12"
                 />
               )}
             />
             <label htmlFor="finishDate" className={classNames({ 'p-error': !!errors.finishDate })}>
-              {t('global.dictionary.finishDate')}*
+              {t('global.dictionary.finalDate')}*
             </label>
           </span>
           {errors.finishDate && <small className="p-error">{errors.finishDate?.message}</small>}
@@ -273,6 +303,7 @@ export default function EditEventDialogForm({
                   options={groupsLabels}
                   optionLabel="label"
                   optionValue="value"
+                  display="chip"
                   className={classNames({ 'p-invalid': fieldState.invalid })}
                   onChange={(e) => {
                     setSelecGroups(e.value);
@@ -282,7 +313,6 @@ export default function EditEventDialogForm({
                       shouldTouch: true,
                     });
                   }}
-                  showSelectAll={false}
                 />
               )}
             />

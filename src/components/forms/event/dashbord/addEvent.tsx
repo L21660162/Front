@@ -22,6 +22,9 @@ import {
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
+import { addLocale } from 'primereact/api';
+import { useAccessTokenData } from '../../../../store/auth/store';
+import { TokenData } from '../../../../store/auth/type';
 
 type EventFormProps = {
   headerTitle: string;
@@ -38,10 +41,19 @@ export default function EventDialogForm({
   const toast = useRef<Toast>(null);
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
   let periodData: Array<IPeriod> = [];
+  const { _id } = useAccessTokenData() as TokenData;
   const [selecGroups, setSelecGroups] = React.useState<IGroup[]>([]);
   let groupsLabels: Array<{ label: string; value: string }> = [];
-  const [startData, setStartData] = useState<string | Date | Date[] | null>(null);
-  const [finalData, setFinalData] = useState<string | Date | Date[] | null>(null);
+  addLocale('es', {
+    firstDayOfWeek: 1,
+    dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+    dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+    dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+    monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+    monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+    today: 'Hoy',
+    clear: 'Limpiar'
+});
 
   const { mutate } = useCreateEventMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -112,6 +124,7 @@ export default function EventDialogForm({
       finishDate: '',
       period: '',
       groupsIncluded: [],
+      uploadedBy: _id,
     },
   });
 
@@ -193,8 +206,12 @@ export default function EventDialogForm({
               }}
               render={({ field, fieldState }) => (
                 <Calendar
-                  value={startData}
-                  onChange={(e: CalendarChangeEvent) => setStartData(e.value)}
+                  value={field.value}
+                  onChange={(e: CalendarChangeEvent) => field.onChange(e.value)}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
+                  locale= "es"
+                  showTime
+                  hourFormat="12"
                 />
               )}
             />
@@ -216,8 +233,12 @@ export default function EventDialogForm({
               }}
               render={({ field, fieldState }) => (
                 <Calendar
-                  value={finalData}
-                  onChange={(e: CalendarChangeEvent) => setFinalData(e.value)}
+                  value={field.value}
+                  onChange={(e: CalendarChangeEvent) => field.onChange(e.value)}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
+                  locale= "es"
+                  showTime
+                  hourFormat="12"
                 />
               )}
             />

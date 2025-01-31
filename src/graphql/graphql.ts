@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { RequestInit } from 'graphql-request/src/types.dom';
-import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1599,6 +1599,16 @@ export interface ICreateDepartmentInput {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+export type IGetAllAttendancesQueryVariables = Exact<{
+  filter?: InputMaybe<IAttendanceArgs>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type IGetAllAttendancesQuery = { getAllAttendances: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, createdAt?: any | null, deletedAt?: any | null, firstPass: IAttendanceStatus, isDeleted: boolean, period: string, schedule: string, secondPass: IAttendanceStatus, updatedAt?: any | null, uploadedBy: string }> } };
+
 export type ISignUpMutationVariables = Exact<{
   data: ISignUpInput;
 }>;
@@ -1968,6 +1978,53 @@ export type ISubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }
 export type ISubscriptionSubscription = { userAdded: { _id?: string | null, createdAt?: any | null, email: string, firstName: string, lastName: string, middleName?: string | null, roles: Array<IRoles> } };
 
 
+export const GetAllAttendancesDocument = /*#__PURE__*/ `
+    query GetAllAttendances($filter: AttendanceArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllAttendances(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      createdAt
+      deletedAt
+      firstPass
+      isDeleted
+      period
+      schedule
+      secondPass
+      updatedAt
+      uploadedBy
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+    `;
+export const useGetAllAttendancesQuery = <
+      TData = IGetAllAttendancesQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllAttendancesQueryVariables,
+      options?: UseQueryOptions<IGetAllAttendancesQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllAttendancesQuery, TError, TData>(
+      variables === undefined ? ['GetAllAttendances'] : ['GetAllAttendances', variables],
+      fetcher<IGetAllAttendancesQuery, IGetAllAttendancesQueryVariables>(client, GetAllAttendancesDocument, variables, headers),
+      options
+    );
+
+useGetAllAttendancesQuery.getKey = (variables?: IGetAllAttendancesQueryVariables) => variables === undefined ? ['GetAllAttendances'] : ['GetAllAttendances', variables];
+;
+
+useGetAllAttendancesQuery.fetcher = (client: GraphQLClient, variables?: IGetAllAttendancesQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllAttendancesQuery, IGetAllAttendancesQueryVariables>(client, GetAllAttendancesDocument, variables, headers);
 export const SignUpDocument = /*#__PURE__*/ `
     mutation SignUp($data: SignUpInput!) {
   signUp(data: $data) {

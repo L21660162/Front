@@ -2,7 +2,15 @@ import { z } from 'zod';
 
 const mongoIdSchema = z.string().regex(/^[0-9a-f]{24}$/);
 const roles = z
-  .enum(['SUPER_ADMINISTRATOR', 'ADMINISTRATOR', 'COORDINATOR', 'ORGANIZATION', 'STUDENT'])
+  .enum([
+    'SUPER_ADMINISTRATOR',
+    'DIRECTOR_ACADEMICO',
+    'SUBDIRECTOR_ACADEMICO',
+    'RECURSOS_HUMANOS',
+    'JEFE_ACADEMICO',
+    'DOCENTE',
+    'PREFECTO',
+  ])
   .array();
 
 type Role = z.infer<typeof roles>;

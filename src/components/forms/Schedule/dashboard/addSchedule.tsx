@@ -147,7 +147,7 @@ export default function AddScheduleDialogForm({
     defaultValues: {
       classroom: '',
       finalTime: '',
-      group: '',
+      classGroup: '',
       period: '',
       startTime: '',
       subject: '',
