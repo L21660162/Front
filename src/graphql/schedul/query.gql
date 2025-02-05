@@ -36,8 +36,8 @@ query GetScheduleById($id: ID) {
   }
 }
 
-query GetSchedulesFormatted($teacher: ID) {
-  getSchedulesFormatted(teacher: $teacher) {
+query GetSchedulesFormatted($teacher: ID, $schedule: ID) {
+  getSchedulesFormatted(teacher: $teacher, schedule: $schedule) {
     _id
     classroomIdentifier
     finalTime

@@ -17,6 +17,8 @@ import { TokenData } from '../../../store/auth/type';
 import { dialogStore } from '../../../store/global/dialogStore';
 import EditScheduleViewDialogForm from '../../forms/Schedule/dashboard/editScheduleView';
 import JustifyStatus from './justifieStatus';
+import Addjustify from '../../justify/dashbord/addjustify';
+import ViewJustify from '../../justify/dashbord/viewjustifi';
 
 interface ITeacherSearchResult {
   _id?: string | null | undefined;
@@ -42,6 +44,10 @@ export default function JustifyCrud() {
   const { visible, setVisible } = dialogStore();
   const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const currentDay = new Date().getDay();
+
+  const handleVisibilityChange = (newVisible) => {
+    setVisible(newVisible);
+  };
 
   const {
     data: allTeacherData,
@@ -157,7 +163,7 @@ export default function JustifyCrud() {
                     </div>
                     <div className="col-4">
                       <span className="font-semibold text-center text-sm">
-                        {JustifyStatus(product._id, 'Hola')}
+                        {JustifyStatus(product._id, handleVisibilityChange)}
                       </span>
                     </div>
                     <div className="col-4 text-right">
@@ -177,11 +183,11 @@ export default function JustifyCrud() {
         )}
 
         {visible && (
-          <EditScheduleViewDialogForm
+          <Addjustify
             visible={visible}
             setVisible={setVisible}
-            schedule={selectSchedule}
             headerTitle={t('module.subject.dashboard.dialog.edit.header')}
+            id="678fe4cce5dab4d5b0064588"
           />
         )}
       </div>

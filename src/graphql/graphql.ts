@@ -164,6 +164,7 @@ export interface ICreateCareerInput {
 
 /** CreateFile */
 export interface ICreateFile {
+  attendanceJustified: Scalars['ID']['input'];
   extension: Scalars['String']['input'];
   nameFile: Scalars['String']['input'];
   path: Scalars['String']['input'];
@@ -239,6 +240,7 @@ export interface IEventIdArgs {
 export interface IFile {
   _id: Scalars['ID']['output'];
   approvedBy?: Maybe<Scalars['JSON']['output']>;
+  attendanceJustified?: Maybe<Scalars['ID']['output']>;
   comments?: Maybe<Array<IFileComment>>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -253,6 +255,7 @@ export interface IFile {
 }
 
 export interface IFileArgs {
+  attendanceJustified?: InputMaybe<Scalars['ID']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   fileType?: InputMaybe<Array<IFileType>>;
   filename?: InputMaybe<Scalars['String']['input']>;
@@ -275,13 +278,38 @@ export interface IFileIdArgs {
 
 /** Define the file type that was uploaded by the student */
 export enum IFileType {
-  FotoPerfil = 'FOTO_PERFIL',
   /** Justificante */
   Justificante = 'JUSTIFICANTE',
   /** Reporte en Excel */
   ReporteExcel = 'REPORTE_EXCEL',
   /** Reporte en PDF */
   ReportePdf = 'REPORTE_PDF'
+}
+
+/** Object type for dashboard statistics */
+export interface IGeneralStatistics {
+  classAbsentDay: Scalars['Float']['output'];
+  classAbsentMonth: Scalars['Float']['output'];
+  classAbsentPeriod: Scalars['Float']['output'];
+  classAbsentSemester: Scalars['Float']['output'];
+  classAbsentYear: Scalars['Float']['output'];
+  classJustifyDay: Scalars['Float']['output'];
+  classJustifyMonth: Scalars['Float']['output'];
+  classJustifyPeriod: Scalars['Float']['output'];
+  classJustifySemester: Scalars['Float']['output'];
+  classJustifyYear: Scalars['Float']['output'];
+  classPresentDay: Scalars['Float']['output'];
+  classPresentMonth: Scalars['Float']['output'];
+  classPresentPeriod: Scalars['Float']['output'];
+  classPresentSemester: Scalars['Float']['output'];
+  classPresentYear: Scalars['Float']['output'];
+  weekday1: Scalars['Float']['output'];
+  weekday2: Scalars['Float']['output'];
+  weekday3: Scalars['Float']['output'];
+  weekday4: Scalars['Float']['output'];
+  weekday5: Scalars['Float']['output'];
+  weekday6: Scalars['Float']['output'];
+  weekday7: Scalars['Float']['output'];
 }
 
 /** group */
@@ -857,35 +885,6 @@ export interface IPeriodIdArgs {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
-export interface IPeriodoActual {
-  cierre_horarios: Scalars['String']['output'];
-  cierre_seleccion: Scalars['String']['output'];
-  fecha_inicio: Scalars['String']['output'];
-  fecha_inicio_c: Scalars['String']['output'];
-  fecha_termino: Scalars['String']['output'];
-  fecha_termino_c: Scalars['String']['output'];
-  fin_enc_estudiantil: Scalars['String']['output'];
-  fin_enc_estudiantil_c: Scalars['String']['output'];
-  fin_sele_alumnos: Scalars['String']['output'];
-  fin_sele_alumnos_c: Scalars['String']['output'];
-  identificacion_corta: Scalars['String']['output'];
-  identificacion_larga: Scalars['String']['output'];
-  inicio_enc_estudiantil: Scalars['String']['output'];
-  inicio_enc_estudiantil_c: Scalars['String']['output'];
-  inicio_sele_alumnos: Scalars['String']['output'];
-  inicio_sele_alumnos_c: Scalars['String']['output'];
-  inicio_vacacional: Scalars['String']['output'];
-  inicio_vacacional_c: Scalars['String']['output'];
-  inicio_vacacional_ss: Scalars['String']['output'];
-  inicio_vacacional_ss_c: Scalars['String']['output'];
-  periodo: Scalars['String']['output'];
-  status: Scalars['String']['output'];
-  termino_vacacional: Scalars['String']['output'];
-  termino_vacacional_c: Scalars['String']['output'];
-  termino_vacacional_ss: Scalars['String']['output'];
-  termino_vacacional_ss_c: Scalars['String']['output'];
-}
-
 export interface IPeriodos {
   finalDate: Scalars['DateTime']['output'];
   largeIdentifier: Scalars['String']['output'];
@@ -920,6 +919,7 @@ export interface IQuery {
   getAllSubjects: IPaginateSubject;
   getAllUsers: IPaginateUser;
   getAttendanceById: IAttendance;
+  getAttendanceStatistics: IGeneralStatistics;
   getBuildingById: IBuilding;
   getById: IUser;
   getCareerById: ICareer;
@@ -933,7 +933,6 @@ export interface IQuery {
   getLastPeriod: IPeriod;
   getMaterias: Array<IMaterias>;
   getPeriodById: IPeriod;
-  getPeriodoActual: IPeriodoActual;
   getPeriodos: Array<IPeriodos>;
   getProfesores: Array<IProfesores>;
   getScheduleById: ISchedule;
@@ -1107,6 +1106,15 @@ export interface IQueryGetAttendanceByIdArgs {
 }
 
 
+export interface IQueryGetAttendanceStatisticsArgs {
+  career?: InputMaybe<Scalars['ID']['input']>;
+  department?: InputMaybe<Scalars['ID']['input']>;
+  period?: InputMaybe<Scalars['ID']['input']>;
+  semester?: InputMaybe<Scalars['String']['input']>;
+  teacher?: InputMaybe<Scalars['ID']['input']>;
+}
+
+
 export interface IQueryGetBuildingByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
@@ -1155,25 +1163,12 @@ export interface IQueryGetGroupByIdArgs {
 
 
 export interface IQueryGetGruposArgs {
-  periodo: Scalars['String']['input'];
+  actualPeriod: Scalars['String']['input'];
 }
 
 
 export interface IQueryGetHorariosArgs {
-  periodo: Scalars['String']['input'];
-}
-
-
-export interface IQueryGetLastPeriodArgs {
-  filter?: InputMaybe<IPeriodArgs>;
-  lean?: InputMaybe<Scalars['Boolean']['input']>;
-  leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  populate?: InputMaybe<Scalars['String']['input']>;
-  select?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['JSON']['input']>;
+  actualPeriod: Scalars['String']['input'];
 }
 
 
@@ -1190,8 +1185,13 @@ export interface IQueryGetScheduleByIdArgs {
 
 
 export interface IQueryGetSchedulesFormattedArgs {
+  actualTime?: InputMaybe<Scalars['String']['input']>;
   classroom?: InputMaybe<Scalars['ID']['input']>;
+  period?: InputMaybe<Scalars['ID']['input']>;
+  schedule?: InputMaybe<Scalars['ID']['input']>;
   teacher?: InputMaybe<Scalars['ID']['input']>;
+  uploadedBy?: InputMaybe<Scalars['ID']['input']>;
+  weekday?: InputMaybe<Scalars['Float']['input']>;
 }
 
 
@@ -1269,13 +1269,20 @@ export interface IScheduleIdArgs {
 /** Object type for dashboard statistics */
 export interface ISchedulesFormatted {
   _id: Scalars['ID']['output'];
+  buildingId: Scalars['String']['output'];
+  buildingLetter: Scalars['String']['output'];
+  buildingName: Scalars['String']['output'];
+  classroomId: Scalars['String']['output'];
   classroomIdentifier: Scalars['String']['output'];
   finalTime: Scalars['DateTime']['output'];
+  groupId: Scalars['String']['output'];
   groupIdentifier: Scalars['String']['output'];
   startTime: Scalars['DateTime']['output'];
+  subjectId: Scalars['String']['output'];
   subjectLargeName: Scalars['String']['output'];
   subjectShortName: Scalars['String']['output'];
   teacherFirstName: Scalars['String']['output'];
+  teacherId: Scalars['String']['output'];
   teacherLastName: Scalars['String']['output'];
   teacherMiddleName?: Maybe<Scalars['String']['output']>;
   teacherRfc: Scalars['String']['output'];
@@ -1387,6 +1394,7 @@ export interface IUpdateEventInput {
 export interface IUpdateFile {
   _id?: InputMaybe<Scalars['ID']['input']>;
   approvedBy: Scalars['String']['input'];
+  attendanceJustified: Scalars['ID']['input'];
   description: Scalars['String']['input'];
   namefile: Scalars['String']['input'];
   person: Scalars['String']['input'];
@@ -1886,6 +1894,7 @@ export type IGetScheduleByIdQuery = { getScheduleById: { _id: string, classroom:
 
 export type IGetSchedulesFormattedQueryVariables = Exact<{
   teacher?: InputMaybe<Scalars['ID']['input']>;
+  schedule?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
@@ -3287,8 +3296,8 @@ useGetScheduleByIdQuery.getKey = (variables?: IGetScheduleByIdQueryVariables) =>
 
 useGetScheduleByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetScheduleByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetScheduleByIdQuery, IGetScheduleByIdQueryVariables>(client, GetScheduleByIdDocument, variables, headers);
 export const GetSchedulesFormattedDocument = /*#__PURE__*/ `
-    query GetSchedulesFormatted($teacher: ID) {
-  getSchedulesFormatted(teacher: $teacher) {
+    query GetSchedulesFormatted($teacher: ID, $schedule: ID) {
+  getSchedulesFormatted(teacher: $teacher, schedule: $schedule) {
     _id
     classroomIdentifier
     finalTime

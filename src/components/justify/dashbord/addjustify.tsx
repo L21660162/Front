@@ -1,30 +1,33 @@
 import React, { PropsWithChildren, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
-import { set } from 'idb-keyval';
 import { Tag } from 'primereact/tag';
 import { ProgressBar } from 'primereact/progressbar';
 import { Toast } from 'primereact/toast';
 import { Tooltip } from 'primereact/tooltip';
 import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
-import { dialogStore } from '../../../store/global/dialogStore';
-import { IAttendanceStatus, useGetAllAttendancesQuery } from '../../../graphql/graphql';
+import { DataView } from 'primereact/dataview';
+import { IAttendanceStatus, ISchedulesFormatted, useGetAllAttendancesQuery, useGetSchedulesFormattedQuery } from '../../../graphql/graphql';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import { DialogStore } from '../../../store/global/types';
+import { Card } from 'primereact/card';
 
 type JustifyFormProps = {
   headerTitle: string;
+  id: string;
 };
 type JustifyFormPropsAndDialogStore = JustifyFormProps & DialogStore;
 
-export default function Addjustify({
+export default function AddJustify({
   headerTitle,
   visible,
   setVisible,
+  id,
 }: PropsWithChildren<JustifyFormPropsAndDialogStore>) {
   const toast = useRef(null);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
+  let scheduleData: Array<ISchedulesFormatted> = [];
 
   const { data: status } = useGetAllAttendancesQuery(GRAPHQL_CLIENT, {
     page: 1,
@@ -36,6 +39,32 @@ export default function Addjustify({
       secondPass: IAttendanceStatus.Absent,
     },
   });
+
+  const { data: scheduledata } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
+    schedule: status?.getAllAttendances.docs[0].schedule,
+  });
+
+  console.log('scheduleData', scheduledata?.getSchedulesFormatted[0].startTime);
+
+  const itemTemplate2 = (data: IAttendance) => {
+    return (
+      <div className="col-12">
+        <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
+          <div className="flex flex-column lg:flex-row justify-content-between align-items-center xl:align-items-start lg:flex-1 gap-4">
+            <div className="flex flex-column align-items-center lg:align-items-start gap-3">
+              <div className="flex flex-column gap-1">
+                <div className="text-2 font-bold text-900">{scheduledata?.getSchedulesFormatted[0].subjectShortName}</div>
+                <div className="text-1 text-700">
+                  {scheduledata?.getSchedulesFormatted[0].startTime} - {scheduledata?.getSchedulesFormatted[0].finalTime}
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-row lg:flex-column align-items-center lg:align-items-end gap-4 lg:gap-2" />
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const onTemplateSelect = (e) => {
     let _totalSize = totalSize;
@@ -91,22 +120,10 @@ export default function Addjustify({
   };
 
   const itemTemplate = (file, props) => {
+    console.log('file', file);
     return (
-      <div className="flex align-items-center flex-wrap">
-        <div className="flex align-items-center" style={{ width: '40%' }}>
-          <img alt={file.name} role="presentation" src={file.objectURL} width={100} />
-          <span className="flex flex-column text-left ml-3">
-            {file.name}
-            <small>{new Date().toLocaleDateString()}</small>
-          </span>
-        </div>
-        <Tag value={props.formatSize} severity="warning" className="px-3 py-2" />
-        <Button
-          type="button"
-          icon="pi pi-times"
-          className="p-button-outlined p-button-rounded p-button-danger ml-auto"
-          onClick={() => onTemplateRemove(file, props.onRemove)}
-        />
+      <div className="w-full h-full">
+        <iframe src={file.objectURL} width="100%" height="100%" title="PDFDoc" />
       </div>
     );
   };
@@ -151,33 +168,42 @@ export default function Addjustify({
       <Dialog
         header={headerTitle}
         visible={visible}
-        style={{ width: '35rem' }}
+        style={{ width: '85rem', height: '50rem' }}
         onHide={() => setVisible(false)}
       >
-        <Toast ref={toast} />
+        <div className="grid h-full">
+          <div className="col-4 flex flex-column h-full">
+            <Card title="Historial" className="p-4 flex-grow-1">
+              <DataView value={status?.getAllAttendances.docs} itemTemplate={itemTemplate2} />
+            </Card>
+          </div>
+          <div className="col-8 flex flex-column h-full">
+            <Toast ref={toast} />
 
-        <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
-        <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
-        <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
+            <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
+            <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
+            <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
-        <FileUpload
-          ref={fileUploadRef}
-          name="demo[]"
-          url="/api/upload"
-          multiple
-          accept="image/*"
-          maxFileSize={1000000}
-          onUpload={onTemplateUpload}
-          onSelect={onTemplateSelect}
-          onError={onTemplateClear}
-          onClear={onTemplateClear}
-          headerTemplate={headerTemplate}
-          itemTemplate={itemTemplate}
-          emptyTemplate={emptyTemplate}
-          chooseOptions={chooseOptions}
-          uploadOptions={uploadOptions}
-          cancelOptions={cancelOptions}
-        />
+            <FileUpload
+              ref={fileUploadRef}
+              name="demo[]"
+              url="/api/upload"
+              multiple
+              accept="pdf/*"
+              onUpload={onTemplateUpload}
+              onSelect={onTemplateSelect}
+              onError={onTemplateClear}
+              onClear={onTemplateClear}
+              headerTemplate={headerTemplate}
+              itemTemplate={itemTemplate}
+              emptyTemplate={emptyTemplate}
+              chooseOptions={chooseOptions}
+              uploadOptions={uploadOptions}
+              cancelOptions={cancelOptions}
+              className="flex-grow-1"
+            />
+          </div>
+        </div>
       </Dialog>
     </div>
   );

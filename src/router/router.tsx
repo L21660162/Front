@@ -11,7 +11,6 @@ import Example from '../pages/example';
 import OrganizationDashboard from '../pages/organization/index';
 import OrganizationManagement from '../pages/organization/management';
 import VacancyDashboard from '../pages/vacancy/index';
-import VacancyManagement from '../pages/vacancy/management';
 import Career from '../pages/ maintenance';
 import UserDashboard from '../pages/user';
 import CovenantPage from '../pages/covenant';
@@ -282,7 +281,6 @@ const routeConfig = rootRoute.addChildren([
   careerSettings,
   eventRoute,
 ]);
-
 
 // Create the router using your route tree
 const router = new Router({ routeTree: routeConfig });
