@@ -901,6 +901,7 @@ export interface IQuery {
   getScheduleById: ISchedule;
   getSchedulesFormatted: Array<ISchedulesFormatted>;
   getSubjectById: ISubject;
+  getUniqueOptionsCareer: IUniqueOptionsCareer;
   getUserById: IUser;
   me: IUser;
   refreshToken: IJwtAccessToken;
@@ -1236,6 +1237,12 @@ export interface ISignUpInput {
   password: Scalars['String']['input'];
 }
 
+/** Small data for careers */
+export interface ISmallCareer {
+  label: Scalars['String']['output'];
+  value: Scalars['ID']['output'];
+}
+
 export interface ISoftDeleteResponse {
   deleted: Scalars['Float']['output'];
 }
@@ -1267,6 +1274,12 @@ export interface ISubjectIdArgs {
 export interface ISubscription {
   importedUsers: Array<IUser>;
   userAdded: IUser;
+}
+
+/** Object type for options statistics */
+export interface IUniqueOptionsCareer {
+  careers: Array<ISmallCareer>;
+  semesters: Array<Scalars['String']['output']>;
 }
 
 /** Update attendance info input */
@@ -2242,6 +2255,15 @@ export type IGetScheduleByIdQuery = {
     startTime: any;
     subject: string;
     updatedAt?: any | null;
+  };
+};
+
+export type IGetUniqueOptionsCareerQueryVariables = Exact<{ [key: string]: never }>;
+
+export type IGetUniqueOptionsCareerQuery = {
+  getUniqueOptionsCareer: {
+    semesters: Array<string>;
+    careers: Array<{ value: string; label: string }>;
   };
 };
 
@@ -4094,6 +4116,50 @@ useGetScheduleByIdQuery.fetcher = (
   fetcher<IGetScheduleByIdQuery, IGetScheduleByIdQueryVariables>(
     client,
     GetScheduleByIdDocument,
+    variables,
+    headers
+  );
+export const GetUniqueOptionsCareerDocument = /*#__PURE__*/ `
+    query GetUniqueOptionsCareer {
+  getUniqueOptionsCareer {
+    semesters
+    careers {
+      value
+      label
+    }
+  }
+}
+    `;
+export const useGetUniqueOptionsCareerQuery = <
+  TData = IGetUniqueOptionsCareerQuery,
+  TError = unknown
+>(
+  client: GraphQLClient,
+  variables?: IGetUniqueOptionsCareerQueryVariables,
+  options?: UseQueryOptions<IGetUniqueOptionsCareerQuery, TError, TData>,
+  headers?: RequestInit['headers']
+) =>
+  useQuery<IGetUniqueOptionsCareerQuery, TError, TData>(
+    variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables],
+    fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(
+      client,
+      GetUniqueOptionsCareerDocument,
+      variables,
+      headers
+    ),
+    options
+  );
+
+useGetUniqueOptionsCareerQuery.getKey = (variables?: IGetUniqueOptionsCareerQueryVariables) =>
+  variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables];
+useGetUniqueOptionsCareerQuery.fetcher = (
+  client: GraphQLClient,
+  variables?: IGetUniqueOptionsCareerQueryVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(
+    client,
+    GetUniqueOptionsCareerDocument,
     variables,
     headers
   );

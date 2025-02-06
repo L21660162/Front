@@ -1,5 +1,12 @@
 import { classNames } from 'primereact/utils';
-import React, { forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import { AppTopbarRef } from '../types/types';
 import { LayoutContext } from './context/layoutcontext';
 import { useNavigate } from '@tanstack/react-router';
@@ -22,6 +29,7 @@ const { setAccessToken, setRefreshToken } = getActions();
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   const { layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
   const [menuToggle, setMenuToggle] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const menubuttonRef = useRef(null);
   const topbarmenuRef = useRef(null);
   const topbarmenubuttonRef = useRef(null);
@@ -148,7 +156,23 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
   };
 
   const rol = roles[0];
-  const image = 'http://localhost:4000' + StudentServiceStatusData?.getUserById.photo;
+
+  useEffect(() => {
+    if (
+      StudentServiceStatusData &&
+      StudentServiceStatusData.getUserById &&
+      StudentServiceStatusData.getUserById.photo
+    ) {
+      setProfileImage(`http://localhost:4000${StudentServiceStatusData.getUserById.photo}`);
+    }
+    if (
+      StudentServiceStatusData &&
+      StudentServiceStatusData.getUserById &&
+      !StudentServiceStatusData.getUserById.photo
+    ){
+      setProfileImage(`http://localhost:4000/uploads/users/default_profile.jpg`)
+    }
+  }, [StudentServiceStatusData]);
 
   return (
     <div className="layout-topbar">
@@ -222,8 +246,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
           aria-controls="popup_menu_right"
           aria-haspopup
         >
-          <Avatar image={image} size="xlarge" shape="circle" />
-          <span>{t('topbar.account')}</span>
+          <Avatar image={profileImage} className="bg-primary" shape="circle" size="xlarge" />
         </button>
         <Menu model={items} popup ref={menuRight} id="popup_menu_right" popupAlignment="right" />
       </div>

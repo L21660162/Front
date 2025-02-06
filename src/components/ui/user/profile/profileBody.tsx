@@ -60,7 +60,7 @@ function BodyProfile() {
         detail: t('global.toast.success.detail.profileEditSuccess'),
       });
       setTimeout(() => {
-        navigate({ to: '/user/dashboard' });
+        navigate({ to: '/home/dashboard' });
         window.location.reload();
       }, 200);
       setButtonDisabled(false);
@@ -96,6 +96,9 @@ function BodyProfile() {
           setSelectedFile(imageFile);
         }
       });
+    }
+    if (userData && userData.getUserById && !userData.getUserById.photo ) {
+      setLogo(`http://localhost:4000/uploads/users/default_profile.jpg`);
     }
   }, [userData]);
 
@@ -145,17 +148,16 @@ function BodyProfile() {
       <div className="col-12">
         <div className="card" style={{ height: '100%' }}>
           <div className="element">
-            <div className="field mt-6 flex align-content-center">
+            <div className="field flex justify-content-center flex-wrap">
               <span className="p-float-label p-input-icon-right">
-                <i className="pi pi-upload" />
                 {logo && (
                   <div className="element">
-                    <div className="field flex justify-content-center flex-wrap">
+                    <div className="field">
                       <div className="flex align-items-center justify-content-center">
                         <img
                           src={logo}
                           alt="Foto de Perfil"
-                          className="border-round w-20rem h-20rem"
+                          className="border-circle w-20rem h-20rem bg-primary"
                         />
                       </div>
                     </div>
@@ -166,6 +168,7 @@ function BodyProfile() {
                   url="http://localhost:4000/graphql"
                   mode="basic"
                   accept="image/*"
+                  className="flex align-items-center justify-content-center"
                   chooseLabel={t('global.dictionary.profilePicture') as string}
                   onSelect={(e) => {
                     const selected = e.files[0];
@@ -346,7 +349,7 @@ function BodyProfile() {
             </div>
           </div>
           <div className="element">
-            <div className="field">
+            <div className="field flex justify-content-center flex-wrap">
               <span className="field-radiobutton">
                 <Controller
                   name="gender"
@@ -401,7 +404,7 @@ function BodyProfile() {
               label="Cancelar"
               icon="pi pi-times"
               onClick={() => {
-                navigate({ to: '/me/profile', replace: true });
+                navigate({ to: '/home/dashboard', replace: true });
               }}
               disabled={buttonDisabled}
             />

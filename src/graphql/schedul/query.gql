@@ -34,3 +34,13 @@ query GetScheduleById($id: ID) {
     updatedAt
   }
 }
+
+query GetUniqueOptionsCareer {
+  getUniqueOptionsCareer {
+    semesters
+    careers {
+      value
+      label
+    }
+  }
+}
