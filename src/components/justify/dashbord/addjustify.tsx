@@ -7,7 +7,13 @@ import { Tooltip } from 'primereact/tooltip';
 import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
 import { DataView } from 'primereact/dataview';
-import { IAttendanceStatus, ISchedulesFormatted, useGetAllAttendancesQuery, useGetSchedulesFormattedQuery } from '../../../graphql/graphql';
+import {
+  IAttendance,
+  IAttendanceStatus,
+  ISchedulesFormatted,
+  useGetAllAttendancesQuery,
+  useGetSchedulesFormattedQuery,
+} from '../../../graphql/graphql';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import { DialogStore } from '../../../store/global/types';
 import { Card } from 'primereact/card';
@@ -24,10 +30,10 @@ export default function AddJustify({
   setVisible,
   id,
 }: PropsWithChildren<JustifyFormPropsAndDialogStore>) {
-  const toast = useRef(null);
+  const toast = useRef<Toast>(null);
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
-  let scheduleData: Array<ISchedulesFormatted> = [];
+  const [selectedSchedule, setSelectedSchedule] = useState<null>(null);
 
   const { data: status } = useGetAllAttendancesQuery(GRAPHQL_CLIENT, {
     page: 1,
@@ -44,8 +50,6 @@ export default function AddJustify({
     schedule: status?.getAllAttendances.docs[0].schedule,
   });
 
-  console.log('scheduleData', scheduledata?.getSchedulesFormatted[0].startTime);
-
   const itemTemplate2 = (data: IAttendance) => {
     return (
       <div className="col-12">
@@ -53,13 +57,22 @@ export default function AddJustify({
           <div className="flex flex-column lg:flex-row justify-content-between align-items-center xl:align-items-start lg:flex-1 gap-4">
             <div className="flex flex-column align-items-center lg:align-items-start gap-3">
               <div className="flex flex-column gap-1">
-                <div className="text-2 font-bold text-900">{scheduledata?.getSchedulesFormatted[0].subjectShortName}</div>
+                <div className="text-2 font-bold text-900">
+                  {scheduledata?.getSchedulesFormatted[0].subjectShortName}
+                </div>
                 <div className="text-1 text-700">
-                  {scheduledata?.getSchedulesFormatted[0].startTime} - {scheduledata?.getSchedulesFormatted[0].finalTime}
+                  {new Date(data.createdAt).toLocaleDateString('es-MX', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  })}
                 </div>
               </div>
             </div>
-            <div className="flex flex-row lg:flex-column align-items-center lg:align-items-end gap-4 lg:gap-2" />
+            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
+              <Button icon="pi pi-shopping-cart" className="p-button-rounded" onClick={() => setSelectedSchedule(data._id)}></Button>
+              <span className="text-2xl font-semibold">Hola</span>
+            </div>
           </div>
         </div>
       </div>
@@ -78,14 +91,10 @@ export default function AddJustify({
   };
 
   const onTemplateUpload = (e) => {
-    let _totalSize = 0;
-
-    e.files.forEach((file) => {
-      _totalSize += file.size || 0;
-    });
-
-    setTotalSize(_totalSize);
-    toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
+    if (toast.current) {
+      console.log("Hola");
+      toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
+    }
   };
 
   const onTemplateRemove = (file, callback) => {
@@ -103,6 +112,15 @@ export default function AddJustify({
     const formatedValue =
       fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : '0 B';
 
+    if (selectedSchedule === null) {
+      return (
+        <div
+        className={className}
+        style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}
+      >
+      </div>
+      );
+    }
     return (
       <div
         className={className}
@@ -111,10 +129,6 @@ export default function AddJustify({
         {chooseButton}
         {uploadButton}
         {cancelButton}
-        <div className="flex align-items-center gap-3 ml-auto">
-          <span>{formatedValue} / 1 MB</span>
-          <ProgressBar value={value} showValue={false} style={{ width: '10rem', height: '12px' }} />
-        </div>
       </div>
     );
   };
@@ -124,7 +138,7 @@ export default function AddJustify({
     return (
       <div className="flex w-full h-full flex-grow-1">
         <iframe
-          src={object}
+          src={`${object}#toolbar=0&navpanes=0&scrollbar=0`}
           title="PDFDoc"
           style={{ width: '100%', height: '100%', border: 'none' }}
         />
@@ -133,6 +147,14 @@ export default function AddJustify({
   };
 
   const emptyTemplate = () => {
+    if (selectedSchedule === null) {
+      return (
+      <div className="flex align-items-center flex-column">
+        <i className="pi pi-exclamation-circle p-3" style={{ fontSize: '2em' }}></i>
+        <span>No has seleccionado una asistencia que justificar</span>
+      </div>
+      );
+    }
     return (
       <div className="flex align-items-center h-full">
         <i
@@ -172,7 +194,7 @@ export default function AddJustify({
       <Dialog
         header={headerTitle}
         visible={visible}
-        style={{ width: '85rem', height: '50rem' }}
+        style={{ width: '85rem', height: '70rem' }}
         onHide={() => setVisible(false)}
       >
         <div className="grid h-full">
@@ -190,10 +212,10 @@ export default function AddJustify({
 
             <FileUpload
               ref={fileUploadRef}
-              name="demo[]"
-              url="/api/upload"
+              name="files[]"
+              url="http://localhost:4000/graphql"
               multiple
-              accept="pdf/*"
+              accept="application/pdf"
               onUpload={onTemplateUpload}
               onSelect={onTemplateSelect}
               onError={onTemplateClear}
