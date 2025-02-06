@@ -120,17 +120,21 @@ export default function AddJustify({
   };
 
   const itemTemplate = (file, props) => {
-    console.log('file', file);
+    const object = URL.createObjectURL(file);
     return (
-      <div className="w-full h-full">
-        <iframe src={file.objectURL} width="100%" height="100%" title="PDFDoc" />
+      <div className="flex w-full h-full flex-grow-1">
+        <iframe
+          src={object}
+          title="PDFDoc"
+          style={{ width: '100%', height: '100%', border: 'none' }}
+        />
       </div>
     );
   };
 
   const emptyTemplate = () => {
     return (
-      <div className="flex align-items-center flex-column">
+      <div className="flex align-items-center h-full">
         <i
           className="pi pi-image mt-3 p-5"
           style={{
