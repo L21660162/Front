@@ -1,4 +1,3 @@
-
 mutation UploadClassroomPicture($data: UploadPictureClassroomInput!) {
   uploadClassroomPicture(data: $data) {
     _id

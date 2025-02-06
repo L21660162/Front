@@ -19,6 +19,7 @@ mutation UpdateUser($data: UpdateUserInput!) {
     password
     rfc
     roles
+    photo
     updatedAt
   }
 }
@@ -38,6 +39,7 @@ mutation UpsertUser($data: UpsertUserInput!) {
     password
     rfc
     roles
+    photo
     updatedAt
   }
 }

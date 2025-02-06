@@ -74,7 +74,7 @@ function ScheduleView() {
       page: 1,
       offset: 0,
       filter: {
-        teacher: teacherSelectId, //'678fdf61e5dab4d5b006401d',
+        teacher: teacherSelectId, // '678fdf61e5dab4d5b006401d',
       },
     }
   );
@@ -259,11 +259,11 @@ function ScheduleView() {
                 >
                   <div className="flex flex-wrap align-items-center justify-content-between gap-2">
                     <div className="flex align-items-center gap-2">
-                      <i className="pi pi-tag"></i>
+                      <i className="pi pi-tag" />
                       <span className="font-semibold">{time(product.startTime)}</span>
                     </div>
                     <div className="flex align-items-center gap-2">
-                      <i className="pi pi-tag"></i>
+                      <i className="pi pi-tag" />
                       <span className="font-semibold">{product.hora_fin}</span>
                     </div>
                   </div>
@@ -371,7 +371,7 @@ function ScheduleView() {
           <DataView
             value={[dataTeacherSerch]} //  || listValue
             layout={layout}
-            //sortField={sortField}
+            // sortField={sortField}
             itemTemplate={(data) => itemTemplate(data, layout, null)}
             emptyMessage={String(t('global.dictionary.Novacancy'))}
           />

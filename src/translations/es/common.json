@@ -1,4 +1,14 @@
 {
+  "topbar": {
+    "account": "Mi cuenta",
+    "darkMode": "Invertir color",
+    "accountOptions": {
+      "label": "Opciones",
+      "signOut": "Cerrar sesión",
+      "labelProfile": "Mi Perfil",
+      "account": "Ver Mi Perfil"
+    }
+  },
   "sidebar": {
     "home": {
       "label": "Inicio",
@@ -38,7 +48,8 @@
     },
     "user": {
       "label": "Usuario",
-      "dashboard": "Panel de Usuario"
+      "dashboard": "Panel de Usuario",
+      "profile": "Mi Perfil"
     },
     "subject": {
       "label": "Materia",
@@ -67,11 +78,13 @@
   },
   "global": {
     "forms": {
-      "submit": "Enviar",
+      "submit": "Guardar",
       "edit": "Editar",
       "validation": {
         "firstName": "El nombre es obligatiorio",
-        "lastName": "El apellido es obligatorio",
+        "lastName": "El apellido paterno es obligatorio",
+        "middleName": "El apellido materno es obligatorio",
+        "gender": "El sexo es obligatorio",
         "email": "El correo electrónico es obligatorio",
         "emailRegex": "Dirección de correo electrónico inválida. Ej. example@email.com",
         "password": "La contraseña es obligatoria",
@@ -93,7 +106,8 @@
         "teacher": "Debes colocar el docente",
         "finalTime": "Debes colocar la hora de finalización",
         "startTime": "Debes colocar la hora de inicio",
-        "weekday": "Debes colocar el día de la semana"
+        "weekday": "Debes colocar el día de la semana",
+        "profilePicture": "Debes seleccionar una foto en donde aparezca su rostro"
       }
     },
     "dictionary": {
@@ -106,7 +120,7 @@
       "password": "Contraseña",
       "passwordRecovery": "Recuperar Contraseña",
       "welcome": "Bienvenido",
-      "gener": "Sexo:",
+      "gender": "Sexo:",
       "rfc": "RFC",
       "department": "Departamento",
       "tcareerName": "Nombre",
@@ -134,6 +148,7 @@
       "areaKey": "Codigo de area",
       "subjectname": "Nombre de la materia",
       "classroom": "Nombre del aula",
+      "profilePicture": "Foto de perfil",
       "group": "Grupo",
       "period": "Periodo",
       "teacher": "Docente",
@@ -158,12 +173,16 @@
     },
     "toast": {
       "error": {
-        "summary": "Error"
+        "summary": "Error",
+        "detail": {
+          "profileEditError": "Hubo un error al actualizar tu perfil. Por favor, intenta de nuevo."
+        }
       },
       "success": {
         "summary": "Realizado",
         "detail": {
-          "signUpSuccess": "Tu cuenta ha sido creada con éxito. \nRedireccionando al inicio de sesión..."
+          "signUpSuccess": "Tu cuenta ha sido creada con éxito. \nRedireccionando al inicio de sesión...",
+          "profileEditSuccess": "Tu perfil ha sido actualizado con éxito."
         }
       }
     }

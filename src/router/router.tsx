@@ -23,6 +23,7 @@ import { TokenData } from '../store/auth/type';
 import Events from '../pages/events';
 import Migrate from '../pages/migrate';
 import UserSettings from '../pages/settings/user';
+import UserProfile from '../pages/user/profile';
 import ScheduleSettings from '../pages/settings/schedule';
 import SubjectSettings from '../pages/settings/subject';
 import BuildingSettings from '../pages/settings/buildings';
@@ -32,9 +33,15 @@ import CareerSettings from '../pages/settings/career';
 
 const rootRoute = new RootRoute();
 
-const signInRoute = new Route({
+const landingRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/',
+  component: () => <App Component={SignInPage} />,
+});
+
+const signInRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/auth/signin',
   component: () => <App Component={SignInPage} />,
 });
 
@@ -42,12 +49,6 @@ const signUpRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/auth/signup',
   component: () => <App Component={SignUpPage} />,
-});
-
-const landingRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/LandingPage',
-  component: () => <App Component={LandingPage} />,
 });
 
 const dashboardRoute = new Route({
@@ -61,7 +62,12 @@ const justifiyRoute = new Route({
   path: 'justify/dashboard',
   component: () => {
     const { roles } = useAccessTokenData() as TokenData;
-    const allowedroles = ['DIRTECTOR_ACADEMICO', 'SUBDIRECTOR_ACADEMICO', 'RECURSOS_HUMANOS', 'JEFE_ACADEMICO'];
+    const allowedroles = [
+      'DIRTECTOR_ACADEMICO',
+      'SUBDIRECTOR_ACADEMICO',
+      'RECURSOS_HUMANOS',
+      'JEFE_ACADEMICO',
+    ];
 
     if (allowedroles.some((role) => roles.includes(role))) {
       return <App Component={Justify} />;
@@ -165,6 +171,12 @@ const vacancyDashboard = new Route({
   getParentRoute: () => rootRoute,
   path: '/vacancy/dashboard',
   component: () => <App Component={VacancyDashboard} />,
+});
+
+const userProfile = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/me/profile',
+  component: () => <App Component={UserProfile} />,
 });
 
 const userSettings = new Route({
@@ -273,6 +285,7 @@ const routeConfig = rootRoute.addChildren([
   signUpRoute,
   notFoundRoute,
   passwordRecoveryRoute,
+  userProfile,
   organizationDashboard,
   organizationManagement,
   vacancyDashboard,
@@ -291,7 +304,6 @@ const routeConfig = rootRoute.addChildren([
   periodSettings,
   careerSettings,
 ]);
-
 
 // Create the router using your route tree
 const router = new Router({ routeTree: routeConfig });

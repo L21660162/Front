@@ -61,7 +61,7 @@ export default function AddUserDialogForm({
     },
   });
 
-  let rolesLabels = [
+  const rolesLabels = [
     { value: IRoles.Director, label: t('global.dictionary.roles.DIRECTOR') },
     { value: IRoles.Docente, label: t('global.dictionary.roles.DOCENTE') },
     { value: IRoles.JefeAcademico, label: t('global.dictionary.roles.JEFE_ACADEMICO') },

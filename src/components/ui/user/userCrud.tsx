@@ -34,7 +34,15 @@ function UserCrud() {
     email: '',
     _id: '',
     gender: '',
-    roles: [IRoles.Sa, IRoles.Subdirector, IRoles.Rrhh, IRoles.Prefecto, IRoles.Director, IRoles.Docente, IRoles.JefeAcademico],
+    roles: [
+      IRoles.Sa,
+      IRoles.Subdirector,
+      IRoles.Rrhh,
+      IRoles.Prefecto,
+      IRoles.Director,
+      IRoles.Docente,
+      IRoles.JefeAcademico,
+    ],
     password: '',
     createdAt: undefined,
     isDeleted: false,
@@ -86,8 +94,6 @@ function UserCrud() {
     setSelectedRole(e.value);
   };
 
-
-
   const { data } = useGetAllUsersQuery<IGetAllUsersQuery>(GRAPHQL_CLIENT, {
     limit: 99999,
     page: 1,
@@ -118,13 +124,13 @@ function UserCrud() {
   });
 
   const roleTranslations = {
-    DIRECTOR: "Director Academico",
-    DOCENTE: "Docente",
-    JEFE_ACADEMICO: "Jefe Académico",
-    PREFECTO: "Prefecto",
-    RRHH: "Recursos Humanos",
-    SA: "Super Administrador",
-    SUBDIRECTOR: "Subdirector Académico"
+    DIRECTOR: 'Director Academico',
+    DOCENTE: 'Docente',
+    JEFE_ACADEMICO: 'Jefe Académico',
+    PREFECTO: 'Prefecto',
+    RRHH: 'Recursos Humanos',
+    SA: 'Super Administrador',
+    SUBDIRECTOR: 'Subdirector Académico',
   };
 
   let options;
@@ -379,17 +385,17 @@ function UserCrud() {
               }}
             />
             <Column
-                field="rfc"
-                header={t('global.dictionary.rfc')}
-                sortable
-                body={rfcBodyTemplate}
-                headerStyle={{
-                  minWidth: '15rem',
-                  border: '1px solid #2a497b',
-                  backgroundColor: '#2a497b',
-                  color: 'white',
-                }}
-              />
+              field="rfc"
+              header={t('global.dictionary.rfc')}
+              sortable
+              body={rfcBodyTemplate}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+            />
             <Column
               field="roles"
               header={t('global.dictionary.roles.rules')}
