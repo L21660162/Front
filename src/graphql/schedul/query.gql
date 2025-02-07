@@ -45,6 +45,7 @@ query GetSchedulesFormatted($teacher: ID, $schedule: ID) {
     startTime
     subjectLargeName
     subjectShortName
+    teacherId
     teacherFirstName
     teacherLastName
     teacherMiddleName

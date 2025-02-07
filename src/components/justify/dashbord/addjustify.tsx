@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useRef, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 import { ProgressBar } from 'primereact/progressbar';
@@ -10,13 +10,21 @@ import { DataView } from 'primereact/dataview';
 import {
   IAttendance,
   IAttendanceStatus,
+  IFileType,
   ISchedulesFormatted,
+  IUploadFileInput,
   useGetAllAttendancesQuery,
+  useGetAllFilesQuery,
   useGetSchedulesFormattedQuery,
+  useUploadFileMutation,
 } from '../../../graphql/graphql';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import { DialogStore } from '../../../store/global/types';
 import { Card } from 'primereact/card';
+import { useNavigate } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
+import { IApiError } from '../../../../types/apierror';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 type JustifyFormProps = {
   headerTitle: string;
@@ -31,9 +39,40 @@ export default function AddJustify({
   id,
 }: PropsWithChildren<JustifyFormPropsAndDialogStore>) {
   const toast = useRef<Toast>(null);
+  const { t } = useTranslation('common');
   const [totalSize, setTotalSize] = useState(0);
   const fileUploadRef = useRef(null);
+  const navigate = useNavigate({ from: '/justify/dashboard' });
   const [selectedSchedule, setSelectedSchedule] = useState<null>(null);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [initialImageUrl, setInitialImageUrl] = useState<string | null>(null);
+  const [logo, setLogo] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { mutate } = useUploadFileMutation<IApiError>(GRAPHQL_CLIENT, {
+    onSuccess: () => {
+      toast.current?.show({
+        severity: 'success',
+        summary: t('global.toast.success.summary'),
+        detail: t('global.toast.success.detail.profileEditSuccess'),
+      });
+      setTimeout(() => {
+        navigate({ to: '/justify/dashboard' });
+        window.location.reload();
+      }, 200);
+      setButtonDisabled(false);
+    },
+    onError: (errorResponse: IApiError) => {
+      toast.current?.show({
+        severity: 'error',
+        summary: t('global.toast.error.summary'),
+        detail: t('global.toast.error.detail.profileEditError'),
+        life: 5000,
+      });
+      setButtonDisabled(false);
+    },
+  });
 
   const { data: status } = useGetAllAttendancesQuery(GRAPHQL_CLIENT, {
     page: 1,
@@ -45,6 +84,47 @@ export default function AddJustify({
       secondPass: IAttendanceStatus.Absent,
     },
   });
+
+  const { data: file } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
+    page: 1,
+    limit: 10,
+    offset: 0,
+    filter: {
+      attendanceJustified: status?.getAllAttendances.docs[0].userId,
+    },
+  });
+
+  
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+    reset,
+    watch,
+  } = useForm<IUploadFileInput>({
+    defaultValues: {
+      file: null,
+      fileType: null,
+      userId: null,
+    },
+  });
+
+  useEffect(() => {
+    if (selectedFile) {
+      setValue('file', selectedFile);
+      setValue('fileType', selectedFile.type);
+      setValue('userId', status?.getAllAttendances.docs[0].userId);
+    }
+  }, [selectedFile, setValue]);
+
+  const onSubmit: SubmitHandler<IUploadFileInput> = (data: IUploadFileInput) => {
+    setButtonDisabled(true);
+    data.file = selectedFile;
+    mutate({ data });
+    reset();
+  };
 
   const { data: scheduledata } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
     schedule: status?.getAllAttendances.docs[0].schedule,
@@ -70,7 +150,11 @@ export default function AddJustify({
               </div>
             </div>
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              <Button icon="pi pi-shopping-cart" className="p-button-rounded" onClick={() => setSelectedSchedule(data._id)}></Button>
+              <Button
+                icon="pi pi-shopping-cart"
+                className="p-button-rounded"
+                onClick={() => setSelectedSchedule(data._id)}
+              ></Button>
               <span className="text-2xl font-semibold">Hola</span>
             </div>
           </div>
@@ -80,26 +164,26 @@ export default function AddJustify({
   };
 
   const onTemplateSelect = (e) => {
-    let _totalSize = totalSize;
-    let files = e.files;
+    const selected = e.files[0];
+    setSelectedFile(selected);
 
-    Object.keys(files).forEach((key) => {
-      _totalSize += files[key].size || 0;
-    });
-
-    setTotalSize(_totalSize);
+    if (selected) {
+      setImage(selected);
+      setLogo(URL.createObjectURL(selected));
+    } else {
+      setImage(null);
+      setLogo(initialImageUrl);
+    }
+    console.log('Hola, desde el select');
   };
 
   const onTemplateUpload = (e) => {
-    if (toast.current) {
-      console.log("Hola");
-      toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
-    }
-  };
-
-  const onTemplateRemove = (file, callback) => {
-    setTotalSize(totalSize - file.size);
-    callback();
+    console.log('Hola, antes ', selectedFile);
+    mutate({ data: { 
+      file: selectedFile,
+      userId: scheduledata?.getSchedulesFormatted[0].teacherId,
+      fileType: IFileType.Justificante } });
+    
   };
 
   const onTemplateClear = () => {
@@ -108,17 +192,12 @@ export default function AddJustify({
 
   const headerTemplate = (options) => {
     const { className, chooseButton, uploadButton, cancelButton } = options;
-    const value = totalSize / 10000;
-    const formatedValue =
-      fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : '0 B';
-
     if (selectedSchedule === null) {
       return (
         <div
-        className={className}
-        style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}
-      >
-      </div>
+          className={className}
+          style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}
+        ></div>
       );
     }
     return (
@@ -149,10 +228,10 @@ export default function AddJustify({
   const emptyTemplate = () => {
     if (selectedSchedule === null) {
       return (
-      <div className="flex align-items-center flex-column">
-        <i className="pi pi-exclamation-circle p-3" style={{ fontSize: '2em' }}></i>
-        <span>No has seleccionado una asistencia que justificar</span>
-      </div>
+        <div className="flex align-items-center flex-column">
+          <i className="pi pi-exclamation-circle p-3" style={{ fontSize: '2em' }}></i>
+          <span>No has seleccionado una asistencia que justificar</span>
+        </div>
       );
     }
     return (
@@ -211,12 +290,13 @@ export default function AddJustify({
             <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
             <FileUpload
-              ref={fileUploadRef}
-              name="files[]"
+              name="Document"
               url="http://localhost:4000/graphql"
-              multiple
               accept="application/pdf"
-              onUpload={onTemplateUpload}
+              customUpload
+              uploadHandler={async ({ files }) => {
+                onTemplateUpload(files);
+              } }
               onSelect={onTemplateSelect}
               onError={onTemplateClear}
               onClear={onTemplateClear}

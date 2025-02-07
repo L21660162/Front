@@ -1451,6 +1451,7 @@ export interface IUpdateUserInput {
   gender?: InputMaybe<Scalars['String']['input']>;
   lastName: Scalars['String']['input'];
   middleName?: InputMaybe<Scalars['String']['input']>;
+  photo?: InputMaybe<Scalars['Upload']['input']>;
   rfc: Scalars['String']['input'];
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
@@ -1580,7 +1581,7 @@ export interface IUser {
   lastName: Scalars['String']['output'];
   middleName?: Maybe<Scalars['String']['output']>;
   password: Scalars['String']['output'];
-  profilePicture?: Maybe<Scalars['String']['output']>;
+  photo?: Maybe<Scalars['String']['output']>;
   rfc: Scalars['String']['output'];
   roles: Array<IRoles>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -1898,7 +1899,7 @@ export type IGetSchedulesFormattedQueryVariables = Exact<{
 }>;
 
 
-export type IGetSchedulesFormattedQuery = { getSchedulesFormatted: Array<{ _id: string, classroomIdentifier: string, finalTime: any, groupIdentifier: string, startTime: any, subjectLargeName: string, subjectShortName: string, teacherFirstName: string, teacherLastName: string, teacherMiddleName?: string | null, teacherRfc: string, weekday: number }> };
+export type IGetSchedulesFormattedQuery = { getSchedulesFormatted: Array<{ _id: string, classroomIdentifier: string, finalTime: any, groupIdentifier: string, startTime: any, subjectLargeName: string, subjectShortName: string, teacherId: string, teacherFirstName: string, teacherLastName: string, teacherMiddleName?: string | null, teacherRfc: string, weekday: number }> };
 
 export type ICreateSubjectMutationVariables = Exact<{
   data: IUpsertSubjectInput;
@@ -3305,6 +3306,7 @@ export const GetSchedulesFormattedDocument = /*#__PURE__*/ `
     startTime
     subjectLargeName
     subjectShortName
+    teacherId
     teacherFirstName
     teacherLastName
     teacherMiddleName
