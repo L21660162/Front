@@ -16,7 +16,7 @@ import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import { TokenData } from '../../../store/auth/type';
 import { dialogStore } from '../../../store/global/dialogStore';
 import EditScheduleViewDialogForm from '../../forms/Schedule/dashboard/editScheduleView';
-import JustifyStatus from './justifieStatus';
+import JustifyStatus from '../../justify/dashbord/justifieStatus';
 import Addjustify from '../../justify/dashbord/addjustify';
 import ViewJustify from '../../justify/dashbord/viewjustifi';
 

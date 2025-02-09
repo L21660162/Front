@@ -938,6 +938,7 @@ export interface IQuery {
   getScheduleById: ISchedule;
   getSchedulesFormatted: Array<ISchedulesFormatted>;
   getSubjectById: ISubject;
+  getUniqueOptionsCareer: IUniqueOptionsCareer;
   getUserById: IUser;
   me: IUser;
   refreshToken: IJwtAccessToken;
@@ -1303,6 +1304,12 @@ export interface ISignUpInput {
   password: Scalars['String']['input'];
 }
 
+/** Small data for careers */
+export interface ISmallCareer {
+  label: Scalars['String']['output'];
+  value: Scalars['ID']['output'];
+}
+
 export interface ISoftDeleteResponse {
   deleted: Scalars['Float']['output'];
 }
@@ -1334,6 +1341,12 @@ export interface ISubjectIdArgs {
 export interface ISubscription {
   importedUsers: Array<IUser>;
   userAdded: IUser;
+}
+
+/** Object type for options statistics */
+export interface IUniqueOptionsCareer {
+  careers: Array<ISmallCareer>;
+  semesters: Array<Scalars['String']['output']>;
 }
 
 /** Update attendance info input */
@@ -1458,6 +1471,7 @@ export interface IUpdateUserInput {
 
 export interface IUploadFileInput {
   approvedBy?: InputMaybe<Scalars['ID']['input']>;
+  attendanceJustified?: InputMaybe<Scalars['ID']['input']>;
   file: Scalars['Upload']['input'];
   fileType: IFileType;
   userId: Scalars['ID']['input'];
@@ -1789,7 +1803,7 @@ export type IUploadFileMutationVariables = Exact<{
 }>;
 
 
-export type IUploadFileMutation = { uploadFile: { _id: string, createdAt: any, deletedAt?: any | null, extension: string, isDeleted: boolean, nameFile: string, path: string, size: number, type: IFileType, updatedAt: any, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } } };
+export type IUploadFileMutation = { uploadFile: { _id: string, createdAt: any, deletedAt?: any | null, extension: string, attendanceJustified?: string | null, isDeleted: boolean, nameFile: string, path: string, size: number, type: IFileType, updatedAt: any, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } } };
 
 export type ICreateFileCommentMutationVariables = Exact<{
   data: ICreateFileCommentInput;
@@ -1813,7 +1827,7 @@ export type IGetAllFilesQueryVariables = Exact<{
 }>;
 
 
-export type IGetAllFilesQuery = { getAllFiles: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, approvedBy?: any | null, createdAt: any, deletedAt?: any | null, extension: string, isDeleted: boolean, nameFile: string, path: string, size: number, type: IFileType, updatedAt: any, comments?: Array<{ _id?: string | null, comment?: string | null, createdAt?: any | null, createdBy?: any | null }> | null, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } }> } };
+export type IGetAllFilesQuery = { getAllFiles: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, approvedBy?: any | null, createdAt: any, deletedAt?: any | null, extension: string, isDeleted: boolean, nameFile: string, attendanceJustified?: string | null, path: string, size: number, type: IFileType, updatedAt: any, comments?: Array<{ _id?: string | null, comment?: string | null, createdAt?: any | null, createdBy?: any | null }> | null, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } }> } };
 
 export type IGetFileByIdQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2750,6 +2764,7 @@ export const UploadFileDocument = /*#__PURE__*/ `
     createdAt
     deletedAt
     extension
+    attendanceJustified
     isDeleted
     nameFile
     path
@@ -2856,6 +2871,7 @@ export const GetAllFilesDocument = /*#__PURE__*/ `
       extension
       isDeleted
       nameFile
+      attendanceJustified
       path
       size
       type

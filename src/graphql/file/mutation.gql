@@ -42,6 +42,7 @@ mutation UploadFile($data: UploadFileInput!) {
     createdAt
     deletedAt
     extension
+    attendanceJustified
     isDeleted
     nameFile
     path

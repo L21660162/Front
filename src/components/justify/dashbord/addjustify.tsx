@@ -25,6 +25,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { IApiError } from '../../../../types/apierror';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { nullable } from 'zod';
 
 type JustifyFormProps = {
   headerTitle: string;
@@ -49,6 +50,7 @@ export default function AddJustify({
   const [logo, setLogo] = useState<string | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [viewFile, setViewFile] = useState<string | null>(null);
 
   const { mutate } = useUploadFileMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -85,16 +87,16 @@ export default function AddJustify({
     },
   });
 
-  const { data: file } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
+  const { data: file, isSuccess } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
     page: 1,
     limit: 10,
     offset: 0,
     filter: {
-      attendanceJustified: status?.getAllAttendances.docs[0].userId,
+      attendanceJustified: status?.getAllAttendances.docs[0]._id,
     },
   });
 
-  
+  console.log('file', file);
 
   const {
     handleSubmit,
@@ -139,6 +141,21 @@ export default function AddJustify({
               <div className="flex flex-column gap-1">
                 <div className="text-2 font-bold text-900">
                   {scheduledata?.getSchedulesFormatted[0].subjectShortName}
+                  {isSuccess && file.getAllFiles.docs.length > 0 ? (
+                file.getAllFiles.docs[0].approvedBy !== null ? (
+                  <Tag
+                    value="Justificado"
+                    severity="success"
+                    className="p-tag-rounded mx-1"
+                  />
+                ) : file.getAllFiles.docs[0].comments[0]._id !== null ? (
+                  <Tag value="No Aceptado" severity="danger" className="p-tag-rounded mx-1" />
+                ) : (
+                  <Tag value="En revición" severity="warning" className="p-tag-rounded mx-1" />
+                )
+              ) : (
+                <Tag value="Sin Justificar" severity="info" className="p-tag-rounded mx-1" />
+              )}
                 </div>
                 <div className="text-1 text-700">
                   {new Date(data.createdAt).toLocaleDateString('es-MX', {
@@ -149,13 +166,29 @@ export default function AddJustify({
                 </div>
               </div>
             </div>
-            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
+            <div className="sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2 ">
               <Button
-                icon="pi pi-shopping-cart"
-                className="p-button-rounded"
-                onClick={() => setSelectedSchedule(data._id)}
-              ></Button>
-              <span className="text-2xl font-semibold">Hola</span>
+                icon="pi pi-file-export"
+                className="p-button-rounded mx-1"
+                severity="info"
+                onClick={() => {
+                  setSelectedSchedule(data._id);
+                  setViewFile(null);
+                }}
+              />
+              <Button
+                icon="pi pi-eye"
+                className="p-button-rounded mx-1"
+                outlined
+                onClick={() => {
+                  setViewFile(file.getAllFiles.docs[0].path);
+                  setSelectedSchedule(null);
+                }}
+                disabled={isSuccess && file.getAllFiles.docs.length > 0 ? (
+                  false) : (
+                    true
+                  )}
+              />
             </div>
           </div>
         </div>
@@ -174,7 +207,6 @@ export default function AddJustify({
       setImage(null);
       setLogo(initialImageUrl);
     }
-    console.log('Hola, desde el select');
   };
 
   const onTemplateUpload = (e) => {
@@ -182,7 +214,8 @@ export default function AddJustify({
     mutate({ data: { 
       file: selectedFile,
       userId: scheduledata?.getSchedulesFormatted[0].teacherId,
-      fileType: IFileType.Justificante } });
+      fileType: IFileType.Justificante,
+      attendanceJustified: selectedSchedule } });
     
   };
 
@@ -192,28 +225,49 @@ export default function AddJustify({
 
   const headerTemplate = (options) => {
     const { className, chooseButton, uploadButton, cancelButton } = options;
-    if (selectedSchedule === null) {
+    if (selectedSchedule !== null || viewFile !== null) {
       return (
         <div
           className={className}
           style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}
-        ></div>
+        >
+          {chooseButton}
+          {uploadButton}
+          {cancelButton}
+
+          {file?.getAllFiles.docs[0].comments[0]._id !== null ? (
+          <div className="flex flex-column gap-2 ml-3">
+            <div className="flex flex-column gap-1">
+              <div className="text-2 font-bold text-900">Comentarios</div>
+              <div className="text-1 text-700">
+                {file?.getAllFiles.docs[0].comments[0].comment}
+              </div>
+            </div>
+          </div>
+        ) : (
+          // <div className="flex flex-column gap-2 ml-3">
+          //   <div className="flex flex-column gap-1">
+          //     <div className="text-2 font-bold text-900">Comentarios</div>
+          //     <div className="text-1 text-700">Sin comentarios</div>
+          //   </div>
+          // </div>
+          null
+        )}
+        </div>
       );
     }
+
     return (
       <div
         className={className}
         style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}
-      >
-        {chooseButton}
-        {uploadButton}
-        {cancelButton}
-      </div>
+      ></div>
     );
   };
 
-  const itemTemplate = (file, props) => {
-    const object = URL.createObjectURL(file);
+  const itemTemplate = (doc, props) => {
+    
+    const object = URL.createObjectURL(doc);
     return (
       <div className="flex w-full h-full flex-grow-1">
         <iframe
@@ -226,6 +280,18 @@ export default function AddJustify({
   };
 
   const emptyTemplate = () => {
+    if (file?.getAllFiles.docs.length > 0 && viewFile !== null) {
+    
+      return (
+        <div className="flex w-full h-full flex-grow-1">
+          <iframe
+            src={`http://localhost:4000${viewFile}#toolbar=0&navpanes=0&scrollbar=0`}
+            title="PDFDoc"
+            style={{ width: '100%', height: '100%', border: 'none' }}
+          />
+        </div>
+      );
+    }
     if (selectedSchedule === null) {
       return (
         <div className="flex align-items-center flex-column">
