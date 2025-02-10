@@ -1,7 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-
-'use client';
-
+import React, { useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -9,58 +6,58 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
-import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
-import { Demo } from '../../../../types/types';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
-  IBuilding,
-  IGetAllBuildingsQuery,
-  useDeleteBuildingMutation,
-  useGetAllBuildingsQuery,
+  IPeriod,
+  IGetAllPeriodsQuery,
+  useDeletePeriodMutation,
+  useGetAllPeriodsQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import { dialogStore } from '../../../store/global/dialogStore';
-import EditBuildingDialogForm from '../../forms/buildings/dashboard/editbuildings';
-import { useAccessTokenData } from '../../../store/auth/store';
-import { TokenData } from '../../../store/auth/type';
+import EditperiodDialogForm from '../../forms/period/dashboard/editPeriod';
 
-function BuildingCrud() {
-  const emptyBuilding: IBuilding = {
-    name: '',
-    letter: '',
+function PeriodCrud() {
+  const emptyperiod: IPeriod = {
     _id: '',
-    createdAt: undefined,
+    name: '',
+    largeIdentifier: '',
+    shortIdentifier: '',
+    startDate: new Date().toISOString(),
+    finalDate: new Date().toISOString(),
     isDeleted: false,
+    createdAt: undefined,
     updatedAt: undefined,
-    deletedAt: undefined
+    deletedAt: undefined,
   };
+
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/career/dashboard' }); //aun no se
-
-  const [buildings, setBuildings] = useState(null);
-  const [deleteBuildsDialog, setDeleteBuildsDialog] = useState(false);
-  const [building, setBuilding] = useState<Demo.GetAllBuildsQuery.docs>(emptyBuilding);
-  const [selectedBuildings, setSelectedBuildings] = useState(null);
-  const [globalFilter, setGlobalFilter] = useState('');
+  const navigate = useNavigate({ from: '/career/dashboard' });
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<any>>(null);
-  const [selectedBuilds, setSelectedBuilds] = useState<IBuilding | null>(null);
-  const [visibleEditBuilding, setVisibleEditBuilding] = useState(false);
 
-  const { data } = useGetAllBuildingsQuery<IGetAllBuildingsQuery>(GRAPHQL_CLIENT, {
+  const [periods, setperiods] = useState(null);
+  const [deleteBuildsDialog, setDeleteBuildsDialog] = useState(false);
+  const [period, setperiod] = useState<IPeriod>(emptyperiod);
+  const [selectedperiods, setSelectedperiods] = useState(null);
+  const [globalFilter, setGlobalFilter] = useState('');
+  const dt = useRef<DataTable<any>>(null);
+  const [selectedBuilds, setSelectedBuilds] = useState<IPeriod | null>(null);
+  const [visibleEditperiod, setVisibleEditperiod] = useState(false);
+
+  const { data } = useGetAllPeriodsQuery<IGetAllPeriodsQuery>(GRAPHQL_CLIENT, {
     limit: 500,
     page: 1,
     offset: 0,
   });
 
-  const { mutate } = useDeleteBuildingMutation<IApiError>(GRAPHQL_CLIENT, { //Pendiente
+  const { mutate } = useDeletePeriodMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
       toast.current?.show({
         severity: 'success',
         summary: t('global.toast.success.summary'),
-        detail: t('global.toast.success.detail.signUpSuccess'),
+        detail: t('global.toast.success.detail.periodDeleteSuccess'),
       });
 
       setTimeout(() => {
@@ -68,7 +65,6 @@ function BuildingCrud() {
       }, 50);
     },
     onError: (errorResponse: IApiError) => {
-      // TODO manage server error response for translation or something
       toast.current?.show({
         severity: 'error',
         summary: t('global.toast.error.summary'),
@@ -78,24 +74,23 @@ function BuildingCrud() {
     },
   });
 
-  const hideDeleteBuildingsDialog = () => {
+  const hideDeleteperiodsDialog = () => {
     setDeleteBuildsDialog(false);
   };
 
-  const editBuilding = (building: IBuilding) => {
-    setSelectedBuilds(building);
-    setVisibleEditBuilding(true);
+  const editperiod = (period: IPeriod) => {
+    setSelectedBuilds(period);
+    setVisibleEditperiod(true);
   };
 
-  const confirmDeleteBuilding = (building: IBuilding) => {
-    setBuilding(building);
+  const confirmDeleteperiod = (period: IPeriod) => {
+    setperiod(period);
     setDeleteBuildsDialog(true);
   };
 
-  const deleteBuilding = () => {
-    const _buildings = building._id;
-    setBuildings(_buildings);
-    mutate({ data: { _id: _buildings } });
+  const deleteperiod = () => {
+    const _periods = period._id;
+    mutate({ data: { _id: _periods } });
     setDeleteBuildsDialog(false);
   };
 
@@ -103,25 +98,25 @@ function BuildingCrud() {
     dt.current?.exportCSV();
   };
 
-  const nameBodyTemplate = (building: IBuilding) => {
+  const nameBodyTemplate = (period: IPeriod) => {
     return (
       <>
         <span className="p-column-title">Name</span>
-        {building.name}
+        {period.name}
       </>
     );
   };
 
-  const descriptionBodyTemplate = (building: IBuilding) => {
+  const descriptionBodyTemplate = (period: IPeriod) => {
     return (
       <>
-        <span className="p-column-title">Letter</span>
-        {building.letter}
+        <span className="p-column-title">Large Identifier</span>
+        {period.largeIdentifier}
       </>
     );
   };
 
-  const actionBodyTemplate = (rowData: Demo.Building) => {
+  const actionBodyTemplate = (rowData: IPeriod) => {
     return (
       <>
         <Button
@@ -129,13 +124,13 @@ function BuildingCrud() {
           rounded
           severity="success"
           className="mr-2"
-          onClick={() => editBuilding(rowData)}
+          onClick={() => editperiod(rowData)}
         />
         <Button
           icon="pi pi-trash"
           rounded
           severity="warning"
-          onClick={() => confirmDeleteBuilding(rowData)}
+          onClick={() => confirmDeleteperiod(rowData)}
         />
       </>
     );
@@ -143,7 +138,7 @@ function BuildingCrud() {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t('global.dictionary.careerdirectory')}</h5>
+      <h5 className="m-0">{t('global.dictionary.perioddirectory')}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -155,10 +150,10 @@ function BuildingCrud() {
     </div>
   );
 
-  const deleteBuildingDialogFooter = () => (
+  const deleteperiodDialogFooter = () => (
     <>
-      <Button label="No" icon="pi pi-times" text onClick={hideDeleteBuildingsDialog} />
-      <Button label="Yes" icon="pi pi-check" text onClick={deleteBuilding} />
+      <Button label="No" icon="pi pi-times" text onClick={hideDeleteperiodsDialog} />
+      <Button label="Yes" icon="pi pi-check" text onClick={deleteperiod} />
     </>
   );
 
@@ -168,44 +163,51 @@ function BuildingCrud() {
         <div className="card">
           <Toast ref={toast} />
 
-          {selectedBuilds && visibleEditBuilding && (
-            <EditBuildingDialogForm
-              headerTitle={t('module.buildings.dashboard.dialog.edit.header')}
-              visible={visibleEditBuilding}
-              setVisible={setVisibleEditBuilding}
-              building={selectedBuilds}
+          {selectedBuilds && visibleEditperiod && (
+            <EditperiodDialogForm
+              headerTitle={t('module.periods.dashboard.dialog.edit.header')}
+              visible={visibleEditperiod}
+              setVisible={setVisibleEditperiod}
+              period={selectedBuilds}
             />
           )}
 
           <DataTable
             ref={dt}
-            value={data?.getAllBuildings.docs}
-            selection={selectedBuildings}
-            onSelectionChange={(e) => setSelectedBuildings(e.value as any)}
+            value={data?.getAllPeriods.docs}
+            selection={selectedperiods}
+            onSelectionChange={(e) => setSelectedperiods(e.value as any)}
             dataKey="_id"
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} carreras"
+            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} períodos"
             globalFilter={globalFilter}
-            emptyMessage={t('global.dictionary.NoBuilding')}
+            emptyMessage={t('global.dictionary.Noperiod')}
             header={header}
             responsiveLayout="scroll"
           >
             <Column
               field="name"
-              header={t('global.dictionary.tBuildingName')}
+              header={t('global.dictionary.tperiodName')}
               sortable
               body={nameBodyTemplate}
               headerStyle={{ minWidth: '15rem' }}
             />
             <Column
-              field="description"
-              header={t('global.dictionary.tBuildingDescription')}
+              field="largeIdentifier"
+              header={t('global.dictionary.tlargeIdentifier')}
               sortable
-              body={descriptionBodyTemplate}
+              body={(rowData: IPeriod) => rowData.largeIdentifier}
+              headerStyle={{ minWidth: '15rem' }}
+            />
+            <Column
+              field="shortIdentifier"
+              header={t('global.dictionary.tshortIdentifier')}
+              sortable
+              body={(rowData: IPeriod) => rowData.shortIdentifier}
               headerStyle={{ minWidth: '15rem' }}
             />
             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }} />
@@ -216,14 +218,14 @@ function BuildingCrud() {
             style={{ width: '450px' }}
             header="Confirm"
             modal
-            footer={deleteBuildingDialogFooter}
-            onHide={hideDeleteBuildingsDialog}
+            footer={deleteperiodDialogFooter}
+            onHide={hideDeleteperiodsDialog}
           >
             <div className="flex align-items-center justify-content-center">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {building && (
+              {period && (
                 <span>
-                  ¿Estás seguro de que quieres eliminar <b>{building.name}</b>?
+                  ¿Estás seguro de que quieres eliminar <b>{period.name}</b>?
                 </span>
               )}
             </div>
@@ -234,4 +236,4 @@ function BuildingCrud() {
   );
 }
 
-export default BuildingCrud;
+export default PeriodCrud;

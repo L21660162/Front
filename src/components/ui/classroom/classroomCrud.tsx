@@ -15,60 +15,56 @@ import { useNavigate } from '@tanstack/react-router';
 import { Demo } from '../../../../types/types';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
-  IBuilding,
-  IGetAllBuildingsQuery,
-  useDeleteBuildingMutation,
-  useGetAllBuildingsQuery,
+  IClassroom,
+  IGetAllClassroomsQuery,
+  useDeleteClassroomMutation,
+  useGetAllClassroomsQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import { dialogStore } from '../../../store/global/dialogStore';
-import EditBuildingDialogForm from '../../forms/buildings/dashboard/editbuildings';
+import EditClassroomDialogForm from '../../forms/classroom/dashboard/editClassroom';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
 
-function BuildingCrud() {
-  const emptyBuilding: IBuilding = {
-    name: '',
-    letter: '',
+function ClassroomCrud() {
+  const emptyClassroom: IClassroom = {
+    building: '',
+    identifier: '',
     _id: '',
     createdAt: undefined,
     isDeleted: false,
     updatedAt: undefined,
-    deletedAt: undefined
+    deletedAt: undefined,
   };
-  const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/career/dashboard' }); //aun no se
 
-  const [buildings, setBuildings] = useState(null);
-  const [deleteBuildsDialog, setDeleteBuildsDialog] = useState(false);
-  const [building, setBuilding] = useState<Demo.GetAllBuildsQuery.docs>(emptyBuilding);
-  const [selectedBuildings, setSelectedBuildings] = useState(null);
+  const { t } = useTranslation('common');
+  const navigate = useNavigate({ from: '/career/dashboard' });
+
+  const [classrooms, setClassrooms] = useState<IClassroom[]>([]);
+  const [deleteClassroomDialog, setDeleteClassroomDialog] = useState(false);
+  const [selectedClassroom, setSelectedClassroom] = useState<IClassroom | null>(null);
   const [globalFilter, setGlobalFilter] = useState('');
   const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<any>>(null);
-  const [selectedBuilds, setSelectedBuilds] = useState<IBuilding | null>(null);
-  const [visibleEditBuilding, setVisibleEditBuilding] = useState(false);
+  const dt = useRef<DataTable<IClassroom[]>>(null);
+  const [visibleEditClassroom, setVisibleEditClassroom] = useState(false);
 
-  const { data } = useGetAllBuildingsQuery<IGetAllBuildingsQuery>(GRAPHQL_CLIENT, {
+  const { data, refetch } = useGetAllClassroomsQuery<IGetAllClassroomsQuery>(GRAPHQL_CLIENT, {
     limit: 500,
     page: 1,
     offset: 0,
   });
 
-  const { mutate } = useDeleteBuildingMutation<IApiError>(GRAPHQL_CLIENT, { //Pendiente
+  const { mutate } = useDeleteClassroomMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
       toast.current?.show({
         severity: 'success',
         summary: t('global.toast.success.summary'),
-        detail: t('global.toast.success.detail.signUpSuccess'),
+        detail: t('global.toast.success.detail.deleteSuccess'),
       });
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 50);
+      refetch(); // Recargar datos después de eliminar
     },
     onError: (errorResponse: IApiError) => {
-      // TODO manage server error response for translation or something
       toast.current?.show({
         severity: 'error',
         summary: t('global.toast.error.summary'),
@@ -78,50 +74,56 @@ function BuildingCrud() {
     },
   });
 
-  const hideDeleteBuildingsDialog = () => {
-    setDeleteBuildsDialog(false);
+  useEffect(() => {
+    if (data?.getAllClassrooms.docs) {
+      setClassrooms(data.getAllClassrooms.docs);
+    }
+  }, [data]);
+
+  const hideDeleteClassroomDialog = () => {
+    setDeleteClassroomDialog(false);
   };
 
-  const editBuilding = (building: IBuilding) => {
-    setSelectedBuilds(building);
-    setVisibleEditBuilding(true);
+  const editClassroom = (classroom: IClassroom) => {
+    setSelectedClassroom(classroom);
+    setVisibleEditClassroom(true);
   };
 
-  const confirmDeleteBuilding = (building: IBuilding) => {
-    setBuilding(building);
-    setDeleteBuildsDialog(true);
+  const confirmDeleteClassroom = (classroom: IClassroom) => {
+    setSelectedClassroom(classroom);
+    setDeleteClassroomDialog(true);
   };
 
-  const deleteBuilding = () => {
-    const _buildings = building._id;
-    setBuildings(_buildings);
-    mutate({ data: { _id: _buildings } });
-    setDeleteBuildsDialog(false);
+  const deleteClassroom = () => {
+    if (selectedClassroom?._id) {
+      mutate({ data: { _id: selectedClassroom._id } });
+    }
+    setDeleteClassroomDialog(false);
   };
 
   const exportCSV = () => {
     dt.current?.exportCSV();
   };
 
-  const nameBodyTemplate = (building: IBuilding) => {
+  const nameBodyTemplate = (classroom: IClassroom) => {
     return (
       <>
-        <span className="p-column-title">Name</span>
-        {building.name}
+        <span className="p-column-title">Building</span>
+        {classroom.building}
       </>
     );
   };
 
-  const descriptionBodyTemplate = (building: IBuilding) => {
+  const descriptionBodyTemplate = (classroom: IClassroom) => {
     return (
       <>
-        <span className="p-column-title">Letter</span>
-        {building.letter}
+        <span className="p-column-title">Identifier</span>
+        {classroom.identifier}
       </>
     );
   };
 
-  const actionBodyTemplate = (rowData: Demo.Building) => {
+  const actionBodyTemplate = (rowData: IClassroom) => {
     return (
       <>
         <Button
@@ -129,13 +131,13 @@ function BuildingCrud() {
           rounded
           severity="success"
           className="mr-2"
-          onClick={() => editBuilding(rowData)}
+          onClick={() => editClassroom(rowData)}
         />
         <Button
           icon="pi pi-trash"
           rounded
-          severity="warning"
-          onClick={() => confirmDeleteBuilding(rowData)}
+          severity="danger"
+          onClick={() => confirmDeleteClassroom(rowData)}
         />
       </>
     );
@@ -143,7 +145,7 @@ function BuildingCrud() {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t('global.dictionary.careerdirectory')}</h5>
+      <h5 className="m-0">{t('global.dictionary.classroomDirectory')}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -155,10 +157,10 @@ function BuildingCrud() {
     </div>
   );
 
-  const deleteBuildingDialogFooter = () => (
+  const deleteClassroomDialogFooter = (
     <>
-      <Button label="No" icon="pi pi-times" text onClick={hideDeleteBuildingsDialog} />
-      <Button label="Yes" icon="pi pi-check" text onClick={deleteBuilding} />
+      <Button label="No" icon="pi pi-times" text onClick={hideDeleteClassroomDialog} />
+      <Button label="Yes" icon="pi pi-check" text onClick={deleteClassroom} />
     </>
   );
 
@@ -168,42 +170,42 @@ function BuildingCrud() {
         <div className="card">
           <Toast ref={toast} />
 
-          {selectedBuilds && visibleEditBuilding && (
-            <EditBuildingDialogForm
-              headerTitle={t('module.buildings.dashboard.dialog.edit.header')}
-              visible={visibleEditBuilding}
-              setVisible={setVisibleEditBuilding}
-              building={selectedBuilds}
+          {selectedClassroom && visibleEditClassroom && (
+            <EditClassroomDialogForm
+              headerTitle={t('module.classrooms.dashboard.dialog.edit.header')}
+              visible={visibleEditClassroom}
+              setVisible={setVisibleEditClassroom}
+              Classroom={selectedClassroom}
             />
           )}
 
           <DataTable
             ref={dt}
-            value={data?.getAllBuildings.docs}
-            selection={selectedBuildings}
-            onSelectionChange={(e) => setSelectedBuildings(e.value as any)}
+            value={classrooms}
+            selection={selectedClassroom}
+            onSelectionChange={(e) => setSelectedClassroom(e.value as IClassroom | null)}
             dataKey="_id"
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} carreras"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} classrooms"
             globalFilter={globalFilter}
-            emptyMessage={t('global.dictionary.NoBuilding')}
+            emptyMessage={t('global.dictionary.noClassroomsFound')}
             header={header}
             responsiveLayout="scroll"
           >
             <Column
-              field="name"
-              header={t('global.dictionary.tBuildingName')}
+              field="building"
+              header={t('global.dictionary.tClassroomBuilding')}
               sortable
               body={nameBodyTemplate}
               headerStyle={{ minWidth: '15rem' }}
             />
             <Column
-              field="description"
-              header={t('global.dictionary.tBuildingDescription')}
+              field="identifier"
+              header={t('global.dictionary.tClassroomIdentifier')}
               sortable
               body={descriptionBodyTemplate}
               headerStyle={{ minWidth: '15rem' }}
@@ -212,18 +214,18 @@ function BuildingCrud() {
           </DataTable>
 
           <Dialog
-            visible={deleteBuildsDialog}
+            visible={deleteClassroomDialog}
             style={{ width: '450px' }}
             header="Confirm"
             modal
-            footer={deleteBuildingDialogFooter}
-            onHide={hideDeleteBuildingsDialog}
+            footer={deleteClassroomDialogFooter}
+            onHide={hideDeleteClassroomDialog}
           >
             <div className="flex align-items-center justify-content-center">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {building && (
+              {selectedClassroom && (
                 <span>
-                  ¿Estás seguro de que quieres eliminar <b>{building.name}</b>?
+                  Are you sure you want to delete <b>{selectedClassroom.building} - {selectedClassroom.identifier}</b>?
                 </span>
               )}
             </div>
@@ -234,4 +236,4 @@ function BuildingCrud() {
   );
 }
 
-export default BuildingCrud;
+export default ClassroomCrud;

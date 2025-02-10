@@ -13,9 +13,9 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-  IGetAllDepartmentQuery,
+  IGetAllDepartmentsQuery,
   IUpdateDepartmentInput,
-  useGetAllDepartmentQuery,
+  useGetAllDepartmentsQuery,
   useUpdateDepartmentMutation,
   IDepartment,
 } from '../../../../graphql/graphql';
@@ -78,6 +78,7 @@ export default function EditdepartmentDialogForm({
       _id: department._id,
       departmentBoss: department.departmentBoss,
       name: department.name,
+      areaKey: department.areaKey,
     },
   });
   const footerContent = (
@@ -124,6 +125,74 @@ export default function EditdepartmentDialogForm({
             <i className="pi pi-book" />
             <Controller
               name="name"
+              control={control}
+              rules={{
+                // required: t('global.forms.validation.departmentName') as string,
+                validate: (value) =>
+                  value !== '' || (t('global.forms.validation.departmentName') as string),
+              }}
+              render={({ field, fieldState }) => (
+                <InputText
+                  id={field.name}
+                  {...field}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
+                  // defaultValue={departmentData?.getdepartmentById.name}
+                />
+              )}
+            />
+            <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
+              {t('global.dictionary.departmentName')}*
+            </label>
+          </span>
+          {errors.name && <small className="p-error">{errors.name?.message}</small>}
+        </div>
+      </form>
+      <form className="p-fluid">
+        <div className="label">
+          <label htmlFor="contact">
+            <b>{t('global.dictionary.department')}</b> <br />
+          </label>
+        </div>
+        <hr />
+        <div className="field">
+          <span className="p-float-label p-input-icon-right">
+            <i className="pi pi-book" />
+            <Controller
+              name="areaKey"
+              control={control}
+              rules={{
+                // required: t('global.forms.validation.departmentName') as string,
+                validate: (value) =>
+                  value !== '' || (t('global.forms.validation.departmentName') as string),
+              }}
+              render={({ field, fieldState }) => (
+                <InputText
+                  id={field.name}
+                  {...field}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
+                  // defaultValue={departmentData?.getdepartmentById.name}
+                />
+              )}
+            />
+            <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
+              {t('global.dictionary.departmentName')}*
+            </label>
+          </span>
+          {errors.name && <small className="p-error">{errors.name?.message}</small>}
+        </div>
+      </form>
+      <form className="p-fluid">
+        <div className="label">
+          <label htmlFor="contact">
+            <b>{t('global.dictionary.department')}</b> <br />
+          </label>
+        </div>
+        <hr />
+        <div className="field">
+          <span className="p-float-label p-input-icon-right">
+            <i className="pi pi-book" />
+            <Controller
+              name="departmentBoss"
               control={control}
               rules={{
                 // required: t('global.forms.validation.departmentName') as string,

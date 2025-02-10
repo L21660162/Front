@@ -15,22 +15,24 @@ import { useNavigate } from '@tanstack/react-router';
 import { Demo } from '../../../../types/types';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
-  IBuilding,
-  IGetAllBuildingsQuery,
-  useDeleteBuildingMutation,
-  useGetAllBuildingsQuery,
+  IGroup,
+  IGetAllGroupsQuery,
+  useDeleteGroupMutation,
+  useGetAllGroupsQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import { dialogStore } from '../../../store/global/dialogStore';
-import EditBuildingDialogForm from '../../forms/buildings/dashboard/editbuildings';
+import EditGroupDialogForm from '../../forms/group/dashboard/editGroup';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
 
-function BuildingCrud() {
-  const emptyBuilding: IBuilding = {
-    name: '',
-    letter: '',
+function GroupCrud() {
+  const emptyGroup: IGroup = {
+    career: '',
+    period: '',
     _id: '',
+    semester: '',
+    identifier: '',
     createdAt: undefined,
     isDeleted: false,
     updatedAt: undefined,
@@ -39,23 +41,23 @@ function BuildingCrud() {
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/career/dashboard' }); //aun no se
 
-  const [buildings, setBuildings] = useState(null);
+  const [Groups, setGroups] = useState(null);
   const [deleteBuildsDialog, setDeleteBuildsDialog] = useState(false);
-  const [building, setBuilding] = useState<Demo.GetAllBuildsQuery.docs>(emptyBuilding);
-  const [selectedBuildings, setSelectedBuildings] = useState(null);
+  const [Group, setGroup] = useState<Demo.GetAllBuildsQuery.docs>(emptyGroup);
+  const [selectedGroups, setSelectedGroups] = useState(null);
   const [globalFilter, setGlobalFilter] = useState('');
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<any>>(null);
-  const [selectedBuilds, setSelectedBuilds] = useState<IBuilding | null>(null);
-  const [visibleEditBuilding, setVisibleEditBuilding] = useState(false);
+  const [selectedBuilds, setSelectedBuilds] = useState<IGroup | null>(null);
+  const [visibleEditGroup, setVisibleEditGroup] = useState(false);
 
-  const { data } = useGetAllBuildingsQuery<IGetAllBuildingsQuery>(GRAPHQL_CLIENT, {
+  const { data } = useGetAllGroupsQuery<IGetAllGroupsQuery>(GRAPHQL_CLIENT, {
     limit: 500,
     page: 1,
     offset: 0,
   });
 
-  const { mutate } = useDeleteBuildingMutation<IApiError>(GRAPHQL_CLIENT, { //Pendiente
+  const { mutate } = useDeleteGroupMutation<IApiError>(GRAPHQL_CLIENT, { //Pendiente
     onSuccess: () => {
       toast.current?.show({
         severity: 'success',
@@ -78,24 +80,24 @@ function BuildingCrud() {
     },
   });
 
-  const hideDeleteBuildingsDialog = () => {
+  const hideDeleteGroupsDialog = () => {
     setDeleteBuildsDialog(false);
   };
 
-  const editBuilding = (building: IBuilding) => {
-    setSelectedBuilds(building);
-    setVisibleEditBuilding(true);
+  const editGroup = (Group: IGroup) => {
+    setSelectedBuilds(Group);
+    setVisibleEditGroup(true);
   };
 
-  const confirmDeleteBuilding = (building: IBuilding) => {
-    setBuilding(building);
+  const confirmDeleteGroup = (Group: IGroup) => {
+    setGroup(Group);
     setDeleteBuildsDialog(true);
   };
 
-  const deleteBuilding = () => {
-    const _buildings = building._id;
-    setBuildings(_buildings);
-    mutate({ data: { _id: _buildings } });
+  const deleteGroup = () => {
+    const _Groups = Group._id;
+    setGroups(_Groups);
+    mutate({ data: { _id: _Groups } });
     setDeleteBuildsDialog(false);
   };
 
@@ -103,25 +105,43 @@ function BuildingCrud() {
     dt.current?.exportCSV();
   };
 
-  const nameBodyTemplate = (building: IBuilding) => {
+  const nameBodyTemplate = (Group: IGroup) => {
     return (
       <>
         <span className="p-column-title">Name</span>
-        {building.name}
+        {Group.career}
       </>
     );
   };
 
-  const descriptionBodyTemplate = (building: IBuilding) => {
+  const descriptionBodyTemplate = (Group: IGroup) => {
     return (
       <>
         <span className="p-column-title">Letter</span>
-        {building.letter}
+        {Group.period}
       </>
     );
   };
 
-  const actionBodyTemplate = (rowData: Demo.Building) => {
+  const semesterBodyTemplate = (Group: IGroup) => {
+    return (
+      <>
+        <span className="p-column-title">Letter</span>
+        {Group.semester}
+      </>
+    );
+  };
+
+  const periodBodyTemplate = (Group: IGroup) => {
+    return (
+      <>
+        <span className="p-column-title">Letter</span>
+        {Group.identifier}
+      </>
+    );
+  };
+
+  const actionBodyTemplate = (rowData: Demo.Group) => {
     return (
       <>
         <Button
@@ -129,13 +149,13 @@ function BuildingCrud() {
           rounded
           severity="success"
           className="mr-2"
-          onClick={() => editBuilding(rowData)}
+          onClick={() => editGroup(rowData)}
         />
         <Button
           icon="pi pi-trash"
           rounded
           severity="warning"
-          onClick={() => confirmDeleteBuilding(rowData)}
+          onClick={() => confirmDeleteGroup(rowData)}
         />
       </>
     );
@@ -155,10 +175,10 @@ function BuildingCrud() {
     </div>
   );
 
-  const deleteBuildingDialogFooter = () => (
+  const deleteGroupDialogFooter = () => (
     <>
-      <Button label="No" icon="pi pi-times" text onClick={hideDeleteBuildingsDialog} />
-      <Button label="Yes" icon="pi pi-check" text onClick={deleteBuilding} />
+      <Button label="No" icon="pi pi-times" text onClick={hideDeleteGroupsDialog} />
+      <Button label="Yes" icon="pi pi-check" text onClick={deleteGroup} />
     </>
   );
 
@@ -168,20 +188,20 @@ function BuildingCrud() {
         <div className="card">
           <Toast ref={toast} />
 
-          {selectedBuilds && visibleEditBuilding && (
-            <EditBuildingDialogForm
-              headerTitle={t('module.buildings.dashboard.dialog.edit.header')}
-              visible={visibleEditBuilding}
-              setVisible={setVisibleEditBuilding}
-              building={selectedBuilds}
+          {selectedBuilds && visibleEditGroup && (
+            <EditGroupDialogForm
+              headerTitle={t('module.Groups.dashboard.dialog.edit.header')}
+              visible={visibleEditGroup}
+              setVisible={setVisibleEditGroup}
+              Group={selectedBuilds}
             />
           )}
 
           <DataTable
             ref={dt}
-            value={data?.getAllBuildings.docs}
-            selection={selectedBuildings}
-            onSelectionChange={(e) => setSelectedBuildings(e.value as any)}
+            value={data?.getAllGroups.docs}
+            selection={selectedGroups}
+            onSelectionChange={(e) => setSelectedGroups(e.value as any)}
             dataKey="_id"
             paginator
             rows={10}
@@ -190,22 +210,36 @@ function BuildingCrud() {
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} carreras"
             globalFilter={globalFilter}
-            emptyMessage={t('global.dictionary.NoBuilding')}
+            emptyMessage={t('global.dictionary.NoGroup')}
             header={header}
             responsiveLayout="scroll"
           >
             <Column
               field="name"
-              header={t('global.dictionary.tBuildingName')}
+              header={t('global.dictionary.tGroupName')}
               sortable
               body={nameBodyTemplate}
               headerStyle={{ minWidth: '15rem' }}
             />
             <Column
               field="description"
-              header={t('global.dictionary.tBuildingDescription')}
+              header={t('global.dictionary.tGroupDescription')}
               sortable
               body={descriptionBodyTemplate}
+              headerStyle={{ minWidth: '15rem' }}
+            />
+                        <Column
+              field="description"
+              header={t('global.dictionary.tGroupDescription')}
+              sortable
+              body={semesterBodyTemplate}
+              headerStyle={{ minWidth: '15rem' }}
+            />
+                        <Column
+              field="description"
+              header={t('global.dictionary.tGroupDescription')}
+              sortable
+              body={periodBodyTemplate}
               headerStyle={{ minWidth: '15rem' }}
             />
             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }} />
@@ -216,14 +250,14 @@ function BuildingCrud() {
             style={{ width: '450px' }}
             header="Confirm"
             modal
-            footer={deleteBuildingDialogFooter}
-            onHide={hideDeleteBuildingsDialog}
+            footer={deleteGroupDialogFooter}
+            onHide={hideDeleteGroupsDialog}
           >
             <div className="flex align-items-center justify-content-center">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {building && (
+              {Group && (
                 <span>
-                  ¿Estás seguro de que quieres eliminar <b>{building.name}</b>?
+                  ¿Estás seguro de que quieres eliminar <b>{Group.name}</b>?
                 </span>
               )}
             </div>
@@ -234,4 +268,4 @@ function BuildingCrud() {
   );
 }
 
-export default BuildingCrud;
+export default GroupCrud;

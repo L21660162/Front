@@ -44,7 +44,7 @@ export interface IAttendance {
   schedule: Scalars['ID']['output'];
   secondPass: IAttendanceStatus;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  uploadedBy: IUser;
+  uploadedBy: Scalars['ID']['output'];
 }
 
 export interface IAttendanceArgs {
@@ -53,7 +53,7 @@ export interface IAttendanceArgs {
   period?: InputMaybe<Scalars['ID']['input']>;
   schedule?: InputMaybe<Scalars['ID']['input']>;
   secondPass?: InputMaybe<IAttendanceStatus>;
-  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+  uploadedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
 export interface IAttendanceIdArgs {
@@ -81,6 +81,7 @@ export interface IBuilding {
   isDeleted: Scalars['Boolean']['output'];
   letter?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  picturePath?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 }
 
@@ -134,6 +135,7 @@ export interface IClassroom {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   identifier: Scalars['String']['output'];
   isDeleted: Scalars['Boolean']['output'];
+  picturePath?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 }
 
@@ -162,6 +164,7 @@ export interface ICreateCareerInput {
 
 /** CreateFile */
 export interface ICreateFile {
+  attendanceJustified: Scalars['ID']['input'];
   extension: Scalars['String']['input'];
   nameFile: Scalars['String']['input'];
   path: Scalars['String']['input'];
@@ -204,10 +207,40 @@ export interface IDepartmentIdArgs {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+/** event */
+export interface IEvent {
+  _id: Scalars['ID']['output'];
+  activity: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  finishDate: Scalars['DateTime']['output'];
+  groupsIncluded: Array<Scalars['ID']['output']>;
+  isDeleted: Scalars['Boolean']['output'];
+  period: Scalars['ID']['output'];
+  startDate: Scalars['DateTime']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  uploadedBy: Scalars['ID']['output'];
+}
+
+export interface IEventArgs {
+  finishDate?: InputMaybe<Scalars['DateTime']['input']>;
+  groupsIncluded?: InputMaybe<Array<Scalars['ID']['input']>>;
+  keyword?: InputMaybe<Scalars['String']['input']>;
+  period?: InputMaybe<Scalars['ID']['input']>;
+  startDate?: InputMaybe<Scalars['DateTime']['input']>;
+  uploadedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+export interface IEventIdArgs {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
 /** File */
 export interface IFile {
   _id: Scalars['ID']['output'];
   approvedBy?: Maybe<Scalars['JSON']['output']>;
+  attendanceJustified?: Maybe<Scalars['ID']['output']>;
   comments?: Maybe<Array<IFileComment>>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -222,6 +255,7 @@ export interface IFile {
 }
 
 export interface IFileArgs {
+  attendanceJustified?: InputMaybe<Scalars['ID']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   fileType?: InputMaybe<Array<IFileType>>;
   filename?: InputMaybe<Scalars['String']['input']>;
@@ -244,14 +278,38 @@ export interface IFileIdArgs {
 
 /** Define the file type that was uploaded by the student */
 export enum IFileType {
-  /** Foto de perfil */
-  FotoPerfil = 'FOTO_PERFIL',
   /** Justificante */
   Justificante = 'JUSTIFICANTE',
   /** Reporte en Excel */
   ReporteExcel = 'REPORTE_EXCEL',
   /** Reporte en PDF */
   ReportePdf = 'REPORTE_PDF'
+}
+
+/** Object type for dashboard statistics */
+export interface IGeneralStatistics {
+  classAbsentDay: Scalars['Float']['output'];
+  classAbsentMonth: Scalars['Float']['output'];
+  classAbsentPeriod: Scalars['Float']['output'];
+  classAbsentSemester: Scalars['Float']['output'];
+  classAbsentYear: Scalars['Float']['output'];
+  classJustifyDay: Scalars['Float']['output'];
+  classJustifyMonth: Scalars['Float']['output'];
+  classJustifyPeriod: Scalars['Float']['output'];
+  classJustifySemester: Scalars['Float']['output'];
+  classJustifyYear: Scalars['Float']['output'];
+  classPresentDay: Scalars['Float']['output'];
+  classPresentMonth: Scalars['Float']['output'];
+  classPresentPeriod: Scalars['Float']['output'];
+  classPresentSemester: Scalars['Float']['output'];
+  classPresentYear: Scalars['Float']['output'];
+  weekday1: Scalars['Float']['output'];
+  weekday2: Scalars['Float']['output'];
+  weekday3: Scalars['Float']['output'];
+  weekday4: Scalars['Float']['output'];
+  weekday5: Scalars['Float']['output'];
+  weekday6: Scalars['Float']['output'];
+  weekday7: Scalars['Float']['output'];
 }
 
 /** group */
@@ -330,6 +388,7 @@ export interface IMutation {
   createCareer: ICareer;
   createClassroom: IClassroom;
   createDepartment: IDepartment;
+  createEvent: IEvent;
   createFile: IFile;
   createFileComment: IFile;
   createGroup: IGroup;
@@ -340,6 +399,7 @@ export interface IMutation {
   deleteBuilding: ISoftDeleteResponse;
   deleteClassroom: ISoftDeleteResponse;
   deleteDepartment: ISoftDeleteResponse;
+  deleteEvent: ISoftDeleteResponse;
   deleteGroup: ISoftDeleteResponse;
   deletePeriod: ISoftDeleteResponse;
   deleteSchedule: ISoftDeleteResponse;
@@ -362,12 +422,15 @@ export interface IMutation {
   updateCareer: ICareer;
   updateClassroom: IClassroom;
   updateDepartment: IDepartment;
+  updateEvent: IEvent;
   updateFile: IFile;
   updateGroup: IGroup;
   updatePeriod: IPeriod;
   updateSchedule: ISchedule;
   updateSubject: ISubject;
   updateUser: IUser;
+  uploadBuildingPicture: IBuilding;
+  uploadClassroomPicture: IClassroom;
   uploadFile: IFile;
   upsertUser: IUser;
 }
@@ -405,6 +468,11 @@ export interface IMutationCreateClassroomArgs {
 
 export interface IMutationCreateDepartmentArgs {
   data: ICreateDepartmentInput;
+}
+
+
+export interface IMutationCreateEventArgs {
+  data: IUpsertEventInput;
 }
 
 
@@ -455,6 +523,11 @@ export interface IMutationDeleteClassroomArgs {
 
 export interface IMutationDeleteDepartmentArgs {
   data: IDepartmentIdArgs;
+}
+
+
+export interface IMutationDeleteEventArgs {
+  data: IEventIdArgs;
 }
 
 
@@ -543,6 +616,11 @@ export interface IMutationUpdateDepartmentArgs {
 }
 
 
+export interface IMutationUpdateEventArgs {
+  data: IUpdateEventInput;
+}
+
+
 export interface IMutationUpdateFileArgs {
   data: IUpdateFile;
 }
@@ -570,6 +648,16 @@ export interface IMutationUpdateSubjectArgs {
 
 export interface IMutationUpdateUserArgs {
   data: IUpdateUserInput;
+}
+
+
+export interface IMutationUploadBuildingPictureArgs {
+  data: IUploadPictureBuildingInput;
+}
+
+
+export interface IMutationUploadClassroomPictureArgs {
+  data: IUploadPictureClassroomInput;
 }
 
 
@@ -645,6 +733,21 @@ export interface IPaginateClassroom {
 /** Object type for paging results */
 export interface IPaginateDepartment {
   docs: Array<IDepartment>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  limit: Scalars['Float']['output'];
+  nextPage?: Maybe<Scalars['Float']['output']>;
+  offset?: Maybe<Scalars['Float']['output']>;
+  page: Scalars['Float']['output'];
+  pagingCounter: Scalars['Float']['output'];
+  prevPage?: Maybe<Scalars['Float']['output']>;
+  totalDocs: Scalars['Float']['output'];
+  totalPages: Scalars['Float']['output'];
+}
+
+/** Object type for paging results */
+export interface IPaginateEvent {
+  docs: Array<IEvent>;
   hasNextPage: Scalars['Boolean']['output'];
   hasPrevPage: Scalars['Boolean']['output'];
   limit: Scalars['Float']['output'];
@@ -782,35 +885,6 @@ export interface IPeriodIdArgs {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
-export interface IPeriodoActual {
-  cierre_horarios: Scalars['String']['output'];
-  cierre_seleccion: Scalars['String']['output'];
-  fecha_inicio: Scalars['String']['output'];
-  fecha_inicio_c: Scalars['String']['output'];
-  fecha_termino: Scalars['String']['output'];
-  fecha_termino_c: Scalars['String']['output'];
-  fin_enc_estudiantil: Scalars['String']['output'];
-  fin_enc_estudiantil_c: Scalars['String']['output'];
-  fin_sele_alumnos: Scalars['String']['output'];
-  fin_sele_alumnos_c: Scalars['String']['output'];
-  identificacion_corta: Scalars['String']['output'];
-  identificacion_larga: Scalars['String']['output'];
-  inicio_enc_estudiantil: Scalars['String']['output'];
-  inicio_enc_estudiantil_c: Scalars['String']['output'];
-  inicio_sele_alumnos: Scalars['String']['output'];
-  inicio_sele_alumnos_c: Scalars['String']['output'];
-  inicio_vacacional: Scalars['String']['output'];
-  inicio_vacacional_c: Scalars['String']['output'];
-  inicio_vacacional_ss: Scalars['String']['output'];
-  inicio_vacacional_ss_c: Scalars['String']['output'];
-  periodo: Scalars['String']['output'];
-  status: Scalars['String']['output'];
-  termino_vacacional: Scalars['String']['output'];
-  termino_vacacional_c: Scalars['String']['output'];
-  termino_vacacional_ss: Scalars['String']['output'];
-  termino_vacacional_ss_c: Scalars['String']['output'];
-}
-
 export interface IPeriodos {
   finalDate: Scalars['DateTime']['output'];
   largeIdentifier: Scalars['String']['output'];
@@ -837,6 +911,7 @@ export interface IQuery {
   getAllCareers: IPaginateCareer;
   getAllClassrooms: IPaginateClassroom;
   getAllDepartments: IPaginateDepartment;
+  getAllEvents: IPaginateEvent;
   getAllFiles: IPaginateFile;
   getAllGroups: IPaginateGroup;
   getAllPeriods: IPaginatePeriod;
@@ -844,11 +919,13 @@ export interface IQuery {
   getAllSubjects: IPaginateSubject;
   getAllUsers: IPaginateUser;
   getAttendanceById: IAttendance;
+  getAttendanceStatistics: IGeneralStatistics;
   getBuildingById: IBuilding;
   getById: IUser;
   getCareerById: ICareer;
   getClassroomById: IClassroom;
   getDepartmentById: IDepartment;
+  getEventById: IEvent;
   getFileById: IFile;
   getGroupById: IGroup;
   getGrupos: Array<IGrupos>;
@@ -856,10 +933,10 @@ export interface IQuery {
   getLastPeriod: IPeriod;
   getMaterias: Array<IMaterias>;
   getPeriodById: IPeriod;
-  getPeriodoActual: IPeriodoActual;
   getPeriodos: Array<IPeriodos>;
   getProfesores: Array<IProfesores>;
   getScheduleById: ISchedule;
+  getSchedulesFormatted: Array<ISchedulesFormatted>;
   getSubjectById: ISubject;
   getUserById: IUser;
   me: IUser;
@@ -921,6 +998,19 @@ export interface IQueryGetAllClassroomsArgs {
 
 export interface IQueryGetAllDepartmentsArgs {
   filter?: InputMaybe<IDepartmentArgs>;
+  lean?: InputMaybe<Scalars['Boolean']['input']>;
+  leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  populate?: InputMaybe<Scalars['String']['input']>;
+  select?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['JSON']['input']>;
+}
+
+
+export interface IQueryGetAllEventsArgs {
+  filter?: InputMaybe<IEventArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
   leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1016,6 +1106,15 @@ export interface IQueryGetAttendanceByIdArgs {
 }
 
 
+export interface IQueryGetAttendanceStatisticsArgs {
+  career?: InputMaybe<Scalars['ID']['input']>;
+  department?: InputMaybe<Scalars['ID']['input']>;
+  period?: InputMaybe<Scalars['ID']['input']>;
+  semester?: InputMaybe<Scalars['String']['input']>;
+  teacher?: InputMaybe<Scalars['ID']['input']>;
+}
+
+
 export interface IQueryGetBuildingByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
@@ -1045,6 +1144,12 @@ export interface IQueryGetDepartmentByIdArgs {
 }
 
 
+export interface IQueryGetEventByIdArgs {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+
 export interface IQueryGetFileByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
@@ -1058,25 +1163,12 @@ export interface IQueryGetGroupByIdArgs {
 
 
 export interface IQueryGetGruposArgs {
-  periodo: Scalars['String']['input'];
+  actualPeriod: Scalars['String']['input'];
 }
 
 
 export interface IQueryGetHorariosArgs {
-  periodo: Scalars['String']['input'];
-}
-
-
-export interface IQueryGetLastPeriodArgs {
-  filter?: InputMaybe<IPeriodArgs>;
-  lean?: InputMaybe<Scalars['Boolean']['input']>;
-  leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  populate?: InputMaybe<Scalars['String']['input']>;
-  select?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['JSON']['input']>;
+  actualPeriod: Scalars['String']['input'];
 }
 
 
@@ -1089,6 +1181,17 @@ export interface IQueryGetPeriodByIdArgs {
 export interface IQueryGetScheduleByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+
+export interface IQueryGetSchedulesFormattedArgs {
+  actualTime?: InputMaybe<Scalars['String']['input']>;
+  classroom?: InputMaybe<Scalars['ID']['input']>;
+  period?: InputMaybe<Scalars['ID']['input']>;
+  schedule?: InputMaybe<Scalars['ID']['input']>;
+  teacher?: InputMaybe<Scalars['ID']['input']>;
+  uploadedBy?: InputMaybe<Scalars['ID']['input']>;
+  weekday?: InputMaybe<Scalars['Float']['input']>;
 }
 
 
@@ -1163,6 +1266,29 @@ export interface IScheduleIdArgs {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+/** Object type for dashboard statistics */
+export interface ISchedulesFormatted {
+  _id: Scalars['ID']['output'];
+  buildingId: Scalars['String']['output'];
+  buildingLetter: Scalars['String']['output'];
+  buildingName: Scalars['String']['output'];
+  classroomId: Scalars['String']['output'];
+  classroomIdentifier: Scalars['String']['output'];
+  finalTime: Scalars['DateTime']['output'];
+  groupId: Scalars['String']['output'];
+  groupIdentifier: Scalars['String']['output'];
+  startTime: Scalars['DateTime']['output'];
+  subjectId: Scalars['String']['output'];
+  subjectLargeName: Scalars['String']['output'];
+  subjectShortName: Scalars['String']['output'];
+  teacherFirstName: Scalars['String']['output'];
+  teacherId: Scalars['String']['output'];
+  teacherLastName: Scalars['String']['output'];
+  teacherMiddleName?: Maybe<Scalars['String']['output']>;
+  teacherRfc: Scalars['String']['output'];
+  weekday: Scalars['Float']['output'];
+}
+
 /** Input for user SignIn */
 export interface ISignInInput {
   email: Scalars['String']['input'];
@@ -1215,6 +1341,7 @@ export interface IUpdateAttendanceInput {
   _id: Scalars['ID']['input'];
   secondPass: IAttendanceStatus;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+  uploadedBy: Scalars['ID']['input'];
 }
 
 /** Update building info input */
@@ -1253,10 +1380,21 @@ export interface IUpdateDepartmentInput {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+/** Update event info input */
+export interface IUpdateEventInput {
+  _id: Scalars['ID']['input'];
+  activity: Scalars['String']['input'];
+  finishDate: Scalars['DateTime']['input'];
+  groupsIncluded: Array<Scalars['ID']['input']>;
+  startDate: Scalars['DateTime']['input'];
+  uploadedBy: Scalars['ID']['input'];
+}
+
 /** UpdateFile */
 export interface IUpdateFile {
   _id?: InputMaybe<Scalars['ID']['input']>;
   approvedBy: Scalars['String']['input'];
+  attendanceJustified: Scalars['ID']['input'];
   description: Scalars['String']['input'];
   namefile: Scalars['String']['input'];
   person: Scalars['String']['input'];
@@ -1313,6 +1451,7 @@ export interface IUpdateUserInput {
   gender?: InputMaybe<Scalars['String']['input']>;
   lastName: Scalars['String']['input'];
   middleName?: InputMaybe<Scalars['String']['input']>;
+  photo?: InputMaybe<Scalars['Upload']['input']>;
   rfc: Scalars['String']['input'];
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
@@ -1324,12 +1463,27 @@ export interface IUploadFileInput {
   userId: Scalars['ID']['input'];
 }
 
+/** Upload picture of the building input */
+export interface IUploadPictureBuildingInput {
+  _id: Scalars['ID']['input'];
+  picture: Scalars['Upload']['input'];
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+/** Upload picture of the classroom input */
+export interface IUploadPictureClassroomInput {
+  _id: Scalars['ID']['input'];
+  picture: Scalars['Upload']['input'];
+  updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
 /** Create attendance input */
 export interface IUpsertAttendanceInput {
   firstPass: IAttendanceStatus;
   period: Scalars['ID']['input'];
   schedule: Scalars['ID']['input'];
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+  uploadedBy: Scalars['ID']['input'];
 }
 
 /** Create building input */
@@ -1344,6 +1498,16 @@ export interface IUpsertClassroomInput {
   building: Scalars['ID']['input'];
   identifier: Scalars['String']['input'];
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+/** Create event input */
+export interface IUpsertEventInput {
+  activity: Scalars['String']['input'];
+  finishDate: Scalars['DateTime']['input'];
+  groupsIncluded: Array<Scalars['ID']['input']>;
+  period: Scalars['ID']['input'];
+  startDate: Scalars['DateTime']['input'];
+  uploadedBy: Scalars['ID']['input'];
 }
 
 /** Create group input */
@@ -1417,6 +1581,7 @@ export interface IUser {
   lastName: Scalars['String']['output'];
   middleName?: Maybe<Scalars['String']['output']>;
   password: Scalars['String']['output'];
+  photo?: Maybe<Scalars['String']['output']>;
   rfc: Scalars['String']['output'];
   roles: Array<IRoles>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;

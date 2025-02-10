@@ -29,6 +29,8 @@ import BuildingSettings from '../pages/settings/buildings';
 import DepartmentsSettings from '../pages/settings/departament';
 import PeriodSettings from '../pages/settings/periodo';
 import CareerSettings from '../pages/settings/career';
+import classroomsSettings from '../pages/settings/classroom';
+import groupSettings from '../pages/settings/group';
 
 const rootRoute = new RootRoute();
 
@@ -54,6 +56,18 @@ const dashboardRoute = new Route({
   getParentRoute: () => rootRoute,
   path: 'home/dashboard',
   component: () => <App Component={Dashboard} />,
+});
+
+const classroomRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'settings/classroom',
+  component: () => <App Component={classroomsSettings} />,
+});
+
+const groupRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'settings/group',
+  component: () => <App Component={groupSettings} />,
 });
 
 const justifiyRoute = new Route({
@@ -298,6 +312,8 @@ const routeConfig = rootRoute.addChildren([
   departamntSettings,
   periodSettings,
   careerSettings,
+  classroomRoute,
+  groupRoute,
 ]);
 
 

@@ -41,7 +41,9 @@
       "buildings": "Edificios",
       "departments": "Departamentos",
       "periods": "Periodos",
-      "careers": "Carreras"
+      "careers": "Carreras",
+      "classroom": "Salones",
+      "group": "Grupo"
     }
   },
   "signUp": {
@@ -98,6 +100,11 @@
             "header": "Ejemplo de header para el dialogo add"
           }
         }
+      }
+    },
+    "group":{
+      "dashboard":{
+        
       }
     }
   }

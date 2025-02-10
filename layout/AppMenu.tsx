@@ -114,6 +114,16 @@ function AppMenu() {
               icon: 'pi pi-fw pi-book',
               to: '/settings/career',
             },
+            {
+              label: t('sidebar.settings.classroom'), // salon
+              icon: 'pi pi-fw pi-building',
+              to: '/settings/classroom',
+            },
+            {
+              label: t('sidebar.settings.group'), // grupo
+              icon: 'pi pi-fw pi-users',
+              to: '/settings/group',
+            },
           ],
         },
       ],

@@ -1,17 +1,20 @@
 import React from 'react';
+import PeriodCrud from '../../components/ui/period/periodCrud';
+import PageHeadingperiod from '../../components/ui/period/periodHeading';
 
-function PeriodSettings() {
+function periodSettings() {
   return (
     <div className="grid">
       <div className="col-12">
         <div className="card">
-          <h5>Empty Page - Dashboard the Period</h5>
-
-          <p>Use this page to start from scratch and place your custom content.</p>
+          <PageHeadingperiod />
         </div>
+      </div>
+      <div className="col-12">
+        <PeriodCrud />
       </div>
     </div>
   );
 }
 
-export default PeriodSettings;
+export default periodSettings;
