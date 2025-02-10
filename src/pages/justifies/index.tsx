@@ -1,6 +1,7 @@
 import React from 'react';
 import PageHeading from '../../components/ui/justifies/justifiesHeding';
 import JustifyCrud from '../../components/ui/justifies/justifiesCrud';
+import ReviewJustify from '../../components/ui/justifies/reviewjustify';
 
 function Justify() {
   return (
@@ -11,7 +12,8 @@ function Justify() {
         </div>
       </div>
       <div className="col-12">
-        <JustifyCrud />
+        {/* <JustifyCrud /> */}
+        <ReviewJustify />
       </div>
     </div>
   );

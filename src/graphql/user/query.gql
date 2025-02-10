@@ -15,6 +15,7 @@ query GetAllUsers($filter: UserArgs, $limit: Int, $offset: Int, $page: Int) {
       rfc
       roles
       updatedAt
+      photo
     }
     hasNextPage
     hasPrevPage
@@ -45,6 +46,7 @@ query GetUserById($id: ID) {
     rfc
     roles
     updatedAt
+    photo
   }
 }
 

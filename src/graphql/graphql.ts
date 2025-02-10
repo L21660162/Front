@@ -1982,14 +1982,14 @@ export type IGetAllUsersQueryVariables = Exact<{
 }>;
 
 
-export type IGetAllUsersQuery = { getAllUsers: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null }> } };
+export type IGetAllUsersQuery = { getAllUsers: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null, photo?: string | null }> } };
 
 export type IGetUserByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
-export type IGetUserByIdQuery = { getUserById: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } };
+export type IGetUserByIdQuery = { getUserById: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null, photo?: string | null } };
 
 export type IMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3620,6 +3620,7 @@ export const GetAllUsersDocument = /*#__PURE__*/ `
       rfc
       roles
       updatedAt
+      photo
     }
     hasNextPage
     hasPrevPage
@@ -3670,6 +3671,7 @@ export const GetUserByIdDocument = /*#__PURE__*/ `
     rfc
     roles
     updatedAt
+    photo
   }
 }
     `;

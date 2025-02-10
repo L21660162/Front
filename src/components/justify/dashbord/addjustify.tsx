@@ -1,7 +1,6 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
-import { ProgressBar } from 'primereact/progressbar';
 import { Toast } from 'primereact/toast';
 import { Tooltip } from 'primereact/tooltip';
 import { Dialog } from 'primereact/dialog';
@@ -11,7 +10,6 @@ import {
   IAttendance,
   IAttendanceStatus,
   IFileType,
-  ISchedulesFormatted,
   IUploadFileInput,
   useGetAllAttendancesQuery,
   useGetAllFilesQuery,
@@ -24,8 +22,6 @@ import { Card } from 'primereact/card';
 import { useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { IApiError } from '../../../../types/apierror';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { nullable } from 'zod';
 
 type JustifyFormProps = {
   headerTitle: string;
@@ -41,8 +37,6 @@ export default function AddJustify({
 }: PropsWithChildren<JustifyFormPropsAndDialogStore>) {
   const toast = useRef<Toast>(null);
   const { t } = useTranslation('common');
-  const [totalSize, setTotalSize] = useState(0);
-  const fileUploadRef = useRef(null);
   const navigate = useNavigate({ from: '/justify/dashboard' });
   const [selectedSchedule, setSelectedSchedule] = useState<null>(null);
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -95,38 +89,6 @@ export default function AddJustify({
       attendanceJustified: status?.getAllAttendances.docs[0]._id,
     },
   });
-
-  console.log('file', file);
-
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-    setValue,
-    reset,
-    watch,
-  } = useForm<IUploadFileInput>({
-    defaultValues: {
-      file: null,
-      fileType: null,
-      userId: null,
-    },
-  });
-
-  useEffect(() => {
-    if (selectedFile) {
-      setValue('file', selectedFile);
-      setValue('fileType', selectedFile.type);
-      setValue('userId', status?.getAllAttendances.docs[0].userId);
-    }
-  }, [selectedFile, setValue]);
-
-  const onSubmit: SubmitHandler<IUploadFileInput> = (data: IUploadFileInput) => {
-    setButtonDisabled(true);
-    data.file = selectedFile;
-    mutate({ data });
-    reset();
-  };
 
   const { data: scheduledata } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
     schedule: status?.getAllAttendances.docs[0].schedule,
