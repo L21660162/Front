@@ -58,20 +58,7 @@ const dashboardRoute = new Route({
 const justifyRoute = new Route({
   getParentRoute: () => rootRoute,
   path: 'justify/dashboard',
-  component: () => {
-    const { roles } = useAccessTokenData() as TokenData;
-    const allowedroles = [
-      'DIRTECTOR_ACADEMICO',
-      'SUBDIRECTOR_ACADEMICO',
-      'RECURSOS_HUMANOS',
-      'JEFE_ACADEMICO',
-    ];
-
-    if (allowedroles.some((role) => roles.includes(role))) {
-      return <App Component={Justify} />;
-    }
-    return <App Component={NotFoundPage} />;
-  },
+  component: () => <App Component={Justify} />,
 });
 
 const scheduleRoute = new Route({

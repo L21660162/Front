@@ -7,22 +7,22 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { AppTopbarRef } from '../types/types';
-import { LayoutContext } from './context/layoutcontext';
 import { useNavigate } from '@tanstack/react-router';
-import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 import { useTranslation } from 'react-i18next';
 import { MenuItem } from 'primereact/menuitem';
 import { Menu } from 'primereact/menu';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { Avatar } from 'primereact/avatar';
+import { AppTopbarRef } from '../types/types';
+import { LayoutContext } from './context/layoutcontext';
+import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 import { useGetUserByIdQuery, useSignOutMutation } from '../src/graphql/graphql';
 import { GRAPHQL_CLIENT } from '../src/utils/graphqlClient';
 import { IApiError } from '../types/apierror';
 import { getActions, useAccessTokenData, useRefreshToken } from '../src/store/auth/store';
-import logo from '../layout/images/logo-sepret.png';
+import logo from './images/logo-sepret.png';
 import { TokenData } from '../src/store/auth/type';
-import { Avatar } from 'primereact/avatar';
 
 const { setAccessToken, setRefreshToken } = getActions();
 
@@ -246,7 +246,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
           aria-controls="popup_menu_right"
           aria-haspopup
         >
-          <Avatar image={profileImage} className="bg-primary" shape="circle" size="xlarge" />
+          <Avatar image={profileImage} shape="circle" size="large" />
         </button>
         <Menu model={items} popup ref={menuRight} id="popup_menu_right" popupAlignment="right" />
       </div>
