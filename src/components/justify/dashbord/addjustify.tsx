@@ -81,6 +81,8 @@ export default function AddJustify({
     },
   });
 
+  console.log(status);
+
   const { data: file, isSuccess } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
     page: 1,
     limit: 10,
@@ -197,12 +199,12 @@ export default function AddJustify({
           {uploadButton}
           {cancelButton}
 
-          {file?.getAllFiles.docs[0].comments[0]._id !== null ? (
+          {file?.getAllFiles.docs[0]?.comments[0]?._id !== null ? (
           <div className="flex flex-column gap-2 ml-3">
             <div className="flex flex-column gap-1">
               <div className="text-2 font-bold text-900">Comentarios</div>
               <div className="text-1 text-700">
-                {file?.getAllFiles.docs[0].comments[0].comment}
+                {file?.getAllFiles.docs[0]?.comments[0]?.comment}
               </div>
             </div>
           </div>

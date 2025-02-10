@@ -18,7 +18,6 @@ import { dialogStore } from '../../../store/global/dialogStore';
 import EditScheduleViewDialogForm from '../../forms/Schedule/dashboard/editScheduleView';
 import JustifyStatus from '../../justify/dashbord/justifieStatus';
 import Addjustify from '../../justify/dashbord/addjustify';
-import ViewJustify from '../../justify/dashbord/viewjustifi';
 
 interface ITeacherSearchResult {
   _id?: string | null | undefined;
@@ -65,7 +64,7 @@ export default function JustifyCrud() {
   const { data: allScheduleData, refetch: requestUserById } = useGetSchedulesFormattedQuery(
     GRAPHQL_CLIENT,
     {
-      teacher: '678fdf64e5dab4d5b0064084',
+      teacher: '678fdf64e5dab4d5b006408c',
     }
   );
 
@@ -187,7 +186,7 @@ export default function JustifyCrud() {
             visible={visible}
             setVisible={setVisible}
             headerTitle={t('module.subject.dashboard.dialog.edit.header')}
-            id="678fe4cce5dab4d5b0064588"
+            id="678fe4cbe5dab4d5b006450f"
           />
         )}
       </div>

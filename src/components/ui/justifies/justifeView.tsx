@@ -1,36 +1,49 @@
+/* eslint-disable @next/next/no-img-element */
+
+'use client';
+
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Tag } from 'primereact/tag';
+import { Avatar } from 'primereact/avatar';
+import { Demo } from '../../../../types/types';
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
   IAttendance,
   IAttendanceStatus,
+  ICareer,
+  IGetAllCareersQuery,
   useApproveFileMutation,
+  useDeletedCareerMutation,
+  useGetAllAttendancesQuery,
+  useGetAllCareersQuery,
   useGetAllFilesQuery,
   useGetSchedulesFormattedQuery,
   useGetUserByIdQuery,
-  useGetAllAttendancesQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
+import { dialogStore } from '../../../store/global/dialogStore';
+import EditCareerDialogForm from '../../forms/career/dashboard/editcareer';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
 import AddCommentDialogForm from '../../justify/dashbord/addcomment';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 
-export default function ReviewJustify() {
+function CareerCrud() {
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/justify/dashboard' });
   const { roles, _id } = useAccessTokenData() as TokenData;
   const [aprovateDialog, setAprovateDialog] = useState(false);
   const [addCommentDialog, setAddCommentDialog] = useState(false);
   const [selectedAttendance, setSelectedAttendance] = useState(null);
-  const [attendanceId, setAttendanceId] = useState<string | null>(null);
+  //const [attendanceId, setAttendanceId] = useState<string | null>(null);
   const [globalFilter, setGlobalFilter] = useState('');
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<any>>(null);
@@ -67,22 +80,23 @@ export default function ReviewJustify() {
     },
   });
 
-  useEffect(() => {
-    if (status?.getAllAttendances?.docs?.length > 0) {
-      setAttendanceId(status.getAllAttendances.docs[0]._id);
-    }
-  }, [status]);
+  //   useEffect(() => {
+  //     if (status?.getAllAttendances?.docs?.length > 0) {
+  //       setAttendanceId(status.getAllAttendances.docs[0]._id);
+  //     }
+  //   }, [status]);
 
-  console.log(attendanceId);
 
-  const { data: file } = useGetAllFilesQuery(
-    GRAPHQL_CLIENT,
-    {
-      page: 1,
-      limit: 10,
-      offset: 0,
-    filter: attendanceId ? { attendanceJustified: attendanceId } : undefined, 
-  }, { skip: !attendanceId });
+  const { data: file } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
+    page: 1,
+    limit: 10,
+    offset: 0,
+    filter: {
+      attendanceJustified: status?.getAllAttendances?.docs[0]?._id,
+    },
+  });
+
+  console.log(file);
 
   const dataBodyTemplate = (atendans: IAttendance) => {
     return (
@@ -108,7 +122,7 @@ export default function ReviewJustify() {
     }
     return (
       <div className="flex align-items-center gap-2">
-        <img src={img} alt={user?.getUserById?.rfc} className="image" />
+        <Avatar image={img} shape="circle" size="large" />
         <span className="p-column-title">{`${user?.getUserById.firstName} ${user?.getUserById.lastName} ${user?.getUserById.middleName}`}</span>
       </div>
     );
@@ -119,7 +133,7 @@ export default function ReviewJustify() {
       schedule: atendans.schedule,
     });
 
-    const start = new Date(schedule?.getSchedulesFormatted[0].startTime).toLocaleDateString(
+    const start = new Date(schedule?.getSchedulesFormatted[0].startTime).toLocaleTimeString(
       'es-MX',
       {
         hour: '2-digit',
@@ -127,7 +141,7 @@ export default function ReviewJustify() {
         hour12: true,
       }
     );
-    const end = new Date(schedule?.getSchedulesFormatted[0].finalTime).toLocaleDateString('es-MX', {
+    const end = new Date(schedule?.getSchedulesFormatted[0].finalTime).toLocaleTimeString('es-MX', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true,
@@ -163,19 +177,20 @@ export default function ReviewJustify() {
       },
     });
     return (
-      <>
-        {file.getAllFiles.docs.length > 0 ? (
+      <div>
+        {file?.getAllFiles?.docs?.length > 0 ? (
           file.getAllFiles.docs[0].approvedBy !== null ? (
             <Tag value="Justificado" severity="success" className="p-tag-rounded mx-1" />
-          ) : file.getAllFiles.docs[0].comments[0]._id !== null ? (
+          ) : file.getAllFiles.docs[0].comments?.length > 0 &&
+            file.getAllFiles.docs[0].comments[0]._id !== null ? (
             <Tag value="No Aceptado" severity="danger" className="p-tag-rounded mx-1" />
           ) : (
-            <Tag value="En revición" severity="warning" className="p-tag-rounded mx-1" />
+            <Tag value="En revisión" severity="warning" className="p-tag-rounded mx-1" />
           )
         ) : (
           <Tag value="Sin Justificar" severity="info" className="p-tag-rounded mx-1" />
         )}
-      </>
+      </div>
     );
   };
   const actionBodyTemplate = (atendans: IAttendance) => {
@@ -189,6 +204,7 @@ export default function ReviewJustify() {
           severity="warning"
           onClick={() => setAprovateDialog(true)}
           style={{ marginRight: '10px' }}
+          disabled={file?.getAllFiles.docs.length === 0}
         />
       </div>
     );
@@ -208,13 +224,6 @@ export default function ReviewJustify() {
     </div>
   );
 
-  const aprovateDialogFooter = () => (
-    <>
-      <Button label="No" icon="pi pi-times" text onClick={hideAprovateDialog} />
-      <Button label="Yes" icon="pi pi-check" text onClick={() => setAddCommentDialog(true)} />
-    </>
-  );
-
   const hideAprovateDialog = () => {
     mutate({
       data: {
@@ -224,6 +233,13 @@ export default function ReviewJustify() {
     });
     setAprovateDialog(false);
   };
+
+  const aprovateDialogFooter = () => (
+    <>
+      <Button label="No" icon="pi pi-times" text onClick={() => setAddCommentDialog(true)} />
+      <Button label="Yes" icon="pi pi-check" text onClick={hideAprovateDialog} />
+    </>
+  );
 
   return (
     <div className="grid crud-demo">
@@ -344,11 +360,11 @@ export default function ReviewJustify() {
             onHide={hideAprovateDialog}
           >
             <div className="flex w-full h-full flex-grow-1">
-              <iframe
+              {/* <iframe
                 src={`http://localhost:4000${file?.getAllFiles.docs[0].path}#toolbar=0&navpanes=0&scrollbar=0`}
                 title="PDFDoc"
                 style={{ width: '100%', height: '100%', border: 'none' }}
-              />
+              /> */}
             </div>
           </Dialog>
         </div>
@@ -356,3 +372,5 @@ export default function ReviewJustify() {
     </div>
   );
 }
+
+export default CareerCrud;

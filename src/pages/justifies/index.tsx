@@ -1,7 +1,7 @@
 import React from 'react';
 import PageHeading from '../../components/ui/justifies/justifiesHeding';
 import JustifyCrud from '../../components/ui/justifies/justifiesCrud';
-import ReviewJustify from '../../components/ui/justifies/reviewjustify';
+import ReviewJustify from '../../components/ui/justifies/justifeView';
 
 function Justify() {
   return (

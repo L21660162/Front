@@ -17,6 +17,8 @@ export default function JustifyStatus(id: string, onVisibilityChange: (visible: 
     },
   });
 
+  console.log(status);
+
   const handleClick = () => {
     setVisible(true);
     onVisibilityChange(true);
