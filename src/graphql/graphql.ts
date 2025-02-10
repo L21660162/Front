@@ -6,36 +6,26 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
-  [_ in K]?: never;
-};
-export type Incremental<T> =
-  | T
-  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 
-function fetcher<TData, TVariables extends { [key: string]: any }>(
-  client: GraphQLClient,
-  query: string,
-  variables?: TVariables,
-  requestHeaders?: RequestInit['headers']
-) {
-  return async (): Promise<TData> =>
-    client.request({
-      document: query,
-      variables,
-      requestHeaders,
-    });
+function fetcher<TData, TVariables extends { [key: string]: any }>(client: GraphQLClient, query: string, variables?: TVariables, requestHeaders?: RequestInit['headers']) {
+  return async (): Promise<TData> => client.request({
+    document: query,
+    variables,
+    requestHeaders
+  });
 }
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  DateTime: { input: any; output: any };
-  JSON: { input: any; output: any };
-  Upload: { input: any; output: any };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
+  JSON: { input: any; output: any; }
+  Upload: { input: any; output: any; }
 }
 
 export interface IApproveFileInput {
@@ -80,7 +70,7 @@ export enum IAttendanceStatus {
   /** Asistencia Pendiente */
   Pending = 'PENDING',
   /** Presente */
-  Present = 'PRESENT',
+  Present = 'PRESENT'
 }
 
 /** building */
@@ -293,33 +283,7 @@ export enum IFileType {
   /** Reporte en Excel */
   ReporteExcel = 'REPORTE_EXCEL',
   /** Reporte en PDF */
-  ReportePdf = 'REPORTE_PDF',
-}
-
-/** Object type for dashboard statistics */
-export interface IGeneralStatistics {
-  classAbsentDay: Scalars['Float']['output'];
-  classAbsentMonth: Scalars['Float']['output'];
-  classAbsentPeriod: Scalars['Float']['output'];
-  classAbsentSemester: Scalars['Float']['output'];
-  classAbsentYear: Scalars['Float']['output'];
-  classJustifyDay: Scalars['Float']['output'];
-  classJustifyMonth: Scalars['Float']['output'];
-  classJustifyPeriod: Scalars['Float']['output'];
-  classJustifySemester: Scalars['Float']['output'];
-  classJustifyYear: Scalars['Float']['output'];
-  classPresentDay: Scalars['Float']['output'];
-  classPresentMonth: Scalars['Float']['output'];
-  classPresentPeriod: Scalars['Float']['output'];
-  classPresentSemester: Scalars['Float']['output'];
-  classPresentYear: Scalars['Float']['output'];
-  weekday1: Scalars['Float']['output'];
-  weekday2: Scalars['Float']['output'];
-  weekday3: Scalars['Float']['output'];
-  weekday4: Scalars['Float']['output'];
-  weekday5: Scalars['Float']['output'];
-  weekday6: Scalars['Float']['output'];
-  weekday7: Scalars['Float']['output'];
+  ReportePdf = 'REPORTE_PDF'
 }
 
 /** Object type for dashboard statistics */
@@ -471,29 +435,36 @@ export interface IMutation {
   upsertUser: IUser;
 }
 
+
 export interface IMutationApproveFileArgs {
   data: IApproveFileInput;
 }
+
 
 export interface IMutationChangePasswordArgs {
   data: IChangePasswordInput;
 }
 
+
 export interface IMutationCreateAttendanceArgs {
   data: IUpsertAttendanceInput;
 }
+
 
 export interface IMutationCreateBuildingArgs {
   data: IUpsertBuildingInput;
 }
 
+
 export interface IMutationCreateCareerArgs {
   data: ICreateCareerInput;
 }
 
+
 export interface IMutationCreateClassroomArgs {
   data: IUpsertClassroomInput;
 }
+
 
 export interface IMutationCreateDepartmentArgs {
   data: ICreateDepartmentInput;
@@ -504,45 +475,51 @@ export interface IMutationCreateEventArgs {
   data: IUpsertEventInput;
 }
 
-export interface IMutationCreateEventArgs {
-  data: IUpsertEventInput;
-}
 
 export interface IMutationCreateFileArgs {
   data: ICreateFile;
 }
 
+
 export interface IMutationCreateFileCommentArgs {
   data: ICreateFileCommentInput;
 }
+
 
 export interface IMutationCreateGroupArgs {
   data: IUpsertGroupInput;
 }
 
+
 export interface IMutationCreatePeriodArgs {
   data: IUpsertPeriodInput;
 }
+
 
 export interface IMutationCreateScheduleArgs {
   data: IUpsertScheduleInput;
 }
 
+
 export interface IMutationCreateSubjectArgs {
   data: IUpsertSubjectInput;
 }
+
 
 export interface IMutationDeleteAttendanceArgs {
   data: IAttendanceIdArgs;
 }
 
+
 export interface IMutationDeleteBuildingArgs {
   data: IBuildingIdArgs;
 }
 
+
 export interface IMutationDeleteClassroomArgs {
   data: IClassroomIdArgs;
 }
+
 
 export interface IMutationDeleteDepartmentArgs {
   data: IDepartmentIdArgs;
@@ -553,73 +530,86 @@ export interface IMutationDeleteEventArgs {
   data: IEventIdArgs;
 }
 
-export interface IMutationDeleteEventArgs {
-  data: IEventIdArgs;
-}
 
 export interface IMutationDeleteGroupArgs {
   data: IGroupIdArgs;
 }
 
+
 export interface IMutationDeletePeriodArgs {
   data: IPeriodIdArgs;
 }
+
 
 export interface IMutationDeleteScheduleArgs {
   data: IScheduleIdArgs;
 }
 
+
 export interface IMutationDeleteSubjectArgs {
   data: ISubjectIdArgs;
 }
+
 
 export interface IMutationDeleteUserArgs {
   data: IUserIdArgs;
 }
 
+
 export interface IMutationDeletedCareerArgs {
   data: ICareerIdArgs;
 }
+
 
 export interface IMutationDeletedFileArgs {
   data: IFileIdArgs;
 }
 
+
 export interface IMutationPasswordRecoveryArgs {
   data: IPasswordRecoveryInput;
 }
+
 
 export interface IMutationPasswordResetArgs {
   data: IPasswordResetInput;
 }
 
+
 export interface IMutationSignInArgs {
   data: ISignInInput;
 }
+
 
 export interface IMutationSignOutArgs {
   data: IRefreshTokenInput;
 }
 
+
 export interface IMutationSignUpArgs {
   data: ISignUpInput;
 }
+
 
 export interface IMutationUpdateAttendanceArgs {
   data: IUpdateAttendanceInput;
 }
 
+
 export interface IMutationUpdateBuildingArgs {
   data: IUpdateBuildingInput;
 }
+
 
 export interface IMutationUpdateCareerArgs {
   data: IUpdateCareerInput;
 }
 
+
 export interface IMutationUpdateClassroomArgs {
   data: IUpdateClassroomInput;
 }
+
 
 export interface IMutationUpdateDepartmentArgs {
   data: IUpdateDepartmentInput;
@@ -630,29 +620,31 @@ export interface IMutationUpdateEventArgs {
   data: IUpdateEventInput;
 }
 
-export interface IMutationUpdateEventArgs {
-  data: IUpdateEventInput;
-}
 
 export interface IMutationUpdateFileArgs {
   data: IUpdateFile;
 }
 
+
 export interface IMutationUpdateGroupArgs {
   data: IUpdateGroupInput;
 }
+
 
 export interface IMutationUpdatePeriodArgs {
   data: IUpdatePeriodInput;
 }
 
+
 export interface IMutationUpdateScheduleArgs {
   data: IUpdateScheduleInput;
 }
 
+
 export interface IMutationUpdateSubjectArgs {
   data: IUpdateSubjectInput;
 }
+
 
 export interface IMutationUpdateUserArgs {
   data: IUpdateUserInput;
@@ -668,17 +660,11 @@ export interface IMutationUploadClassroomPictureArgs {
   data: IUploadPictureClassroomInput;
 }
 
-export interface IMutationUploadBuildingPictureArgs {
-  data: IUploadPictureBuildingInput;
-}
-
-export interface IMutationUploadClassroomPictureArgs {
-  data: IUploadPictureClassroomInput;
-}
 
 export interface IMutationUploadFileArgs {
   data: IUploadFileInput;
 }
+
 
 export interface IMutationUpsertUserArgs {
   data: IUpsertUserInput;
@@ -958,6 +944,7 @@ export interface IQuery {
   refreshToken: IJwtAccessToken;
 }
 
+
 export interface IQueryGetAllAttendancesArgs {
   filter?: InputMaybe<IAttendanceArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
@@ -969,6 +956,7 @@ export interface IQueryGetAllAttendancesArgs {
   select?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
+
 
 export interface IQueryGetAllBuildingsArgs {
   filter?: InputMaybe<IBuildingArgs>;
@@ -982,6 +970,7 @@ export interface IQueryGetAllBuildingsArgs {
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
 
+
 export interface IQueryGetAllCareersArgs {
   filter?: InputMaybe<ICareerArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
@@ -994,6 +983,7 @@ export interface IQueryGetAllCareersArgs {
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
 
+
 export interface IQueryGetAllClassroomsArgs {
   filter?: InputMaybe<IClassroomArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1005,6 +995,7 @@ export interface IQueryGetAllClassroomsArgs {
   select?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
+
 
 export interface IQueryGetAllDepartmentsArgs {
   filter?: InputMaybe<IDepartmentArgs>;
@@ -1031,17 +1022,6 @@ export interface IQueryGetAllEventsArgs {
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
 
-export interface IQueryGetAllEventsArgs {
-  filter?: InputMaybe<IEventArgs>;
-  lean?: InputMaybe<Scalars['Boolean']['input']>;
-  leanWithId?: InputMaybe<Scalars['Boolean']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  populate?: InputMaybe<Scalars['String']['input']>;
-  select?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Scalars['JSON']['input']>;
-}
 
 export interface IQueryGetAllFilesArgs {
   filter?: InputMaybe<IFileArgs>;
@@ -1055,6 +1035,7 @@ export interface IQueryGetAllFilesArgs {
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
 
+
 export interface IQueryGetAllGroupsArgs {
   filter?: InputMaybe<IGroupArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1066,6 +1047,7 @@ export interface IQueryGetAllGroupsArgs {
   select?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
+
 
 export interface IQueryGetAllPeriodsArgs {
   filter?: InputMaybe<IPeriodArgs>;
@@ -1079,6 +1061,7 @@ export interface IQueryGetAllPeriodsArgs {
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
 
+
 export interface IQueryGetAllSchedulesArgs {
   filter?: InputMaybe<IScheduleArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1090,6 +1073,7 @@ export interface IQueryGetAllSchedulesArgs {
   select?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
+
 
 export interface IQueryGetAllSubjectsArgs {
   filter?: InputMaybe<ISubjectArgs>;
@@ -1103,6 +1087,7 @@ export interface IQueryGetAllSubjectsArgs {
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
 
+
 export interface IQueryGetAllUsersArgs {
   filter?: InputMaybe<IUserArgs>;
   lean?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1114,6 +1099,7 @@ export interface IQueryGetAllUsersArgs {
   select?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }
+
 
 export interface IQueryGetAttendanceByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
@@ -1129,32 +1115,29 @@ export interface IQueryGetAttendanceStatisticsArgs {
   teacher?: InputMaybe<Scalars['ID']['input']>;
 }
 
-export interface IQueryGetAttendanceStatisticsArgs {
-  career?: InputMaybe<Scalars['ID']['input']>;
-  department?: InputMaybe<Scalars['ID']['input']>;
-  period?: InputMaybe<Scalars['ID']['input']>;
-  semester?: InputMaybe<Scalars['String']['input']>;
-  teacher?: InputMaybe<Scalars['ID']['input']>;
-}
 
 export interface IQueryGetBuildingByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+
 export interface IQueryGetByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+
 export interface IQueryGetCareerByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
 }
+
 
 export interface IQueryGetClassroomByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
+
 
 export interface IQueryGetDepartmentByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
@@ -1167,33 +1150,34 @@ export interface IQueryGetEventByIdArgs {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
-export interface IQueryGetEventByIdArgs {
-  _id?: InputMaybe<Scalars['ID']['input']>;
-  updatedBy?: InputMaybe<Scalars['ID']['input']>;
-}
 
 export interface IQueryGetFileByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+
 export interface IQueryGetGroupByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+
 export interface IQueryGetGruposArgs {
   actualPeriod: Scalars['String']['input'];
 }
+
 
 export interface IQueryGetHorariosArgs {
   actualPeriod: Scalars['String']['input'];
 }
 
+
 export interface IQueryGetPeriodByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
+
 
 export interface IQueryGetScheduleByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
@@ -1211,25 +1195,18 @@ export interface IQueryGetSchedulesFormattedArgs {
   weekday?: InputMaybe<Scalars['Float']['input']>;
 }
 
-export interface IQueryGetSchedulesFormattedArgs {
-  actualTime?: InputMaybe<Scalars['String']['input']>;
-  classroom?: InputMaybe<Scalars['ID']['input']>;
-  period?: InputMaybe<Scalars['ID']['input']>;
-  schedule?: InputMaybe<Scalars['ID']['input']>;
-  teacher?: InputMaybe<Scalars['ID']['input']>;
-  uploadedBy?: InputMaybe<Scalars['ID']['input']>;
-  weekday?: InputMaybe<Scalars['Float']['input']>;
-}
 
 export interface IQueryGetSubjectByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+
 export interface IQueryGetUserByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
+
 
 export interface IQueryRefreshTokenArgs {
   data: IRefreshTokenInput;
@@ -1255,7 +1232,7 @@ export enum IRoles {
   /** Super administrador */
   Sa = 'SA',
   /** Subdirector académico */
-  Subdirector = 'SUBDIRECTOR',
+  Subdirector = 'SUBDIRECTOR'
 }
 
 /** schedule */
@@ -1659,35 +1636,20 @@ export type ISignUpMutationVariables = Exact<{
   data: ISignUpInput;
 }>;
 
-export type ISignUpMutation = {
-  signUp: {
-    _id?: string | null;
-    createdAt?: any | null;
-    email: string;
-    firstName: string;
-    lastName: string;
-    middleName?: string | null;
-    roles: Array<IRoles>;
-  };
-};
+
+export type ISignUpMutation = { signUp: { _id?: string | null, createdAt?: any | null, email: string, firstName: string, lastName: string, middleName?: string | null, roles: Array<IRoles> } };
 
 export type ISignInMutationVariables = Exact<{
   data: ISignInInput;
 }>;
 
-export type ISignInMutation = {
-  signIn: {
-    accessToken: string;
-    accessTokenExpiresIn: string;
-    refreshToken: string;
-    refreshTokenExpiresIn: string;
-    type: string;
-  };
-};
+
+export type ISignInMutation = { signIn: { accessToken: string, accessTokenExpiresIn: string, refreshToken: string, refreshTokenExpiresIn: string, type: string } };
 
 export type ISignOutMutationVariables = Exact<{
   data: IRefreshTokenInput;
 }>;
+
 
 export type ISignOutMutation = { signOut: boolean };
 
@@ -1695,20 +1657,13 @@ export type IChangePasswordMutationVariables = Exact<{
   data: IChangePasswordInput;
 }>;
 
-export type IChangePasswordMutation = {
-  changePassword: {
-    _id?: string | null;
-    email: string;
-    firstName: string;
-    lastName: string;
-    middleName?: string | null;
-    updatedAt?: any | null;
-  };
-};
+
+export type IChangePasswordMutation = { changePassword: { _id?: string | null, email: string, firstName: string, lastName: string, middleName?: string | null, updatedAt?: any | null } };
 
 export type IPasswordRecoveryMutationVariables = Exact<{
   data: IPasswordRecoveryInput;
 }>;
+
 
 export type IPasswordRecoveryMutation = { passwordRecovery: string };
 
@@ -1716,85 +1671,41 @@ export type IPasswordResetMutationVariables = Exact<{
   data: IPasswordResetInput;
 }>;
 
-export type IPasswordResetMutation = {
-  passwordReset: {
-    _id?: string | null;
-    email: string;
-    firstName: string;
-    lastName: string;
-    middleName?: string | null;
-    updatedAt?: any | null;
-  };
-};
+
+export type IPasswordResetMutation = { passwordReset: { _id?: string | null, email: string, firstName: string, lastName: string, middleName?: string | null, updatedAt?: any | null } };
 
 export type IRefreshTokenQueryVariables = Exact<{
   data: IRefreshTokenInput;
 }>;
 
-export type IRefreshTokenQuery = {
-  refreshToken: { accessToken: string; accessTokenExpiresIn: string; type: string };
-};
+
+export type IRefreshTokenQuery = { refreshToken: { accessToken: string, accessTokenExpiresIn: string, type: string } };
 
 export type IUploadBuildingPictureMutationVariables = Exact<{
   data: IUploadPictureBuildingInput;
 }>;
 
-export type IUploadBuildingPictureMutation = {
-  uploadBuildingPicture: {
-    _id: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    isDeleted: boolean;
-    letter?: string | null;
-    name: string;
-    picturePath?: string | null;
-    updatedAt?: any | null;
-  };
-};
+
+export type IUploadBuildingPictureMutation = { uploadBuildingPicture: { _id: string, createdAt?: any | null, deletedAt?: any | null, isDeleted: boolean, letter?: string | null, name: string, picturePath?: string | null, updatedAt?: any | null } };
 
 export type ICreateCareerMutationVariables = Exact<{
   data: ICreateCareerInput;
 }>;
 
-export type ICreateCareerMutation = {
-  createCareer: {
-    _id: string;
-    abbreviationCareer: string;
-    createdAt: any;
-    credits: number;
-    deletedAt?: any | null;
-    description: string;
-    duration: string;
-    isCertified: boolean;
-    isDeleted: boolean;
-    name: string;
-    updatedAt: any;
-  };
-};
+
+export type ICreateCareerMutation = { createCareer: { _id: string, abbreviationCareer: string, createdAt: any, credits: number, deletedAt?: any | null, description: string, duration: string, isCertified: boolean, isDeleted: boolean, name: string, updatedAt: any } };
 
 export type IUpdateCareerMutationVariables = Exact<{
   data: IUpdateCareerInput;
 }>;
 
-export type IUpdateCareerMutation = {
-  updateCareer: {
-    _id: string;
-    abbreviationCareer: string;
-    createdAt: any;
-    credits: number;
-    deletedAt?: any | null;
-    description: string;
-    duration: string;
-    isCertified: boolean;
-    isDeleted: boolean;
-    name: string;
-    updatedAt: any;
-  };
-};
+
+export type IUpdateCareerMutation = { updateCareer: { _id: string, abbreviationCareer: string, createdAt: any, credits: number, deletedAt?: any | null, description: string, duration: string, isCertified: boolean, isDeleted: boolean, name: string, updatedAt: any } };
 
 export type IDeletedCareerMutationVariables = Exact<{
   data: ICareerIdArgs;
 }>;
+
 
 export type IDeletedCareerMutation = { deletedCareer: { deleted: number } };
 
@@ -1805,70 +1716,22 @@ export type IGetAllCareersQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type IGetAllCareersQuery = {
-  getAllCareers: {
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-    limit: number;
-    nextPage?: number | null;
-    offset?: number | null;
-    page: number;
-    pagingCounter: number;
-    prevPage?: number | null;
-    totalDocs: number;
-    totalPages: number;
-    docs: Array<{
-      _id: string;
-      abbreviationCareer: string;
-      createdAt: any;
-      credits: number;
-      deletedAt?: any | null;
-      description: string;
-      duration: string;
-      isCertified: boolean;
-      isDeleted: boolean;
-      name: string;
-      updatedAt: any;
-    }>;
-  };
-};
+
+export type IGetAllCareersQuery = { getAllCareers: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, abbreviationCareer: string, createdAt: any, credits: number, deletedAt?: any | null, description: string, duration: string, isCertified: boolean, isDeleted: boolean, name: string, updatedAt: any }> } };
 
 export type IGetCareerByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
-export type IGetCareerByIdQuery = {
-  getCareerById: {
-    _id: string;
-    abbreviationCareer: string;
-    createdAt: any;
-    credits: number;
-    deletedAt?: any | null;
-    description: string;
-    duration: string;
-    isCertified: boolean;
-    isDeleted: boolean;
-    name: string;
-    updatedAt: any;
-  };
-};
+
+export type IGetCareerByIdQuery = { getCareerById: { _id: string, abbreviationCareer: string, createdAt: any, credits: number, deletedAt?: any | null, description: string, duration: string, isCertified: boolean, isDeleted: boolean, name: string, updatedAt: any } };
 
 export type IUploadClassroomPictureMutationVariables = Exact<{
   data: IUploadPictureClassroomInput;
 }>;
 
-export type IUploadClassroomPictureMutation = {
-  uploadClassroomPicture: {
-    _id: string;
-    building: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    identifier: string;
-    isDeleted: boolean;
-    picturePath?: string | null;
-    updatedAt?: any | null;
-  };
-};
+
+export type IUploadClassroomPictureMutation = { uploadClassroomPicture: { _id: string, building: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, picturePath?: string | null, updatedAt?: any | null } };
 
 export type IGetAllClassroomsQueryVariables = Exact<{
   filter?: InputMaybe<IClassroomArgs>;
@@ -1877,45 +1740,15 @@ export type IGetAllClassroomsQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type IGetAllClassroomsQuery = {
-  getAllClassrooms: {
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-    limit: number;
-    nextPage?: number | null;
-    offset?: number | null;
-    page: number;
-    pagingCounter: number;
-    prevPage?: number | null;
-    totalDocs: number;
-    totalPages: number;
-    docs: Array<{
-      _id: string;
-      building: string;
-      createdAt?: any | null;
-      deletedAt?: any | null;
-      identifier: string;
-      isDeleted: boolean;
-      updatedAt?: any | null;
-    }>;
-  };
-};
+
+export type IGetAllClassroomsQuery = { getAllClassrooms: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, building: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, updatedAt?: any | null }> } };
 
 export type IGetClassroomByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
-export type IGetClassroomByIdQuery = {
-  getClassroomById: {
-    _id: string;
-    building: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    identifier: string;
-    isDeleted: boolean;
-    updatedAt?: any | null;
-  };
-};
+
+export type IGetClassroomByIdQuery = { getClassroomById: { _id: string, building: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, updatedAt?: any | null } };
 
 export type IGetAllDepartmentsQueryVariables = Exact<{
   filter?: InputMaybe<IDepartmentArgs>;
@@ -1924,28 +1757,8 @@ export type IGetAllDepartmentsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type IGetAllDepartmentsQuery = {
-  getAllDepartments: {
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-    limit: number;
-    nextPage?: number | null;
-    offset?: number | null;
-    page: number;
-    pagingCounter: number;
-    prevPage?: number | null;
-    totalDocs: number;
-    totalPages: number;
-    docs: Array<{
-      _id: string;
-      createdAt: any;
-      deletedAt?: any | null;
-      isDeleted: boolean;
-      name: string;
-      updatedAt: any;
-    }>;
-  };
-};
+
+export type IGetAllDepartmentsQuery = { getAllDepartments: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, createdAt: any, deletedAt?: any | null, isDeleted: boolean, name: string, updatedAt: any }> } };
 
 export type IGetDepartmentByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -1954,78 +1767,71 @@ export type IGetDepartmentByIdQueryVariables = Exact<{
 
 export type IGetDepartmentByIdQuery = { getDepartmentById: { _id: string, areaKey: string, createdAt: any, deletedAt?: any | null, isDeleted: boolean, name: string, updatedAt: any } };
 
+export type ICreateEventMutationVariables = Exact<{
+  data: IUpsertEventInput;
+}>;
+
+
+export type ICreateEventMutation = { createEvent: { _id: string, activity: string, createdAt?: any | null, deletedAt?: any | null, finishDate: any, groupsIncluded: Array<string>, isDeleted: boolean, period: string, startDate: any, updatedAt?: any | null, uploadedBy: string } };
+
+export type IUpdateEventMutationVariables = Exact<{
+  data: IUpdateEventInput;
+}>;
+
+
+export type IUpdateEventMutation = { updateEvent: { _id: string, activity: string, createdAt?: any | null, deletedAt?: any | null, finishDate: any, groupsIncluded: Array<string>, isDeleted: boolean, period: string, startDate: any, updatedAt?: any | null, uploadedBy: string } };
+
+export type IDeleteEventMutationVariables = Exact<{
+  data: IEventIdArgs;
+}>;
+
+
+export type IDeleteEventMutation = { deleteEvent: { deleted: number } };
+
+export type IGetAllEventsQueryVariables = Exact<{
+  filter?: InputMaybe<IEventArgs>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type IGetAllEventsQuery = { getAllEvents: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, activity: string, createdAt?: any | null, deletedAt?: any | null, finishDate: any, groupsIncluded: Array<string>, isDeleted: boolean, period: string, startDate: any, updatedAt?: any | null, uploadedBy: string }> } };
+
+export type IGetEventByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type IGetEventByIdQuery = { getEventById: { _id: string, activity: string, createdAt?: any | null, deletedAt?: any | null, finishDate: any, groupsIncluded: Array<string>, isDeleted: boolean, period: string, startDate: any, updatedAt?: any | null, uploadedBy: string } };
+
 export type IUpdateFileMutationVariables = Exact<{
   data: IUpdateFile;
 }>;
 
-export type IUpdateFileMutation = {
-  updateFile: {
-    _id: string;
-    approvedBy?: any | null;
-    createdAt: any;
-    deletedAt?: any | null;
-    extension: string;
-    isDeleted: boolean;
-    nameFile: string;
-    path: string;
-    size: number;
-    type: IFileType;
-    updatedAt: any;
-    comments?: Array<{
-      _id?: string | null;
-      comment?: string | null;
-      createdAt?: any | null;
-      createdBy?: any | null;
-    }> | null;
-    uploadedBy: {
-      _id?: string | null;
-      createdAt?: any | null;
-      deletedAt?: any | null;
-      department: string;
-      email: string;
-      firstName: string;
-      gender: string;
-      isDeleted: boolean;
-      lastName: string;
-      middleName?: string | null;
-      password: string;
-      rfc: string;
-      roles: Array<IRoles>;
-      updatedAt?: any | null;
-    };
-  };
-};
+
+export type IUpdateFileMutation = { updateFile: { _id: string, approvedBy?: any | null, createdAt: any, deletedAt?: any | null, extension: string, isDeleted: boolean, nameFile: string, path: string, size: number, type: IFileType, updatedAt: any, comments?: Array<{ _id?: string | null, comment?: string | null, createdAt?: any | null, createdBy?: any | null }> | null, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } } };
 
 export type IUploadFileMutationVariables = Exact<{
   data: IUploadFileInput;
 }>;
 
 
-export type IUploadFileMutation = { uploadFile: { _id: string, createdAt: any, deletedAt?: any | null, extension: string, isDeleted: boolean, nameFile: string, path: string, size: number, type: IFileType, updatedAt: any, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } } };
+export type IUploadFileMutation = { uploadFile: { _id: string, createdAt: any, deletedAt?: any | null, extension: string, attendanceJustified?: string | null, isDeleted: boolean, nameFile: string, path: string, size: number, type: IFileType, updatedAt: any, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } } };
 
 export type ICreateFileCommentMutationVariables = Exact<{
   data: ICreateFileCommentInput;
 }>;
 
-export type ICreateFileCommentMutation = {
-  createFileComment: {
-    _id: string;
-    comments?: Array<{
-      _id?: string | null;
-      comment?: string | null;
-      createdBy?: any | null;
-      createdAt?: any | null;
-    }> | null;
-  };
-};
+
+export type ICreateFileCommentMutation = { createFileComment: { _id: string, comments?: Array<{ _id?: string | null, comment?: string | null, createdBy?: any | null, createdAt?: any | null }> | null } };
 
 export type IApproveFileMutationVariables = Exact<{
   data: IApproveFileInput;
 }>;
 
-export type IApproveFileMutation = {
-  approveFile: { _id: string; nameFile: string; approvedBy?: any | null };
-};
+
+export type IApproveFileMutation = { approveFile: { _id: string, nameFile: string, approvedBy?: any | null } };
 
 export type IGetAllFilesQueryVariables = Exact<{
   filter?: InputMaybe<IFileArgs>;
@@ -2035,47 +1841,12 @@ export type IGetAllFilesQueryVariables = Exact<{
 }>;
 
 
-export type IGetAllFilesQuery = { getAllFiles: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, approvedBy?: any | null, createdAt: any, deletedAt?: any | null, extension: string, isDeleted: boolean, nameFile: string, path: string, size: number, type: IFileType, updatedAt: any, comments?: Array<{ _id?: string | null, comment?: string | null, createdAt?: any | null, createdBy?: any | null }> | null, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } }> } };
+export type IGetAllFilesQuery = { getAllFiles: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, approvedBy?: any | null, createdAt: any, deletedAt?: any | null, extension: string, isDeleted: boolean, nameFile: string, attendanceJustified?: string | null, path: string, size: number, type: IFileType, updatedAt: any, comments?: Array<{ _id?: string | null, comment?: string | null, createdAt?: any | null, createdBy?: any | null }> | null, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } }> } };
 
-export type IGetFileByIdQueryVariables = Exact<{ [key: string]: never }>;
+export type IGetFileByIdQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type IGetFileByIdQuery = {
-  getFileById: {
-    _id: string;
-    approvedBy?: any | null;
-    createdAt: any;
-    deletedAt?: any | null;
-    extension: string;
-    isDeleted: boolean;
-    nameFile: string;
-    path: string;
-    size: number;
-    type: IFileType;
-    updatedAt: any;
-    comments?: Array<{
-      _id?: string | null;
-      comment?: string | null;
-      createdAt?: any | null;
-      createdBy?: any | null;
-    }> | null;
-    uploadedBy: {
-      _id?: string | null;
-      createdAt?: any | null;
-      deletedAt?: any | null;
-      department: string;
-      email: string;
-      firstName: string;
-      gender: string;
-      isDeleted: boolean;
-      lastName: string;
-      middleName?: string | null;
-      password: string;
-      rfc: string;
-      roles: Array<IRoles>;
-      updatedAt?: any | null;
-    };
-  };
-};
+
+export type IGetFileByIdQuery = { getFileById: { _id: string, approvedBy?: any | null, createdAt: any, deletedAt?: any | null, extension: string, isDeleted: boolean, nameFile: string, path: string, size: number, type: IFileType, updatedAt: any, comments?: Array<{ _id?: string | null, comment?: string | null, createdAt?: any | null, createdBy?: any | null }> | null, uploadedBy: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } } };
 
 export type IGetAllGroupsQueryVariables = Exact<{
   filter?: InputMaybe<IGroupArgs>;
@@ -2084,49 +1855,15 @@ export type IGetAllGroupsQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type IGetAllGroupsQuery = {
-  getAllGroups: {
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-    limit: number;
-    nextPage?: number | null;
-    offset?: number | null;
-    page: number;
-    pagingCounter: number;
-    prevPage?: number | null;
-    totalDocs: number;
-    totalPages: number;
-    docs: Array<{
-      _id: string;
-      career: string;
-      createdAt?: any | null;
-      deletedAt?: any | null;
-      identifier: string;
-      isDeleted: boolean;
-      period: string;
-      semester: string;
-      updatedAt?: any | null;
-    }>;
-  };
-};
+
+export type IGetAllGroupsQuery = { getAllGroups: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, career: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, period: string, semester: string, updatedAt?: any | null }> } };
 
 export type IGetGroupByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
-export type IGetGroupByIdQuery = {
-  getGroupById: {
-    _id: string;
-    career: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    identifier: string;
-    isDeleted: boolean;
-    period: string;
-    semester: string;
-    updatedAt?: any | null;
-  };
-};
+
+export type IGetGroupByIdQuery = { getGroupById: { _id: string, career: string, createdAt?: any | null, deletedAt?: any | null, identifier: string, isDeleted: boolean, period: string, semester: string, updatedAt?: any | null } };
 
 export type IGetAllPeriodsQueryVariables = Exact<{
   filter?: InputMaybe<IPeriodArgs>;
@@ -2135,95 +1872,34 @@ export type IGetAllPeriodsQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type IGetAllPeriodsQuery = {
-  getAllPeriods: {
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-    limit: number;
-    nextPage?: number | null;
-    offset?: number | null;
-    page: number;
-    pagingCounter: number;
-    prevPage?: number | null;
-    totalDocs: number;
-    totalPages: number;
-    docs: Array<{
-      _id: string;
-      createdAt?: any | null;
-      deletedAt?: any | null;
-      finalDate: any;
-      isDeleted: boolean;
-      largeIdentifier: string;
-      name: string;
-      shortIdentifier: string;
-      startDate: any;
-      updatedAt?: any | null;
-    }>;
-  };
-};
+
+export type IGetAllPeriodsQuery = { getAllPeriods: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id: string, createdAt?: any | null, deletedAt?: any | null, finalDate: any, isDeleted: boolean, largeIdentifier: string, name: string, shortIdentifier: string, startDate: any, updatedAt?: any | null }> } };
 
 export type IGetPeriodByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
-export type IGetPeriodByIdQuery = {
-  getPeriodById: {
-    _id: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    finalDate: any;
-    isDeleted: boolean;
-    largeIdentifier: string;
-    name: string;
-    shortIdentifier: string;
-    startDate: any;
-    updatedAt?: any | null;
-  };
-};
+
+export type IGetPeriodByIdQuery = { getPeriodById: { _id: string, createdAt?: any | null, deletedAt?: any | null, finalDate: any, isDeleted: boolean, largeIdentifier: string, name: string, shortIdentifier: string, startDate: any, updatedAt?: any | null } };
 
 export type ICreateScheduleMutationVariables = Exact<{
   data: IUpsertScheduleInput;
 }>;
 
-export type ICreateScheduleMutation = {
-  createSchedule: {
-    _id: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    finalTime: any;
-    classGroup: string;
-    isDeleted: boolean;
-    period: string;
-    teacher: string;
-    startTime: any;
-    subject: string;
-    updatedAt?: any | null;
-  };
-};
+
+export type ICreateScheduleMutation = { createSchedule: { _id: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
 
 export type IUpdateScheduleMutationVariables = Exact<{
   data: IUpdateScheduleInput;
 }>;
 
-export type IUpdateScheduleMutation = {
-  updateSchedule: {
-    _id: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    finalTime: any;
-    classGroup: string;
-    isDeleted: boolean;
-    period: string;
-    teacher: string;
-    startTime: any;
-    subject: string;
-    updatedAt?: any | null;
-  };
-};
+
+export type IUpdateScheduleMutation = { updateSchedule: { _id: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
 
 export type IDeleteScheduleMutationVariables = Exact<{
   data: IScheduleIdArgs;
 }>;
+
 
 export type IDeleteScheduleMutation = { deleteSchedule: { deleted: number } };
 
@@ -2235,74 +1911,47 @@ export type IGetAllSchedulesQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['JSON']['input']>;
 }>;
 
-export type IGetAllSchedulesQuery = {
-  getAllSchedules: {
-    docs: Array<{
-      _id: string;
-      classroom: string;
-      createdAt?: any | null;
-      deletedAt?: any | null;
-      finalTime: any;
-      classGroup: string;
-      isDeleted: boolean;
-      period: string;
-      teacher: string;
-      startTime: any;
-      subject: string;
-      updatedAt?: any | null;
-      weekday: number;
-    }>;
-  };
-};
+
+export type IGetAllSchedulesQuery = { getAllSchedules: { docs: Array<{ _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null, weekday: number }> } };
 
 export type IGetScheduleByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
-export type IGetScheduleByIdQuery = { getScheduleById: { _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, startTime: any, subject: string, updatedAt?: any | null } };
+export type IGetScheduleByIdQuery = { getScheduleById: { _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, weekday: number, startTime: any, subject: string, updatedAt?: any | null } };
+
+export type IGetUniqueOptionsCareerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IGetUniqueOptionsCareerQuery = { getUniqueOptionsCareer: { semesters: Array<string>, careers: Array<{ value: string, label: string }> } };
+
+export type IGetSchedulesFormattedQueryVariables = Exact<{
+  teacher?: InputMaybe<Scalars['ID']['input']>;
+  schedule?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type IGetSchedulesFormattedQuery = { getSchedulesFormatted: Array<{ _id: string, classroomIdentifier: string, finalTime: any, groupIdentifier: string, startTime: any, subjectLargeName: string, subjectShortName: string, teacherId: string, teacherFirstName: string, teacherLastName: string, teacherMiddleName?: string | null, teacherRfc: string, weekday: number }> };
 
 export type ICreateSubjectMutationVariables = Exact<{
   data: IUpsertSubjectInput;
 }>;
 
-export type ICreateSubjectMutation = {
-  createSubject: {
-    _id?: string | null;
-    areaKey: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    isDeleted: boolean;
-    largeName: string;
-    schoolarLevel: string;
-    shortName: string;
-    subjectType: number;
-    updatedAt?: any | null;
-  };
-};
+
+export type ICreateSubjectMutation = { createSubject: { _id?: string | null, areaKey: string, createdAt?: any | null, deletedAt?: any | null, isDeleted: boolean, largeName: string, schoolarLevel: string, shortName: string, subjectType: number, updatedAt?: any | null } };
 
 export type IUpdateSubjectMutationVariables = Exact<{
   data: IUpdateSubjectInput;
 }>;
 
-export type IUpdateSubjectMutation = {
-  updateSubject: {
-    _id?: string | null;
-    areaKey: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    isDeleted: boolean;
-    largeName: string;
-    schoolarLevel: string;
-    shortName: string;
-    subjectType: number;
-    updatedAt?: any | null;
-  };
-};
+
+export type IUpdateSubjectMutation = { updateSubject: { _id?: string | null, areaKey: string, createdAt?: any | null, deletedAt?: any | null, isDeleted: boolean, largeName: string, schoolarLevel: string, shortName: string, subjectType: number, updatedAt?: any | null } };
 
 export type IDeleteSubjectMutationVariables = Exact<{
   data: ISubjectIdArgs;
 }>;
+
 
 export type IDeleteSubjectMutation = { deleteSubject: { deleted: number } };
 
@@ -2313,55 +1962,20 @@ export type IGetAllSubjectsQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-export type IGetAllSubjectsQuery = {
-  getAllSubjects: {
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-    limit: number;
-    nextPage?: number | null;
-    offset?: number | null;
-    page: number;
-    pagingCounter: number;
-    prevPage?: number | null;
-    totalDocs: number;
-    totalPages: number;
-    docs: Array<{
-      _id?: string | null;
-      areaKey: string;
-      createdAt?: any | null;
-      deletedAt?: any | null;
-      isDeleted: boolean;
-      largeName: string;
-      schoolarLevel: string;
-      shortName: string;
-      subjectType: number;
-      updatedAt?: any | null;
-    }>;
-  };
-};
+
+export type IGetAllSubjectsQuery = { getAllSubjects: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id?: string | null, areaKey: string, createdAt?: any | null, deletedAt?: any | null, isDeleted: boolean, largeName: string, schoolarLevel: string, shortName: string, subjectType: number, updatedAt?: any | null }> } };
 
 export type IGetSubjectByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
-export type IGetSubjectByIdQuery = {
-  getSubjectById: {
-    _id?: string | null;
-    areaKey: string;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    isDeleted: boolean;
-    largeName: string;
-    schoolarLevel: string;
-    shortName: string;
-    subjectType: number;
-    updatedAt?: any | null;
-  };
-};
+
+export type IGetSubjectByIdQuery = { getSubjectById: { _id?: string | null, areaKey: string, createdAt?: any | null, deletedAt?: any | null, isDeleted: boolean, largeName: string, schoolarLevel: string, shortName: string, subjectType: number, updatedAt?: any | null } };
 
 export type IDeleteUserMutationVariables = Exact<{
   data: IUserIdArgs;
 }>;
+
 
 export type IDeleteUserMutation = { deleteUser: { deleted: number } };
 
@@ -2369,49 +1983,15 @@ export type IUpdateUserMutationVariables = Exact<{
   data: IUpdateUserInput;
 }>;
 
-export type IUpdateUserMutation = {
-  updateUser: {
-    _id?: string | null;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    department: string;
-    email: string;
-    firstName: string;
-    gender: string;
-    isDeleted: boolean;
-    lastName: string;
-    middleName?: string | null;
-    password: string;
-    rfc: string;
-    roles: Array<IRoles>;
-    photo?: string | null;
-    updatedAt?: any | null;
-  };
-};
+
+export type IUpdateUserMutation = { updateUser: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, photo?: string | null, updatedAt?: any | null } };
 
 export type IUpsertUserMutationVariables = Exact<{
   data: IUpsertUserInput;
 }>;
 
-export type IUpsertUserMutation = {
-  upsertUser: {
-    _id?: string | null;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    department: string;
-    email: string;
-    firstName: string;
-    gender: string;
-    isDeleted: boolean;
-    lastName: string;
-    middleName?: string | null;
-    password: string;
-    rfc: string;
-    roles: Array<IRoles>;
-    photo?: string | null;
-    updatedAt?: any | null;
-  };
-};
+
+export type IUpsertUserMutation = { upsertUser: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, photo?: string | null, updatedAt?: any | null } };
 
 export type IGetAllUsersQueryVariables = Exact<{
   filter?: InputMaybe<IUserArgs>;
@@ -2421,50 +2001,25 @@ export type IGetAllUsersQueryVariables = Exact<{
 }>;
 
 
-export type IGetAllUsersQuery = { getAllUsers: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null }> } };
+export type IGetAllUsersQuery = { getAllUsers: { hasNextPage: boolean, hasPrevPage: boolean, limit: number, nextPage?: number | null, offset?: number | null, page: number, pagingCounter: number, prevPage?: number | null, totalDocs: number, totalPages: number, docs: Array<{ _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, photo?: string | null, updatedAt?: any | null }> } };
 
 export type IGetUserByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
-export type IGetUserByIdQuery = { getUserById: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, updatedAt?: any | null } };
+export type IGetUserByIdQuery = { getUserById: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, photo?: string | null, updatedAt?: any | null } };
 
-export type IMeQueryVariables = Exact<{ [key: string]: never }>;
+export type IMeQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type IMeQuery = {
-  me: {
-    _id?: string | null;
-    createdAt?: any | null;
-    deletedAt?: any | null;
-    department: string;
-    email: string;
-    firstName: string;
-    gender: string;
-    isDeleted: boolean;
-    lastName: string;
-    middleName?: string | null;
-    password: string;
-    rfc: string;
-    roles: Array<IRoles>;
-    photo?: string | null;
-    updatedAt?: any | null;
-  };
-};
 
-export type ISubscriptionSubscriptionVariables = Exact<{ [key: string]: never }>;
+export type IMeQuery = { me: { _id?: string | null, createdAt?: any | null, deletedAt?: any | null, department: string, email: string, firstName: string, gender: string, isDeleted: boolean, lastName: string, middleName?: string | null, password: string, rfc: string, roles: Array<IRoles>, photo?: string | null, updatedAt?: any | null } };
 
-export type ISubscriptionSubscription = {
-  userAdded: {
-    _id?: string | null;
-    createdAt?: any | null;
-    email: string;
-    firstName: string;
-    lastName: string;
-    middleName?: string | null;
-    roles: Array<IRoles>;
-  };
-};
+export type ISubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ISubscriptionSubscription = { userAdded: { _id?: string | null, createdAt?: any | null, email: string, firstName: string, lastName: string, middleName?: string | null, roles: Array<IRoles> } };
+
 
 export const GetAllAttendancesDocument = /*#__PURE__*/ `
     query GetAllAttendances($filter: AttendanceArgs, $limit: Int, $offset: Int, $page: Int) {
@@ -2526,27 +2081,20 @@ export const SignUpDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useSignUpMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<ISignUpMutation, TError, ISignUpMutationVariables, TContext>,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<ISignUpMutation, TError, ISignUpMutationVariables, TContext>(
-    ['SignUp'],
-    (variables?: ISignUpMutationVariables) =>
-      fetcher<ISignUpMutation, ISignUpMutationVariables>(
-        client,
-        SignUpDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useSignUpMutation.fetcher = (
-  client: GraphQLClient,
-  variables: ISignUpMutationVariables,
-  headers?: RequestInit['headers']
-) => fetcher<ISignUpMutation, ISignUpMutationVariables>(client, SignUpDocument, variables, headers);
+export const useSignUpMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ISignUpMutation, TError, ISignUpMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ISignUpMutation, TError, ISignUpMutationVariables, TContext>(
+      ['SignUp'],
+      (variables?: ISignUpMutationVariables) => fetcher<ISignUpMutation, ISignUpMutationVariables>(client, SignUpDocument, variables, headers)(),
+      options
+    );
+useSignUpMutation.fetcher = (client: GraphQLClient, variables: ISignUpMutationVariables, headers?: RequestInit['headers']) => fetcher<ISignUpMutation, ISignUpMutationVariables>(client, SignUpDocument, variables, headers);
 export const SignInDocument = /*#__PURE__*/ `
     mutation SignIn($data: SignInInput!) {
   signIn(data: $data) {
@@ -2558,54 +2106,39 @@ export const SignInDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useSignInMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<ISignInMutation, TError, ISignInMutationVariables, TContext>,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<ISignInMutation, TError, ISignInMutationVariables, TContext>(
-    ['SignIn'],
-    (variables?: ISignInMutationVariables) =>
-      fetcher<ISignInMutation, ISignInMutationVariables>(
-        client,
-        SignInDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useSignInMutation.fetcher = (
-  client: GraphQLClient,
-  variables: ISignInMutationVariables,
-  headers?: RequestInit['headers']
-) => fetcher<ISignInMutation, ISignInMutationVariables>(client, SignInDocument, variables, headers);
+export const useSignInMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ISignInMutation, TError, ISignInMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ISignInMutation, TError, ISignInMutationVariables, TContext>(
+      ['SignIn'],
+      (variables?: ISignInMutationVariables) => fetcher<ISignInMutation, ISignInMutationVariables>(client, SignInDocument, variables, headers)(),
+      options
+    );
+useSignInMutation.fetcher = (client: GraphQLClient, variables: ISignInMutationVariables, headers?: RequestInit['headers']) => fetcher<ISignInMutation, ISignInMutationVariables>(client, SignInDocument, variables, headers);
 export const SignOutDocument = /*#__PURE__*/ `
     mutation SignOut($data: RefreshTokenInput!) {
   signOut(data: $data)
 }
     `;
-export const useSignOutMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<ISignOutMutation, TError, ISignOutMutationVariables, TContext>,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<ISignOutMutation, TError, ISignOutMutationVariables, TContext>(
-    ['SignOut'],
-    (variables?: ISignOutMutationVariables) =>
-      fetcher<ISignOutMutation, ISignOutMutationVariables>(
-        client,
-        SignOutDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useSignOutMutation.fetcher = (
-  client: GraphQLClient,
-  variables: ISignOutMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<ISignOutMutation, ISignOutMutationVariables>(client, SignOutDocument, variables, headers);
+export const useSignOutMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ISignOutMutation, TError, ISignOutMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ISignOutMutation, TError, ISignOutMutationVariables, TContext>(
+      ['SignOut'],
+      (variables?: ISignOutMutationVariables) => fetcher<ISignOutMutation, ISignOutMutationVariables>(client, SignOutDocument, variables, headers)(),
+      options
+    );
+useSignOutMutation.fetcher = (client: GraphQLClient, variables: ISignOutMutationVariables, headers?: RequestInit['headers']) => fetcher<ISignOutMutation, ISignOutMutationVariables>(client, SignOutDocument, variables, headers);
 export const ChangePasswordDocument = /*#__PURE__*/ `
     mutation ChangePassword($data: ChangePasswordInput!) {
   changePassword(data: $data) {
@@ -2618,75 +2151,39 @@ export const ChangePasswordDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useChangePasswordMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IChangePasswordMutation,
-    TError,
-    IChangePasswordMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IChangePasswordMutation, TError, IChangePasswordMutationVariables, TContext>(
-    ['ChangePassword'],
-    (variables?: IChangePasswordMutationVariables) =>
-      fetcher<IChangePasswordMutation, IChangePasswordMutationVariables>(
-        client,
-        ChangePasswordDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useChangePasswordMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IChangePasswordMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IChangePasswordMutation, IChangePasswordMutationVariables>(
-    client,
-    ChangePasswordDocument,
-    variables,
-    headers
-  );
+export const useChangePasswordMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IChangePasswordMutation, TError, IChangePasswordMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IChangePasswordMutation, TError, IChangePasswordMutationVariables, TContext>(
+      ['ChangePassword'],
+      (variables?: IChangePasswordMutationVariables) => fetcher<IChangePasswordMutation, IChangePasswordMutationVariables>(client, ChangePasswordDocument, variables, headers)(),
+      options
+    );
+useChangePasswordMutation.fetcher = (client: GraphQLClient, variables: IChangePasswordMutationVariables, headers?: RequestInit['headers']) => fetcher<IChangePasswordMutation, IChangePasswordMutationVariables>(client, ChangePasswordDocument, variables, headers);
 export const PasswordRecoveryDocument = /*#__PURE__*/ `
     mutation PasswordRecovery($data: PasswordRecoveryInput!) {
   passwordRecovery(data: $data)
 }
     `;
-export const usePasswordRecoveryMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IPasswordRecoveryMutation,
-    TError,
-    IPasswordRecoveryMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IPasswordRecoveryMutation, TError, IPasswordRecoveryMutationVariables, TContext>(
-    ['PasswordRecovery'],
-    (variables?: IPasswordRecoveryMutationVariables) =>
-      fetcher<IPasswordRecoveryMutation, IPasswordRecoveryMutationVariables>(
-        client,
-        PasswordRecoveryDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-usePasswordRecoveryMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IPasswordRecoveryMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IPasswordRecoveryMutation, IPasswordRecoveryMutationVariables>(
-    client,
-    PasswordRecoveryDocument,
-    variables,
-    headers
-  );
+export const usePasswordRecoveryMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IPasswordRecoveryMutation, TError, IPasswordRecoveryMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IPasswordRecoveryMutation, TError, IPasswordRecoveryMutationVariables, TContext>(
+      ['PasswordRecovery'],
+      (variables?: IPasswordRecoveryMutationVariables) => fetcher<IPasswordRecoveryMutation, IPasswordRecoveryMutationVariables>(client, PasswordRecoveryDocument, variables, headers)(),
+      options
+    );
+usePasswordRecoveryMutation.fetcher = (client: GraphQLClient, variables: IPasswordRecoveryMutationVariables, headers?: RequestInit['headers']) => fetcher<IPasswordRecoveryMutation, IPasswordRecoveryMutationVariables>(client, PasswordRecoveryDocument, variables, headers);
 export const PasswordResetDocument = /*#__PURE__*/ `
     mutation PasswordReset($data: PasswordResetInput!) {
   passwordReset(data: $data) {
@@ -2699,38 +2196,20 @@ export const PasswordResetDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const usePasswordResetMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IPasswordResetMutation,
-    TError,
-    IPasswordResetMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IPasswordResetMutation, TError, IPasswordResetMutationVariables, TContext>(
-    ['PasswordReset'],
-    (variables?: IPasswordResetMutationVariables) =>
-      fetcher<IPasswordResetMutation, IPasswordResetMutationVariables>(
-        client,
-        PasswordResetDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-usePasswordResetMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IPasswordResetMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IPasswordResetMutation, IPasswordResetMutationVariables>(
-    client,
-    PasswordResetDocument,
-    variables,
-    headers
-  );
+export const usePasswordResetMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IPasswordResetMutation, TError, IPasswordResetMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IPasswordResetMutation, TError, IPasswordResetMutationVariables, TContext>(
+      ['PasswordReset'],
+      (variables?: IPasswordResetMutationVariables) => fetcher<IPasswordResetMutation, IPasswordResetMutationVariables>(client, PasswordResetDocument, variables, headers)(),
+      options
+    );
+usePasswordResetMutation.fetcher = (client: GraphQLClient, variables: IPasswordResetMutationVariables, headers?: RequestInit['headers']) => fetcher<IPasswordResetMutation, IPasswordResetMutationVariables>(client, PasswordResetDocument, variables, headers);
 export const RefreshTokenDocument = /*#__PURE__*/ `
     query RefreshToken($data: RefreshTokenInput!) {
   refreshToken(data: $data) {
@@ -2740,38 +2219,25 @@ export const RefreshTokenDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useRefreshTokenQuery = <TData = IRefreshTokenQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables: IRefreshTokenQueryVariables,
-  options?: UseQueryOptions<IRefreshTokenQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IRefreshTokenQuery, TError, TData>(
-    ['RefreshToken', variables],
-    fetcher<IRefreshTokenQuery, IRefreshTokenQueryVariables>(
-      client,
-      RefreshTokenDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useRefreshTokenQuery = <
+      TData = IRefreshTokenQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: IRefreshTokenQueryVariables,
+      options?: UseQueryOptions<IRefreshTokenQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IRefreshTokenQuery, TError, TData>(
+      ['RefreshToken', variables],
+      fetcher<IRefreshTokenQuery, IRefreshTokenQueryVariables>(client, RefreshTokenDocument, variables, headers),
+      options
+    );
 
-useRefreshTokenQuery.getKey = (variables: IRefreshTokenQueryVariables) => [
-  'RefreshToken',
-  variables,
-];
-useRefreshTokenQuery.fetcher = (
-  client: GraphQLClient,
-  variables: IRefreshTokenQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IRefreshTokenQuery, IRefreshTokenQueryVariables>(
-    client,
-    RefreshTokenDocument,
-    variables,
-    headers
-  );
+useRefreshTokenQuery.getKey = (variables: IRefreshTokenQueryVariables) => ['RefreshToken', variables];
+;
+
+useRefreshTokenQuery.fetcher = (client: GraphQLClient, variables: IRefreshTokenQueryVariables, headers?: RequestInit['headers']) => fetcher<IRefreshTokenQuery, IRefreshTokenQueryVariables>(client, RefreshTokenDocument, variables, headers);
 export const UploadBuildingPictureDocument = /*#__PURE__*/ `
     mutation UploadBuildingPicture($data: UploadPictureBuildingInput!) {
   uploadBuildingPicture(data: $data) {
@@ -2786,43 +2252,20 @@ export const UploadBuildingPictureDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useUploadBuildingPictureMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IUploadBuildingPictureMutation,
-    TError,
-    IUploadBuildingPictureMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<
-    IUploadBuildingPictureMutation,
-    TError,
-    IUploadBuildingPictureMutationVariables,
-    TContext
-  >(
-    ['UploadBuildingPicture'],
-    (variables?: IUploadBuildingPictureMutationVariables) =>
-      fetcher<IUploadBuildingPictureMutation, IUploadBuildingPictureMutationVariables>(
-        client,
-        UploadBuildingPictureDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useUploadBuildingPictureMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IUploadBuildingPictureMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IUploadBuildingPictureMutation, IUploadBuildingPictureMutationVariables>(
-    client,
-    UploadBuildingPictureDocument,
-    variables,
-    headers
-  );
+export const useUploadBuildingPictureMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUploadBuildingPictureMutation, TError, IUploadBuildingPictureMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUploadBuildingPictureMutation, TError, IUploadBuildingPictureMutationVariables, TContext>(
+      ['UploadBuildingPicture'],
+      (variables?: IUploadBuildingPictureMutationVariables) => fetcher<IUploadBuildingPictureMutation, IUploadBuildingPictureMutationVariables>(client, UploadBuildingPictureDocument, variables, headers)(),
+      options
+    );
+useUploadBuildingPictureMutation.fetcher = (client: GraphQLClient, variables: IUploadBuildingPictureMutationVariables, headers?: RequestInit['headers']) => fetcher<IUploadBuildingPictureMutation, IUploadBuildingPictureMutationVariables>(client, UploadBuildingPictureDocument, variables, headers);
 export const CreateCareerDocument = /*#__PURE__*/ `
     mutation CreateCareer($data: CreateCareerInput!) {
   createCareer(data: $data) {
@@ -2840,38 +2283,20 @@ export const CreateCareerDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useCreateCareerMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    ICreateCareerMutation,
-    TError,
-    ICreateCareerMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<ICreateCareerMutation, TError, ICreateCareerMutationVariables, TContext>(
-    ['CreateCareer'],
-    (variables?: ICreateCareerMutationVariables) =>
-      fetcher<ICreateCareerMutation, ICreateCareerMutationVariables>(
-        client,
-        CreateCareerDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useCreateCareerMutation.fetcher = (
-  client: GraphQLClient,
-  variables: ICreateCareerMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<ICreateCareerMutation, ICreateCareerMutationVariables>(
-    client,
-    CreateCareerDocument,
-    variables,
-    headers
-  );
+export const useCreateCareerMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ICreateCareerMutation, TError, ICreateCareerMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ICreateCareerMutation, TError, ICreateCareerMutationVariables, TContext>(
+      ['CreateCareer'],
+      (variables?: ICreateCareerMutationVariables) => fetcher<ICreateCareerMutation, ICreateCareerMutationVariables>(client, CreateCareerDocument, variables, headers)(),
+      options
+    );
+useCreateCareerMutation.fetcher = (client: GraphQLClient, variables: ICreateCareerMutationVariables, headers?: RequestInit['headers']) => fetcher<ICreateCareerMutation, ICreateCareerMutationVariables>(client, CreateCareerDocument, variables, headers);
 export const UpdateCareerDocument = /*#__PURE__*/ `
     mutation UpdateCareer($data: UpdateCareerInput!) {
   updateCareer(data: $data) {
@@ -2889,38 +2314,20 @@ export const UpdateCareerDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useUpdateCareerMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IUpdateCareerMutation,
-    TError,
-    IUpdateCareerMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IUpdateCareerMutation, TError, IUpdateCareerMutationVariables, TContext>(
-    ['UpdateCareer'],
-    (variables?: IUpdateCareerMutationVariables) =>
-      fetcher<IUpdateCareerMutation, IUpdateCareerMutationVariables>(
-        client,
-        UpdateCareerDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useUpdateCareerMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IUpdateCareerMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IUpdateCareerMutation, IUpdateCareerMutationVariables>(
-    client,
-    UpdateCareerDocument,
-    variables,
-    headers
-  );
+export const useUpdateCareerMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUpdateCareerMutation, TError, IUpdateCareerMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUpdateCareerMutation, TError, IUpdateCareerMutationVariables, TContext>(
+      ['UpdateCareer'],
+      (variables?: IUpdateCareerMutationVariables) => fetcher<IUpdateCareerMutation, IUpdateCareerMutationVariables>(client, UpdateCareerDocument, variables, headers)(),
+      options
+    );
+useUpdateCareerMutation.fetcher = (client: GraphQLClient, variables: IUpdateCareerMutationVariables, headers?: RequestInit['headers']) => fetcher<IUpdateCareerMutation, IUpdateCareerMutationVariables>(client, UpdateCareerDocument, variables, headers);
 export const DeletedCareerDocument = /*#__PURE__*/ `
     mutation DeletedCareer($data: CareerIdArgs!) {
   deletedCareer(data: $data) {
@@ -2928,38 +2335,20 @@ export const DeletedCareerDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useDeletedCareerMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IDeletedCareerMutation,
-    TError,
-    IDeletedCareerMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IDeletedCareerMutation, TError, IDeletedCareerMutationVariables, TContext>(
-    ['DeletedCareer'],
-    (variables?: IDeletedCareerMutationVariables) =>
-      fetcher<IDeletedCareerMutation, IDeletedCareerMutationVariables>(
-        client,
-        DeletedCareerDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useDeletedCareerMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IDeletedCareerMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IDeletedCareerMutation, IDeletedCareerMutationVariables>(
-    client,
-    DeletedCareerDocument,
-    variables,
-    headers
-  );
+export const useDeletedCareerMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IDeletedCareerMutation, TError, IDeletedCareerMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IDeletedCareerMutation, TError, IDeletedCareerMutationVariables, TContext>(
+      ['DeletedCareer'],
+      (variables?: IDeletedCareerMutationVariables) => fetcher<IDeletedCareerMutation, IDeletedCareerMutationVariables>(client, DeletedCareerDocument, variables, headers)(),
+      options
+    );
+useDeletedCareerMutation.fetcher = (client: GraphQLClient, variables: IDeletedCareerMutationVariables, headers?: RequestInit['headers']) => fetcher<IDeletedCareerMutation, IDeletedCareerMutationVariables>(client, DeletedCareerDocument, variables, headers);
 export const GetAllCareersDocument = /*#__PURE__*/ `
     query GetAllCareers($filter: CareerArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllCareers(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -2989,36 +2378,25 @@ export const GetAllCareersDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllCareersQuery = <TData = IGetAllCareersQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetAllCareersQueryVariables,
-  options?: UseQueryOptions<IGetAllCareersQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAllCareersQuery, TError, TData>(
-    variables === undefined ? ['GetAllCareers'] : ['GetAllCareers', variables],
-    fetcher<IGetAllCareersQuery, IGetAllCareersQueryVariables>(
-      client,
-      GetAllCareersDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetAllCareersQuery = <
+      TData = IGetAllCareersQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllCareersQueryVariables,
+      options?: UseQueryOptions<IGetAllCareersQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllCareersQuery, TError, TData>(
+      variables === undefined ? ['GetAllCareers'] : ['GetAllCareers', variables],
+      fetcher<IGetAllCareersQuery, IGetAllCareersQueryVariables>(client, GetAllCareersDocument, variables, headers),
+      options
+    );
 
-useGetAllCareersQuery.getKey = (variables?: IGetAllCareersQueryVariables) =>
-  variables === undefined ? ['GetAllCareers'] : ['GetAllCareers', variables];
-useGetAllCareersQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAllCareersQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAllCareersQuery, IGetAllCareersQueryVariables>(
-    client,
-    GetAllCareersDocument,
-    variables,
-    headers
-  );
+useGetAllCareersQuery.getKey = (variables?: IGetAllCareersQueryVariables) => variables === undefined ? ['GetAllCareers'] : ['GetAllCareers', variables];
+;
+
+useGetAllCareersQuery.fetcher = (client: GraphQLClient, variables?: IGetAllCareersQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllCareersQuery, IGetAllCareersQueryVariables>(client, GetAllCareersDocument, variables, headers);
 export const GetCareerByIdDocument = /*#__PURE__*/ `
     query GetCareerById($id: ID) {
   getCareerById(_id: $id) {
@@ -3036,36 +2414,25 @@ export const GetCareerByIdDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetCareerByIdQuery = <TData = IGetCareerByIdQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetCareerByIdQueryVariables,
-  options?: UseQueryOptions<IGetCareerByIdQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetCareerByIdQuery, TError, TData>(
-    variables === undefined ? ['GetCareerById'] : ['GetCareerById', variables],
-    fetcher<IGetCareerByIdQuery, IGetCareerByIdQueryVariables>(
-      client,
-      GetCareerByIdDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetCareerByIdQuery = <
+      TData = IGetCareerByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetCareerByIdQueryVariables,
+      options?: UseQueryOptions<IGetCareerByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetCareerByIdQuery, TError, TData>(
+      variables === undefined ? ['GetCareerById'] : ['GetCareerById', variables],
+      fetcher<IGetCareerByIdQuery, IGetCareerByIdQueryVariables>(client, GetCareerByIdDocument, variables, headers),
+      options
+    );
 
-useGetCareerByIdQuery.getKey = (variables?: IGetCareerByIdQueryVariables) =>
-  variables === undefined ? ['GetCareerById'] : ['GetCareerById', variables];
-useGetCareerByIdQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetCareerByIdQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetCareerByIdQuery, IGetCareerByIdQueryVariables>(
-    client,
-    GetCareerByIdDocument,
-    variables,
-    headers
-  );
+useGetCareerByIdQuery.getKey = (variables?: IGetCareerByIdQueryVariables) => variables === undefined ? ['GetCareerById'] : ['GetCareerById', variables];
+;
+
+useGetCareerByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetCareerByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetCareerByIdQuery, IGetCareerByIdQueryVariables>(client, GetCareerByIdDocument, variables, headers);
 export const UploadClassroomPictureDocument = /*#__PURE__*/ `
     mutation UploadClassroomPicture($data: UploadPictureClassroomInput!) {
   uploadClassroomPicture(data: $data) {
@@ -3080,43 +2447,20 @@ export const UploadClassroomPictureDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useUploadClassroomPictureMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IUploadClassroomPictureMutation,
-    TError,
-    IUploadClassroomPictureMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<
-    IUploadClassroomPictureMutation,
-    TError,
-    IUploadClassroomPictureMutationVariables,
-    TContext
-  >(
-    ['UploadClassroomPicture'],
-    (variables?: IUploadClassroomPictureMutationVariables) =>
-      fetcher<IUploadClassroomPictureMutation, IUploadClassroomPictureMutationVariables>(
-        client,
-        UploadClassroomPictureDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useUploadClassroomPictureMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IUploadClassroomPictureMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IUploadClassroomPictureMutation, IUploadClassroomPictureMutationVariables>(
-    client,
-    UploadClassroomPictureDocument,
-    variables,
-    headers
-  );
+export const useUploadClassroomPictureMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUploadClassroomPictureMutation, TError, IUploadClassroomPictureMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUploadClassroomPictureMutation, TError, IUploadClassroomPictureMutationVariables, TContext>(
+      ['UploadClassroomPicture'],
+      (variables?: IUploadClassroomPictureMutationVariables) => fetcher<IUploadClassroomPictureMutation, IUploadClassroomPictureMutationVariables>(client, UploadClassroomPictureDocument, variables, headers)(),
+      options
+    );
+useUploadClassroomPictureMutation.fetcher = (client: GraphQLClient, variables: IUploadClassroomPictureMutationVariables, headers?: RequestInit['headers']) => fetcher<IUploadClassroomPictureMutation, IUploadClassroomPictureMutationVariables>(client, UploadClassroomPictureDocument, variables, headers);
 export const GetAllClassroomsDocument = /*#__PURE__*/ `
     query GetAllClassrooms($filter: ClassroomArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllClassrooms(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -3142,36 +2486,25 @@ export const GetAllClassroomsDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllClassroomsQuery = <TData = IGetAllClassroomsQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetAllClassroomsQueryVariables,
-  options?: UseQueryOptions<IGetAllClassroomsQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAllClassroomsQuery, TError, TData>(
-    variables === undefined ? ['GetAllClassrooms'] : ['GetAllClassrooms', variables],
-    fetcher<IGetAllClassroomsQuery, IGetAllClassroomsQueryVariables>(
-      client,
-      GetAllClassroomsDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetAllClassroomsQuery = <
+      TData = IGetAllClassroomsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllClassroomsQueryVariables,
+      options?: UseQueryOptions<IGetAllClassroomsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllClassroomsQuery, TError, TData>(
+      variables === undefined ? ['GetAllClassrooms'] : ['GetAllClassrooms', variables],
+      fetcher<IGetAllClassroomsQuery, IGetAllClassroomsQueryVariables>(client, GetAllClassroomsDocument, variables, headers),
+      options
+    );
 
-useGetAllClassroomsQuery.getKey = (variables?: IGetAllClassroomsQueryVariables) =>
-  variables === undefined ? ['GetAllClassrooms'] : ['GetAllClassrooms', variables];
-useGetAllClassroomsQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAllClassroomsQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAllClassroomsQuery, IGetAllClassroomsQueryVariables>(
-    client,
-    GetAllClassroomsDocument,
-    variables,
-    headers
-  );
+useGetAllClassroomsQuery.getKey = (variables?: IGetAllClassroomsQueryVariables) => variables === undefined ? ['GetAllClassrooms'] : ['GetAllClassrooms', variables];
+;
+
+useGetAllClassroomsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllClassroomsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllClassroomsQuery, IGetAllClassroomsQueryVariables>(client, GetAllClassroomsDocument, variables, headers);
 export const GetClassroomByIdDocument = /*#__PURE__*/ `
     query GetClassroomById($id: ID) {
   getClassroomById(_id: $id) {
@@ -3185,36 +2518,25 @@ export const GetClassroomByIdDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetClassroomByIdQuery = <TData = IGetClassroomByIdQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetClassroomByIdQueryVariables,
-  options?: UseQueryOptions<IGetClassroomByIdQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetClassroomByIdQuery, TError, TData>(
-    variables === undefined ? ['GetClassroomById'] : ['GetClassroomById', variables],
-    fetcher<IGetClassroomByIdQuery, IGetClassroomByIdQueryVariables>(
-      client,
-      GetClassroomByIdDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetClassroomByIdQuery = <
+      TData = IGetClassroomByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetClassroomByIdQueryVariables,
+      options?: UseQueryOptions<IGetClassroomByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetClassroomByIdQuery, TError, TData>(
+      variables === undefined ? ['GetClassroomById'] : ['GetClassroomById', variables],
+      fetcher<IGetClassroomByIdQuery, IGetClassroomByIdQueryVariables>(client, GetClassroomByIdDocument, variables, headers),
+      options
+    );
 
-useGetClassroomByIdQuery.getKey = (variables?: IGetClassroomByIdQueryVariables) =>
-  variables === undefined ? ['GetClassroomById'] : ['GetClassroomById', variables];
-useGetClassroomByIdQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetClassroomByIdQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetClassroomByIdQuery, IGetClassroomByIdQueryVariables>(
-    client,
-    GetClassroomByIdDocument,
-    variables,
-    headers
-  );
+useGetClassroomByIdQuery.getKey = (variables?: IGetClassroomByIdQueryVariables) => variables === undefined ? ['GetClassroomById'] : ['GetClassroomById', variables];
+;
+
+useGetClassroomByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetClassroomByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetClassroomByIdQuery, IGetClassroomByIdQueryVariables>(client, GetClassroomByIdDocument, variables, headers);
 export const GetAllDepartmentsDocument = /*#__PURE__*/ `
     query GetAllDepartments($filter: DepartmentArgs, $page: Int, $offset: Int, $limit: Int) {
   getAllDepartments(filter: $filter, page: $page, offset: $offset, limit: $limit) {
@@ -3239,36 +2561,25 @@ export const GetAllDepartmentsDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllDepartmentsQuery = <TData = IGetAllDepartmentsQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetAllDepartmentsQueryVariables,
-  options?: UseQueryOptions<IGetAllDepartmentsQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAllDepartmentsQuery, TError, TData>(
-    variables === undefined ? ['GetAllDepartments'] : ['GetAllDepartments', variables],
-    fetcher<IGetAllDepartmentsQuery, IGetAllDepartmentsQueryVariables>(
-      client,
-      GetAllDepartmentsDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetAllDepartmentsQuery = <
+      TData = IGetAllDepartmentsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllDepartmentsQueryVariables,
+      options?: UseQueryOptions<IGetAllDepartmentsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllDepartmentsQuery, TError, TData>(
+      variables === undefined ? ['GetAllDepartments'] : ['GetAllDepartments', variables],
+      fetcher<IGetAllDepartmentsQuery, IGetAllDepartmentsQueryVariables>(client, GetAllDepartmentsDocument, variables, headers),
+      options
+    );
 
-useGetAllDepartmentsQuery.getKey = (variables?: IGetAllDepartmentsQueryVariables) =>
-  variables === undefined ? ['GetAllDepartments'] : ['GetAllDepartments', variables];
-useGetAllDepartmentsQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAllDepartmentsQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAllDepartmentsQuery, IGetAllDepartmentsQueryVariables>(
-    client,
-    GetAllDepartmentsDocument,
-    variables,
-    headers
-  );
+useGetAllDepartmentsQuery.getKey = (variables?: IGetAllDepartmentsQueryVariables) => variables === undefined ? ['GetAllDepartments'] : ['GetAllDepartments', variables];
+;
+
+useGetAllDepartmentsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllDepartmentsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllDepartmentsQuery, IGetAllDepartmentsQueryVariables>(client, GetAllDepartmentsDocument, variables, headers);
 export const GetDepartmentByIdDocument = /*#__PURE__*/ `
     query GetDepartmentById($id: ID) {
   getDepartmentById(_id: $id) {
@@ -3282,27 +2593,192 @@ export const GetDepartmentByIdDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetDepartmentByIdQuery = <TData = IGetDepartmentByIdQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetDepartmentByIdQueryVariables,
-  options?: UseQueryOptions<IGetDepartmentByIdQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetDepartmentByIdQuery, TError, TData>(
-    variables === undefined ? ['GetDepartmentById'] : ['GetDepartmentById', variables],
-    fetcher<IGetDepartmentByIdQuery, IGetDepartmentByIdQueryVariables>(
-      client,
-      GetDepartmentByIdDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetDepartmentByIdQuery = <
+      TData = IGetDepartmentByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetDepartmentByIdQueryVariables,
+      options?: UseQueryOptions<IGetDepartmentByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetDepartmentByIdQuery, TError, TData>(
+      variables === undefined ? ['GetDepartmentById'] : ['GetDepartmentById', variables],
+      fetcher<IGetDepartmentByIdQuery, IGetDepartmentByIdQueryVariables>(client, GetDepartmentByIdDocument, variables, headers),
+      options
+    );
 
 useGetDepartmentByIdQuery.getKey = (variables?: IGetDepartmentByIdQueryVariables) => variables === undefined ? ['GetDepartmentById'] : ['GetDepartmentById', variables];
 ;
 
 useGetDepartmentByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetDepartmentByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetDepartmentByIdQuery, IGetDepartmentByIdQueryVariables>(client, GetDepartmentByIdDocument, variables, headers);
+export const CreateEventDocument = /*#__PURE__*/ `
+    mutation CreateEvent($data: UpsertEventInput!) {
+  createEvent(data: $data) {
+    _id
+    activity
+    createdAt
+    deletedAt
+    finishDate
+    groupsIncluded
+    isDeleted
+    period
+    startDate
+    updatedAt
+    uploadedBy
+  }
+}
+    `;
+export const useCreateEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ICreateEventMutation, TError, ICreateEventMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ICreateEventMutation, TError, ICreateEventMutationVariables, TContext>(
+      ['CreateEvent'],
+      (variables?: ICreateEventMutationVariables) => fetcher<ICreateEventMutation, ICreateEventMutationVariables>(client, CreateEventDocument, variables, headers)(),
+      options
+    );
+useCreateEventMutation.fetcher = (client: GraphQLClient, variables: ICreateEventMutationVariables, headers?: RequestInit['headers']) => fetcher<ICreateEventMutation, ICreateEventMutationVariables>(client, CreateEventDocument, variables, headers);
+export const UpdateEventDocument = /*#__PURE__*/ `
+    mutation UpdateEvent($data: UpdateEventInput!) {
+  updateEvent(data: $data) {
+    _id
+    activity
+    createdAt
+    deletedAt
+    finishDate
+    groupsIncluded
+    isDeleted
+    period
+    startDate
+    updatedAt
+    uploadedBy
+  }
+}
+    `;
+export const useUpdateEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUpdateEventMutation, TError, IUpdateEventMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUpdateEventMutation, TError, IUpdateEventMutationVariables, TContext>(
+      ['UpdateEvent'],
+      (variables?: IUpdateEventMutationVariables) => fetcher<IUpdateEventMutation, IUpdateEventMutationVariables>(client, UpdateEventDocument, variables, headers)(),
+      options
+    );
+useUpdateEventMutation.fetcher = (client: GraphQLClient, variables: IUpdateEventMutationVariables, headers?: RequestInit['headers']) => fetcher<IUpdateEventMutation, IUpdateEventMutationVariables>(client, UpdateEventDocument, variables, headers);
+export const DeleteEventDocument = /*#__PURE__*/ `
+    mutation DeleteEvent($data: EventIdArgs!) {
+  deleteEvent(data: $data) {
+    deleted
+  }
+}
+    `;
+export const useDeleteEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IDeleteEventMutation, TError, IDeleteEventMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IDeleteEventMutation, TError, IDeleteEventMutationVariables, TContext>(
+      ['DeleteEvent'],
+      (variables?: IDeleteEventMutationVariables) => fetcher<IDeleteEventMutation, IDeleteEventMutationVariables>(client, DeleteEventDocument, variables, headers)(),
+      options
+    );
+useDeleteEventMutation.fetcher = (client: GraphQLClient, variables: IDeleteEventMutationVariables, headers?: RequestInit['headers']) => fetcher<IDeleteEventMutation, IDeleteEventMutationVariables>(client, DeleteEventDocument, variables, headers);
+export const GetAllEventsDocument = /*#__PURE__*/ `
+    query GetAllEvents($filter: EventArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllEvents(filter: $filter, limit: $limit, offset: $offset, page: $page) {
+    docs {
+      _id
+      activity
+      createdAt
+      deletedAt
+      finishDate
+      groupsIncluded
+      isDeleted
+      period
+      startDate
+      updatedAt
+      uploadedBy
+    }
+    hasNextPage
+    hasPrevPage
+    limit
+    nextPage
+    offset
+    page
+    pagingCounter
+    prevPage
+    totalDocs
+    totalPages
+  }
+}
+    `;
+export const useGetAllEventsQuery = <
+      TData = IGetAllEventsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllEventsQueryVariables,
+      options?: UseQueryOptions<IGetAllEventsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllEventsQuery, TError, TData>(
+      variables === undefined ? ['GetAllEvents'] : ['GetAllEvents', variables],
+      fetcher<IGetAllEventsQuery, IGetAllEventsQueryVariables>(client, GetAllEventsDocument, variables, headers),
+      options
+    );
+
+useGetAllEventsQuery.getKey = (variables?: IGetAllEventsQueryVariables) => variables === undefined ? ['GetAllEvents'] : ['GetAllEvents', variables];
+;
+
+useGetAllEventsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllEventsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllEventsQuery, IGetAllEventsQueryVariables>(client, GetAllEventsDocument, variables, headers);
+export const GetEventByIdDocument = /*#__PURE__*/ `
+    query GetEventById($id: ID) {
+  getEventById(_id: $id) {
+    _id
+    activity
+    createdAt
+    deletedAt
+    finishDate
+    groupsIncluded
+    isDeleted
+    period
+    startDate
+    updatedAt
+    uploadedBy
+  }
+}
+    `;
+export const useGetEventByIdQuery = <
+      TData = IGetEventByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetEventByIdQueryVariables,
+      options?: UseQueryOptions<IGetEventByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetEventByIdQuery, TError, TData>(
+      variables === undefined ? ['GetEventById'] : ['GetEventById', variables],
+      fetcher<IGetEventByIdQuery, IGetEventByIdQueryVariables>(client, GetEventByIdDocument, variables, headers),
+      options
+    );
+
+useGetEventByIdQuery.getKey = (variables?: IGetEventByIdQueryVariables) => variables === undefined ? ['GetEventById'] : ['GetEventById', variables];
+;
+
+useGetEventByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetEventByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetEventByIdQuery, IGetEventByIdQueryVariables>(client, GetEventByIdDocument, variables, headers);
 export const UpdateFileDocument = /*#__PURE__*/ `
     mutation UpdateFile($data: UpdateFile!) {
   updateFile(data: $data) {
@@ -3342,33 +2818,20 @@ export const UpdateFileDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useUpdateFileMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<IUpdateFileMutation, TError, IUpdateFileMutationVariables, TContext>,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IUpdateFileMutation, TError, IUpdateFileMutationVariables, TContext>(
-    ['UpdateFile'],
-    (variables?: IUpdateFileMutationVariables) =>
-      fetcher<IUpdateFileMutation, IUpdateFileMutationVariables>(
-        client,
-        UpdateFileDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useUpdateFileMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IUpdateFileMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IUpdateFileMutation, IUpdateFileMutationVariables>(
-    client,
-    UpdateFileDocument,
-    variables,
-    headers
-  );
+export const useUpdateFileMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUpdateFileMutation, TError, IUpdateFileMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUpdateFileMutation, TError, IUpdateFileMutationVariables, TContext>(
+      ['UpdateFile'],
+      (variables?: IUpdateFileMutationVariables) => fetcher<IUpdateFileMutation, IUpdateFileMutationVariables>(client, UpdateFileDocument, variables, headers)(),
+      options
+    );
+useUpdateFileMutation.fetcher = (client: GraphQLClient, variables: IUpdateFileMutationVariables, headers?: RequestInit['headers']) => fetcher<IUpdateFileMutation, IUpdateFileMutationVariables>(client, UpdateFileDocument, variables, headers);
 export const UploadFileDocument = /*#__PURE__*/ `
     mutation UploadFile($data: UploadFileInput!) {
   uploadFile(data: $data) {
@@ -3402,33 +2865,20 @@ export const UploadFileDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useUploadFileMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<IUploadFileMutation, TError, IUploadFileMutationVariables, TContext>,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IUploadFileMutation, TError, IUploadFileMutationVariables, TContext>(
-    ['UploadFile'],
-    (variables?: IUploadFileMutationVariables) =>
-      fetcher<IUploadFileMutation, IUploadFileMutationVariables>(
-        client,
-        UploadFileDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useUploadFileMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IUploadFileMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IUploadFileMutation, IUploadFileMutationVariables>(
-    client,
-    UploadFileDocument,
-    variables,
-    headers
-  );
+export const useUploadFileMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUploadFileMutation, TError, IUploadFileMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUploadFileMutation, TError, IUploadFileMutationVariables, TContext>(
+      ['UploadFile'],
+      (variables?: IUploadFileMutationVariables) => fetcher<IUploadFileMutation, IUploadFileMutationVariables>(client, UploadFileDocument, variables, headers)(),
+      options
+    );
+useUploadFileMutation.fetcher = (client: GraphQLClient, variables: IUploadFileMutationVariables, headers?: RequestInit['headers']) => fetcher<IUploadFileMutation, IUploadFileMutationVariables>(client, UploadFileDocument, variables, headers);
 export const CreateFileCommentDocument = /*#__PURE__*/ `
     mutation CreateFileComment($data: CreateFileCommentInput!) {
   createFileComment(data: $data) {
@@ -3442,38 +2892,20 @@ export const CreateFileCommentDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useCreateFileCommentMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    ICreateFileCommentMutation,
-    TError,
-    ICreateFileCommentMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<ICreateFileCommentMutation, TError, ICreateFileCommentMutationVariables, TContext>(
-    ['CreateFileComment'],
-    (variables?: ICreateFileCommentMutationVariables) =>
-      fetcher<ICreateFileCommentMutation, ICreateFileCommentMutationVariables>(
-        client,
-        CreateFileCommentDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useCreateFileCommentMutation.fetcher = (
-  client: GraphQLClient,
-  variables: ICreateFileCommentMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<ICreateFileCommentMutation, ICreateFileCommentMutationVariables>(
-    client,
-    CreateFileCommentDocument,
-    variables,
-    headers
-  );
+export const useCreateFileCommentMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ICreateFileCommentMutation, TError, ICreateFileCommentMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ICreateFileCommentMutation, TError, ICreateFileCommentMutationVariables, TContext>(
+      ['CreateFileComment'],
+      (variables?: ICreateFileCommentMutationVariables) => fetcher<ICreateFileCommentMutation, ICreateFileCommentMutationVariables>(client, CreateFileCommentDocument, variables, headers)(),
+      options
+    );
+useCreateFileCommentMutation.fetcher = (client: GraphQLClient, variables: ICreateFileCommentMutationVariables, headers?: RequestInit['headers']) => fetcher<ICreateFileCommentMutation, ICreateFileCommentMutationVariables>(client, CreateFileCommentDocument, variables, headers);
 export const ApproveFileDocument = /*#__PURE__*/ `
     mutation ApproveFile($data: ApproveFileInput!) {
   approveFile(data: $data) {
@@ -3483,38 +2915,20 @@ export const ApproveFileDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useApproveFileMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IApproveFileMutation,
-    TError,
-    IApproveFileMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IApproveFileMutation, TError, IApproveFileMutationVariables, TContext>(
-    ['ApproveFile'],
-    (variables?: IApproveFileMutationVariables) =>
-      fetcher<IApproveFileMutation, IApproveFileMutationVariables>(
-        client,
-        ApproveFileDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useApproveFileMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IApproveFileMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IApproveFileMutation, IApproveFileMutationVariables>(
-    client,
-    ApproveFileDocument,
-    variables,
-    headers
-  );
+export const useApproveFileMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IApproveFileMutation, TError, IApproveFileMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IApproveFileMutation, TError, IApproveFileMutationVariables, TContext>(
+      ['ApproveFile'],
+      (variables?: IApproveFileMutationVariables) => fetcher<IApproveFileMutation, IApproveFileMutationVariables>(client, ApproveFileDocument, variables, headers)(),
+      options
+    );
+useApproveFileMutation.fetcher = (client: GraphQLClient, variables: IApproveFileMutationVariables, headers?: RequestInit['headers']) => fetcher<IApproveFileMutation, IApproveFileMutationVariables>(client, ApproveFileDocument, variables, headers);
 export const GetAllFilesDocument = /*#__PURE__*/ `
     query GetAllFiles($filter: FileArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllFiles(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -3567,36 +2981,25 @@ export const GetAllFilesDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllFilesQuery = <TData = IGetAllFilesQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetAllFilesQueryVariables,
-  options?: UseQueryOptions<IGetAllFilesQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAllFilesQuery, TError, TData>(
-    variables === undefined ? ['GetAllFiles'] : ['GetAllFiles', variables],
-    fetcher<IGetAllFilesQuery, IGetAllFilesQueryVariables>(
-      client,
-      GetAllFilesDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetAllFilesQuery = <
+      TData = IGetAllFilesQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllFilesQueryVariables,
+      options?: UseQueryOptions<IGetAllFilesQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllFilesQuery, TError, TData>(
+      variables === undefined ? ['GetAllFiles'] : ['GetAllFiles', variables],
+      fetcher<IGetAllFilesQuery, IGetAllFilesQueryVariables>(client, GetAllFilesDocument, variables, headers),
+      options
+    );
 
-useGetAllFilesQuery.getKey = (variables?: IGetAllFilesQueryVariables) =>
-  variables === undefined ? ['GetAllFiles'] : ['GetAllFiles', variables];
-useGetAllFilesQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAllFilesQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAllFilesQuery, IGetAllFilesQueryVariables>(
-    client,
-    GetAllFilesDocument,
-    variables,
-    headers
-  );
+useGetAllFilesQuery.getKey = (variables?: IGetAllFilesQueryVariables) => variables === undefined ? ['GetAllFiles'] : ['GetAllFiles', variables];
+;
+
+useGetAllFilesQuery.fetcher = (client: GraphQLClient, variables?: IGetAllFilesQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllFilesQuery, IGetAllFilesQueryVariables>(client, GetAllFilesDocument, variables, headers);
 export const GetFileByIdDocument = /*#__PURE__*/ `
     query GetFileById {
   getFileById {
@@ -3636,36 +3039,25 @@ export const GetFileByIdDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetFileByIdQuery = <TData = IGetFileByIdQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetFileByIdQueryVariables,
-  options?: UseQueryOptions<IGetFileByIdQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetFileByIdQuery, TError, TData>(
-    variables === undefined ? ['GetFileById'] : ['GetFileById', variables],
-    fetcher<IGetFileByIdQuery, IGetFileByIdQueryVariables>(
-      client,
-      GetFileByIdDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetFileByIdQuery = <
+      TData = IGetFileByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetFileByIdQueryVariables,
+      options?: UseQueryOptions<IGetFileByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetFileByIdQuery, TError, TData>(
+      variables === undefined ? ['GetFileById'] : ['GetFileById', variables],
+      fetcher<IGetFileByIdQuery, IGetFileByIdQueryVariables>(client, GetFileByIdDocument, variables, headers),
+      options
+    );
 
-useGetFileByIdQuery.getKey = (variables?: IGetFileByIdQueryVariables) =>
-  variables === undefined ? ['GetFileById'] : ['GetFileById', variables];
-useGetFileByIdQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetFileByIdQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetFileByIdQuery, IGetFileByIdQueryVariables>(
-    client,
-    GetFileByIdDocument,
-    variables,
-    headers
-  );
+useGetFileByIdQuery.getKey = (variables?: IGetFileByIdQueryVariables) => variables === undefined ? ['GetFileById'] : ['GetFileById', variables];
+;
+
+useGetFileByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetFileByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetFileByIdQuery, IGetFileByIdQueryVariables>(client, GetFileByIdDocument, variables, headers);
 export const GetAllGroupsDocument = /*#__PURE__*/ `
     query GetAllGroups($filter: GroupArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllGroups(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -3693,36 +3085,25 @@ export const GetAllGroupsDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllGroupsQuery = <TData = IGetAllGroupsQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetAllGroupsQueryVariables,
-  options?: UseQueryOptions<IGetAllGroupsQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAllGroupsQuery, TError, TData>(
-    variables === undefined ? ['GetAllGroups'] : ['GetAllGroups', variables],
-    fetcher<IGetAllGroupsQuery, IGetAllGroupsQueryVariables>(
-      client,
-      GetAllGroupsDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetAllGroupsQuery = <
+      TData = IGetAllGroupsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllGroupsQueryVariables,
+      options?: UseQueryOptions<IGetAllGroupsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllGroupsQuery, TError, TData>(
+      variables === undefined ? ['GetAllGroups'] : ['GetAllGroups', variables],
+      fetcher<IGetAllGroupsQuery, IGetAllGroupsQueryVariables>(client, GetAllGroupsDocument, variables, headers),
+      options
+    );
 
-useGetAllGroupsQuery.getKey = (variables?: IGetAllGroupsQueryVariables) =>
-  variables === undefined ? ['GetAllGroups'] : ['GetAllGroups', variables];
-useGetAllGroupsQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAllGroupsQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAllGroupsQuery, IGetAllGroupsQueryVariables>(
-    client,
-    GetAllGroupsDocument,
-    variables,
-    headers
-  );
+useGetAllGroupsQuery.getKey = (variables?: IGetAllGroupsQueryVariables) => variables === undefined ? ['GetAllGroups'] : ['GetAllGroups', variables];
+;
+
+useGetAllGroupsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllGroupsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllGroupsQuery, IGetAllGroupsQueryVariables>(client, GetAllGroupsDocument, variables, headers);
 export const GetGroupByIdDocument = /*#__PURE__*/ `
     query GetGroupById($id: ID) {
   getGroupById(_id: $id) {
@@ -3738,36 +3119,25 @@ export const GetGroupByIdDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetGroupByIdQuery = <TData = IGetGroupByIdQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetGroupByIdQueryVariables,
-  options?: UseQueryOptions<IGetGroupByIdQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetGroupByIdQuery, TError, TData>(
-    variables === undefined ? ['GetGroupById'] : ['GetGroupById', variables],
-    fetcher<IGetGroupByIdQuery, IGetGroupByIdQueryVariables>(
-      client,
-      GetGroupByIdDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetGroupByIdQuery = <
+      TData = IGetGroupByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetGroupByIdQueryVariables,
+      options?: UseQueryOptions<IGetGroupByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetGroupByIdQuery, TError, TData>(
+      variables === undefined ? ['GetGroupById'] : ['GetGroupById', variables],
+      fetcher<IGetGroupByIdQuery, IGetGroupByIdQueryVariables>(client, GetGroupByIdDocument, variables, headers),
+      options
+    );
 
-useGetGroupByIdQuery.getKey = (variables?: IGetGroupByIdQueryVariables) =>
-  variables === undefined ? ['GetGroupById'] : ['GetGroupById', variables];
-useGetGroupByIdQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetGroupByIdQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetGroupByIdQuery, IGetGroupByIdQueryVariables>(
-    client,
-    GetGroupByIdDocument,
-    variables,
-    headers
-  );
+useGetGroupByIdQuery.getKey = (variables?: IGetGroupByIdQueryVariables) => variables === undefined ? ['GetGroupById'] : ['GetGroupById', variables];
+;
+
+useGetGroupByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetGroupByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetGroupByIdQuery, IGetGroupByIdQueryVariables>(client, GetGroupByIdDocument, variables, headers);
 export const GetAllPeriodsDocument = /*#__PURE__*/ `
     query GetAllPeriods($filter: PeriodArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllPeriods(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -3796,36 +3166,25 @@ export const GetAllPeriodsDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllPeriodsQuery = <TData = IGetAllPeriodsQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetAllPeriodsQueryVariables,
-  options?: UseQueryOptions<IGetAllPeriodsQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAllPeriodsQuery, TError, TData>(
-    variables === undefined ? ['GetAllPeriods'] : ['GetAllPeriods', variables],
-    fetcher<IGetAllPeriodsQuery, IGetAllPeriodsQueryVariables>(
-      client,
-      GetAllPeriodsDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetAllPeriodsQuery = <
+      TData = IGetAllPeriodsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllPeriodsQueryVariables,
+      options?: UseQueryOptions<IGetAllPeriodsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllPeriodsQuery, TError, TData>(
+      variables === undefined ? ['GetAllPeriods'] : ['GetAllPeriods', variables],
+      fetcher<IGetAllPeriodsQuery, IGetAllPeriodsQueryVariables>(client, GetAllPeriodsDocument, variables, headers),
+      options
+    );
 
-useGetAllPeriodsQuery.getKey = (variables?: IGetAllPeriodsQueryVariables) =>
-  variables === undefined ? ['GetAllPeriods'] : ['GetAllPeriods', variables];
-useGetAllPeriodsQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAllPeriodsQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAllPeriodsQuery, IGetAllPeriodsQueryVariables>(
-    client,
-    GetAllPeriodsDocument,
-    variables,
-    headers
-  );
+useGetAllPeriodsQuery.getKey = (variables?: IGetAllPeriodsQueryVariables) => variables === undefined ? ['GetAllPeriods'] : ['GetAllPeriods', variables];
+;
+
+useGetAllPeriodsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllPeriodsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllPeriodsQuery, IGetAllPeriodsQueryVariables>(client, GetAllPeriodsDocument, variables, headers);
 export const GetPeriodByIdDocument = /*#__PURE__*/ `
     query GetPeriodById($id: ID) {
   getPeriodById(_id: $id) {
@@ -3842,36 +3201,25 @@ export const GetPeriodByIdDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetPeriodByIdQuery = <TData = IGetPeriodByIdQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetPeriodByIdQueryVariables,
-  options?: UseQueryOptions<IGetPeriodByIdQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetPeriodByIdQuery, TError, TData>(
-    variables === undefined ? ['GetPeriodById'] : ['GetPeriodById', variables],
-    fetcher<IGetPeriodByIdQuery, IGetPeriodByIdQueryVariables>(
-      client,
-      GetPeriodByIdDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetPeriodByIdQuery = <
+      TData = IGetPeriodByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetPeriodByIdQueryVariables,
+      options?: UseQueryOptions<IGetPeriodByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetPeriodByIdQuery, TError, TData>(
+      variables === undefined ? ['GetPeriodById'] : ['GetPeriodById', variables],
+      fetcher<IGetPeriodByIdQuery, IGetPeriodByIdQueryVariables>(client, GetPeriodByIdDocument, variables, headers),
+      options
+    );
 
-useGetPeriodByIdQuery.getKey = (variables?: IGetPeriodByIdQueryVariables) =>
-  variables === undefined ? ['GetPeriodById'] : ['GetPeriodById', variables];
-useGetPeriodByIdQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetPeriodByIdQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetPeriodByIdQuery, IGetPeriodByIdQueryVariables>(
-    client,
-    GetPeriodByIdDocument,
-    variables,
-    headers
-  );
+useGetPeriodByIdQuery.getKey = (variables?: IGetPeriodByIdQueryVariables) => variables === undefined ? ['GetPeriodById'] : ['GetPeriodById', variables];
+;
+
+useGetPeriodByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetPeriodByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetPeriodByIdQuery, IGetPeriodByIdQueryVariables>(client, GetPeriodByIdDocument, variables, headers);
 export const CreateScheduleDocument = /*#__PURE__*/ `
     mutation CreateSchedule($data: UpsertScheduleInput!) {
   createSchedule(data: $data) {
@@ -3889,38 +3237,20 @@ export const CreateScheduleDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useCreateScheduleMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    ICreateScheduleMutation,
-    TError,
-    ICreateScheduleMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<ICreateScheduleMutation, TError, ICreateScheduleMutationVariables, TContext>(
-    ['CreateSchedule'],
-    (variables?: ICreateScheduleMutationVariables) =>
-      fetcher<ICreateScheduleMutation, ICreateScheduleMutationVariables>(
-        client,
-        CreateScheduleDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useCreateScheduleMutation.fetcher = (
-  client: GraphQLClient,
-  variables: ICreateScheduleMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<ICreateScheduleMutation, ICreateScheduleMutationVariables>(
-    client,
-    CreateScheduleDocument,
-    variables,
-    headers
-  );
+export const useCreateScheduleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ICreateScheduleMutation, TError, ICreateScheduleMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ICreateScheduleMutation, TError, ICreateScheduleMutationVariables, TContext>(
+      ['CreateSchedule'],
+      (variables?: ICreateScheduleMutationVariables) => fetcher<ICreateScheduleMutation, ICreateScheduleMutationVariables>(client, CreateScheduleDocument, variables, headers)(),
+      options
+    );
+useCreateScheduleMutation.fetcher = (client: GraphQLClient, variables: ICreateScheduleMutationVariables, headers?: RequestInit['headers']) => fetcher<ICreateScheduleMutation, ICreateScheduleMutationVariables>(client, CreateScheduleDocument, variables, headers);
 export const UpdateScheduleDocument = /*#__PURE__*/ `
     mutation UpdateSchedule($data: UpdateScheduleInput!) {
   updateSchedule(data: $data) {
@@ -3938,38 +3268,20 @@ export const UpdateScheduleDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useUpdateScheduleMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IUpdateScheduleMutation,
-    TError,
-    IUpdateScheduleMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IUpdateScheduleMutation, TError, IUpdateScheduleMutationVariables, TContext>(
-    ['UpdateSchedule'],
-    (variables?: IUpdateScheduleMutationVariables) =>
-      fetcher<IUpdateScheduleMutation, IUpdateScheduleMutationVariables>(
-        client,
-        UpdateScheduleDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useUpdateScheduleMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IUpdateScheduleMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IUpdateScheduleMutation, IUpdateScheduleMutationVariables>(
-    client,
-    UpdateScheduleDocument,
-    variables,
-    headers
-  );
+export const useUpdateScheduleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUpdateScheduleMutation, TError, IUpdateScheduleMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUpdateScheduleMutation, TError, IUpdateScheduleMutationVariables, TContext>(
+      ['UpdateSchedule'],
+      (variables?: IUpdateScheduleMutationVariables) => fetcher<IUpdateScheduleMutation, IUpdateScheduleMutationVariables>(client, UpdateScheduleDocument, variables, headers)(),
+      options
+    );
+useUpdateScheduleMutation.fetcher = (client: GraphQLClient, variables: IUpdateScheduleMutationVariables, headers?: RequestInit['headers']) => fetcher<IUpdateScheduleMutation, IUpdateScheduleMutationVariables>(client, UpdateScheduleDocument, variables, headers);
 export const DeleteScheduleDocument = /*#__PURE__*/ `
     mutation DeleteSchedule($data: ScheduleIdArgs!) {
   deleteSchedule(data: $data) {
@@ -3977,38 +3289,20 @@ export const DeleteScheduleDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useDeleteScheduleMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IDeleteScheduleMutation,
-    TError,
-    IDeleteScheduleMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IDeleteScheduleMutation, TError, IDeleteScheduleMutationVariables, TContext>(
-    ['DeleteSchedule'],
-    (variables?: IDeleteScheduleMutationVariables) =>
-      fetcher<IDeleteScheduleMutation, IDeleteScheduleMutationVariables>(
-        client,
-        DeleteScheduleDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useDeleteScheduleMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IDeleteScheduleMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IDeleteScheduleMutation, IDeleteScheduleMutationVariables>(
-    client,
-    DeleteScheduleDocument,
-    variables,
-    headers
-  );
+export const useDeleteScheduleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IDeleteScheduleMutation, TError, IDeleteScheduleMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IDeleteScheduleMutation, TError, IDeleteScheduleMutationVariables, TContext>(
+      ['DeleteSchedule'],
+      (variables?: IDeleteScheduleMutationVariables) => fetcher<IDeleteScheduleMutation, IDeleteScheduleMutationVariables>(client, DeleteScheduleDocument, variables, headers)(),
+      options
+    );
+useDeleteScheduleMutation.fetcher = (client: GraphQLClient, variables: IDeleteScheduleMutationVariables, headers?: RequestInit['headers']) => fetcher<IDeleteScheduleMutation, IDeleteScheduleMutationVariables>(client, DeleteScheduleDocument, variables, headers);
 export const GetAllSchedulesDocument = /*#__PURE__*/ `
     query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: Int, $sort: JSON) {
   getAllSchedules(
@@ -4036,36 +3330,25 @@ export const GetAllSchedulesDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllSchedulesQuery = <TData = IGetAllSchedulesQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetAllSchedulesQueryVariables,
-  options?: UseQueryOptions<IGetAllSchedulesQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAllSchedulesQuery, TError, TData>(
-    variables === undefined ? ['GetAllSchedules'] : ['GetAllSchedules', variables],
-    fetcher<IGetAllSchedulesQuery, IGetAllSchedulesQueryVariables>(
-      client,
-      GetAllSchedulesDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetAllSchedulesQuery = <
+      TData = IGetAllSchedulesQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllSchedulesQueryVariables,
+      options?: UseQueryOptions<IGetAllSchedulesQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllSchedulesQuery, TError, TData>(
+      variables === undefined ? ['GetAllSchedules'] : ['GetAllSchedules', variables],
+      fetcher<IGetAllSchedulesQuery, IGetAllSchedulesQueryVariables>(client, GetAllSchedulesDocument, variables, headers),
+      options
+    );
 
-useGetAllSchedulesQuery.getKey = (variables?: IGetAllSchedulesQueryVariables) =>
-  variables === undefined ? ['GetAllSchedules'] : ['GetAllSchedules', variables];
-useGetAllSchedulesQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAllSchedulesQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAllSchedulesQuery, IGetAllSchedulesQueryVariables>(
-    client,
-    GetAllSchedulesDocument,
-    variables,
-    headers
-  );
+useGetAllSchedulesQuery.getKey = (variables?: IGetAllSchedulesQueryVariables) => variables === undefined ? ['GetAllSchedules'] : ['GetAllSchedules', variables];
+;
+
+useGetAllSchedulesQuery.fetcher = (client: GraphQLClient, variables?: IGetAllSchedulesQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllSchedulesQuery, IGetAllSchedulesQueryVariables>(client, GetAllSchedulesDocument, variables, headers);
 export const GetScheduleByIdDocument = /*#__PURE__*/ `
     query GetScheduleById($id: ID) {
   getScheduleById(_id: $id) {
@@ -4085,27 +3368,93 @@ export const GetScheduleByIdDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetScheduleByIdQuery = <TData = IGetScheduleByIdQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetScheduleByIdQueryVariables,
-  options?: UseQueryOptions<IGetScheduleByIdQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetScheduleByIdQuery, TError, TData>(
-    variables === undefined ? ['GetScheduleById'] : ['GetScheduleById', variables],
-    fetcher<IGetScheduleByIdQuery, IGetScheduleByIdQueryVariables>(
-      client,
-      GetScheduleByIdDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetScheduleByIdQuery = <
+      TData = IGetScheduleByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetScheduleByIdQueryVariables,
+      options?: UseQueryOptions<IGetScheduleByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetScheduleByIdQuery, TError, TData>(
+      variables === undefined ? ['GetScheduleById'] : ['GetScheduleById', variables],
+      fetcher<IGetScheduleByIdQuery, IGetScheduleByIdQueryVariables>(client, GetScheduleByIdDocument, variables, headers),
+      options
+    );
 
 useGetScheduleByIdQuery.getKey = (variables?: IGetScheduleByIdQueryVariables) => variables === undefined ? ['GetScheduleById'] : ['GetScheduleById', variables];
 ;
 
 useGetScheduleByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetScheduleByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetScheduleByIdQuery, IGetScheduleByIdQueryVariables>(client, GetScheduleByIdDocument, variables, headers);
+export const GetUniqueOptionsCareerDocument = /*#__PURE__*/ `
+    query GetUniqueOptionsCareer {
+  getUniqueOptionsCareer {
+    semesters
+    careers {
+      value
+      label
+    }
+  }
+}
+    `;
+export const useGetUniqueOptionsCareerQuery = <
+      TData = IGetUniqueOptionsCareerQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetUniqueOptionsCareerQueryVariables,
+      options?: UseQueryOptions<IGetUniqueOptionsCareerQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetUniqueOptionsCareerQuery, TError, TData>(
+      variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables],
+      fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(client, GetUniqueOptionsCareerDocument, variables, headers),
+      options
+    );
+
+useGetUniqueOptionsCareerQuery.getKey = (variables?: IGetUniqueOptionsCareerQueryVariables) => variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables];
+;
+
+useGetUniqueOptionsCareerQuery.fetcher = (client: GraphQLClient, variables?: IGetUniqueOptionsCareerQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(client, GetUniqueOptionsCareerDocument, variables, headers);
+export const GetSchedulesFormattedDocument = /*#__PURE__*/ `
+    query GetSchedulesFormatted($teacher: ID, $schedule: ID) {
+  getSchedulesFormatted(teacher: $teacher, schedule: $schedule) {
+    _id
+    classroomIdentifier
+    finalTime
+    groupIdentifier
+    startTime
+    subjectLargeName
+    subjectShortName
+    teacherId
+    teacherFirstName
+    teacherLastName
+    teacherMiddleName
+    teacherRfc
+    weekday
+  }
+}
+    `;
+export const useGetSchedulesFormattedQuery = <
+      TData = IGetSchedulesFormattedQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetSchedulesFormattedQueryVariables,
+      options?: UseQueryOptions<IGetSchedulesFormattedQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetSchedulesFormattedQuery, TError, TData>(
+      variables === undefined ? ['GetSchedulesFormatted'] : ['GetSchedulesFormatted', variables],
+      fetcher<IGetSchedulesFormattedQuery, IGetSchedulesFormattedQueryVariables>(client, GetSchedulesFormattedDocument, variables, headers),
+      options
+    );
+
+useGetSchedulesFormattedQuery.getKey = (variables?: IGetSchedulesFormattedQueryVariables) => variables === undefined ? ['GetSchedulesFormatted'] : ['GetSchedulesFormatted', variables];
+;
+
+useGetSchedulesFormattedQuery.fetcher = (client: GraphQLClient, variables?: IGetSchedulesFormattedQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetSchedulesFormattedQuery, IGetSchedulesFormattedQueryVariables>(client, GetSchedulesFormattedDocument, variables, headers);
 export const CreateSubjectDocument = /*#__PURE__*/ `
     mutation CreateSubject($data: UpsertSubjectInput!) {
   createSubject(data: $data) {
@@ -4122,38 +3471,20 @@ export const CreateSubjectDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useCreateSubjectMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    ICreateSubjectMutation,
-    TError,
-    ICreateSubjectMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<ICreateSubjectMutation, TError, ICreateSubjectMutationVariables, TContext>(
-    ['CreateSubject'],
-    (variables?: ICreateSubjectMutationVariables) =>
-      fetcher<ICreateSubjectMutation, ICreateSubjectMutationVariables>(
-        client,
-        CreateSubjectDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useCreateSubjectMutation.fetcher = (
-  client: GraphQLClient,
-  variables: ICreateSubjectMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<ICreateSubjectMutation, ICreateSubjectMutationVariables>(
-    client,
-    CreateSubjectDocument,
-    variables,
-    headers
-  );
+export const useCreateSubjectMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ICreateSubjectMutation, TError, ICreateSubjectMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ICreateSubjectMutation, TError, ICreateSubjectMutationVariables, TContext>(
+      ['CreateSubject'],
+      (variables?: ICreateSubjectMutationVariables) => fetcher<ICreateSubjectMutation, ICreateSubjectMutationVariables>(client, CreateSubjectDocument, variables, headers)(),
+      options
+    );
+useCreateSubjectMutation.fetcher = (client: GraphQLClient, variables: ICreateSubjectMutationVariables, headers?: RequestInit['headers']) => fetcher<ICreateSubjectMutation, ICreateSubjectMutationVariables>(client, CreateSubjectDocument, variables, headers);
 export const UpdateSubjectDocument = /*#__PURE__*/ `
     mutation UpdateSubject($data: UpdateSubjectInput!) {
   updateSubject(data: $data) {
@@ -4170,38 +3501,20 @@ export const UpdateSubjectDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useUpdateSubjectMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IUpdateSubjectMutation,
-    TError,
-    IUpdateSubjectMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IUpdateSubjectMutation, TError, IUpdateSubjectMutationVariables, TContext>(
-    ['UpdateSubject'],
-    (variables?: IUpdateSubjectMutationVariables) =>
-      fetcher<IUpdateSubjectMutation, IUpdateSubjectMutationVariables>(
-        client,
-        UpdateSubjectDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useUpdateSubjectMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IUpdateSubjectMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IUpdateSubjectMutation, IUpdateSubjectMutationVariables>(
-    client,
-    UpdateSubjectDocument,
-    variables,
-    headers
-  );
+export const useUpdateSubjectMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUpdateSubjectMutation, TError, IUpdateSubjectMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUpdateSubjectMutation, TError, IUpdateSubjectMutationVariables, TContext>(
+      ['UpdateSubject'],
+      (variables?: IUpdateSubjectMutationVariables) => fetcher<IUpdateSubjectMutation, IUpdateSubjectMutationVariables>(client, UpdateSubjectDocument, variables, headers)(),
+      options
+    );
+useUpdateSubjectMutation.fetcher = (client: GraphQLClient, variables: IUpdateSubjectMutationVariables, headers?: RequestInit['headers']) => fetcher<IUpdateSubjectMutation, IUpdateSubjectMutationVariables>(client, UpdateSubjectDocument, variables, headers);
 export const DeleteSubjectDocument = /*#__PURE__*/ `
     mutation DeleteSubject($data: SubjectIdArgs!) {
   deleteSubject(data: $data) {
@@ -4209,38 +3522,20 @@ export const DeleteSubjectDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useDeleteSubjectMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<
-    IDeleteSubjectMutation,
-    TError,
-    IDeleteSubjectMutationVariables,
-    TContext
-  >,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IDeleteSubjectMutation, TError, IDeleteSubjectMutationVariables, TContext>(
-    ['DeleteSubject'],
-    (variables?: IDeleteSubjectMutationVariables) =>
-      fetcher<IDeleteSubjectMutation, IDeleteSubjectMutationVariables>(
-        client,
-        DeleteSubjectDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useDeleteSubjectMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IDeleteSubjectMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IDeleteSubjectMutation, IDeleteSubjectMutationVariables>(
-    client,
-    DeleteSubjectDocument,
-    variables,
-    headers
-  );
+export const useDeleteSubjectMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IDeleteSubjectMutation, TError, IDeleteSubjectMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IDeleteSubjectMutation, TError, IDeleteSubjectMutationVariables, TContext>(
+      ['DeleteSubject'],
+      (variables?: IDeleteSubjectMutationVariables) => fetcher<IDeleteSubjectMutation, IDeleteSubjectMutationVariables>(client, DeleteSubjectDocument, variables, headers)(),
+      options
+    );
+useDeleteSubjectMutation.fetcher = (client: GraphQLClient, variables: IDeleteSubjectMutationVariables, headers?: RequestInit['headers']) => fetcher<IDeleteSubjectMutation, IDeleteSubjectMutationVariables>(client, DeleteSubjectDocument, variables, headers);
 export const GetAllSubjectsDocument = /*#__PURE__*/ `
     query GetAllSubjects($filter: SubjectArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllSubjects(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -4269,36 +3564,25 @@ export const GetAllSubjectsDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllSubjectsQuery = <TData = IGetAllSubjectsQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetAllSubjectsQueryVariables,
-  options?: UseQueryOptions<IGetAllSubjectsQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAllSubjectsQuery, TError, TData>(
-    variables === undefined ? ['GetAllSubjects'] : ['GetAllSubjects', variables],
-    fetcher<IGetAllSubjectsQuery, IGetAllSubjectsQueryVariables>(
-      client,
-      GetAllSubjectsDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetAllSubjectsQuery = <
+      TData = IGetAllSubjectsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllSubjectsQueryVariables,
+      options?: UseQueryOptions<IGetAllSubjectsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllSubjectsQuery, TError, TData>(
+      variables === undefined ? ['GetAllSubjects'] : ['GetAllSubjects', variables],
+      fetcher<IGetAllSubjectsQuery, IGetAllSubjectsQueryVariables>(client, GetAllSubjectsDocument, variables, headers),
+      options
+    );
 
-useGetAllSubjectsQuery.getKey = (variables?: IGetAllSubjectsQueryVariables) =>
-  variables === undefined ? ['GetAllSubjects'] : ['GetAllSubjects', variables];
-useGetAllSubjectsQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAllSubjectsQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAllSubjectsQuery, IGetAllSubjectsQueryVariables>(
-    client,
-    GetAllSubjectsDocument,
-    variables,
-    headers
-  );
+useGetAllSubjectsQuery.getKey = (variables?: IGetAllSubjectsQueryVariables) => variables === undefined ? ['GetAllSubjects'] : ['GetAllSubjects', variables];
+;
+
+useGetAllSubjectsQuery.fetcher = (client: GraphQLClient, variables?: IGetAllSubjectsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllSubjectsQuery, IGetAllSubjectsQueryVariables>(client, GetAllSubjectsDocument, variables, headers);
 export const GetSubjectByIdDocument = /*#__PURE__*/ `
     query GetSubjectById($id: ID) {
   getSubjectById(_id: $id) {
@@ -4315,36 +3599,25 @@ export const GetSubjectByIdDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetSubjectByIdQuery = <TData = IGetSubjectByIdQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetSubjectByIdQueryVariables,
-  options?: UseQueryOptions<IGetSubjectByIdQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetSubjectByIdQuery, TError, TData>(
-    variables === undefined ? ['GetSubjectById'] : ['GetSubjectById', variables],
-    fetcher<IGetSubjectByIdQuery, IGetSubjectByIdQueryVariables>(
-      client,
-      GetSubjectByIdDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetSubjectByIdQuery = <
+      TData = IGetSubjectByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetSubjectByIdQueryVariables,
+      options?: UseQueryOptions<IGetSubjectByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetSubjectByIdQuery, TError, TData>(
+      variables === undefined ? ['GetSubjectById'] : ['GetSubjectById', variables],
+      fetcher<IGetSubjectByIdQuery, IGetSubjectByIdQueryVariables>(client, GetSubjectByIdDocument, variables, headers),
+      options
+    );
 
-useGetSubjectByIdQuery.getKey = (variables?: IGetSubjectByIdQueryVariables) =>
-  variables === undefined ? ['GetSubjectById'] : ['GetSubjectById', variables];
-useGetSubjectByIdQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetSubjectByIdQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetSubjectByIdQuery, IGetSubjectByIdQueryVariables>(
-    client,
-    GetSubjectByIdDocument,
-    variables,
-    headers
-  );
+useGetSubjectByIdQuery.getKey = (variables?: IGetSubjectByIdQueryVariables) => variables === undefined ? ['GetSubjectById'] : ['GetSubjectById', variables];
+;
+
+useGetSubjectByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetSubjectByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetSubjectByIdQuery, IGetSubjectByIdQueryVariables>(client, GetSubjectByIdDocument, variables, headers);
 export const DeleteUserDocument = /*#__PURE__*/ `
     mutation DeleteUser($data: UserIdArgs!) {
   deleteUser(data: $data) {
@@ -4352,33 +3625,20 @@ export const DeleteUserDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useDeleteUserMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<IDeleteUserMutation, TError, IDeleteUserMutationVariables, TContext>,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IDeleteUserMutation, TError, IDeleteUserMutationVariables, TContext>(
-    ['DeleteUser'],
-    (variables?: IDeleteUserMutationVariables) =>
-      fetcher<IDeleteUserMutation, IDeleteUserMutationVariables>(
-        client,
-        DeleteUserDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useDeleteUserMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IDeleteUserMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IDeleteUserMutation, IDeleteUserMutationVariables>(
-    client,
-    DeleteUserDocument,
-    variables,
-    headers
-  );
+export const useDeleteUserMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IDeleteUserMutation, TError, IDeleteUserMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IDeleteUserMutation, TError, IDeleteUserMutationVariables, TContext>(
+      ['DeleteUser'],
+      (variables?: IDeleteUserMutationVariables) => fetcher<IDeleteUserMutation, IDeleteUserMutationVariables>(client, DeleteUserDocument, variables, headers)(),
+      options
+    );
+useDeleteUserMutation.fetcher = (client: GraphQLClient, variables: IDeleteUserMutationVariables, headers?: RequestInit['headers']) => fetcher<IDeleteUserMutation, IDeleteUserMutationVariables>(client, DeleteUserDocument, variables, headers);
 export const UpdateUserDocument = /*#__PURE__*/ `
     mutation UpdateUser($data: UpdateUserInput!) {
   updateUser(data: $data) {
@@ -4400,33 +3660,20 @@ export const UpdateUserDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useUpdateUserMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<IUpdateUserMutation, TError, IUpdateUserMutationVariables, TContext>,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IUpdateUserMutation, TError, IUpdateUserMutationVariables, TContext>(
-    ['UpdateUser'],
-    (variables?: IUpdateUserMutationVariables) =>
-      fetcher<IUpdateUserMutation, IUpdateUserMutationVariables>(
-        client,
-        UpdateUserDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useUpdateUserMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IUpdateUserMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IUpdateUserMutation, IUpdateUserMutationVariables>(
-    client,
-    UpdateUserDocument,
-    variables,
-    headers
-  );
+export const useUpdateUserMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUpdateUserMutation, TError, IUpdateUserMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUpdateUserMutation, TError, IUpdateUserMutationVariables, TContext>(
+      ['UpdateUser'],
+      (variables?: IUpdateUserMutationVariables) => fetcher<IUpdateUserMutation, IUpdateUserMutationVariables>(client, UpdateUserDocument, variables, headers)(),
+      options
+    );
+useUpdateUserMutation.fetcher = (client: GraphQLClient, variables: IUpdateUserMutationVariables, headers?: RequestInit['headers']) => fetcher<IUpdateUserMutation, IUpdateUserMutationVariables>(client, UpdateUserDocument, variables, headers);
 export const UpsertUserDocument = /*#__PURE__*/ `
     mutation UpsertUser($data: UpsertUserInput!) {
   upsertUser(data: $data) {
@@ -4448,33 +3695,20 @@ export const UpsertUserDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useUpsertUserMutation = <TError = unknown, TContext = unknown>(
-  client: GraphQLClient,
-  options?: UseMutationOptions<IUpsertUserMutation, TError, IUpsertUserMutationVariables, TContext>,
-  headers?: RequestInit['headers']
-) =>
-  useMutation<IUpsertUserMutation, TError, IUpsertUserMutationVariables, TContext>(
-    ['UpsertUser'],
-    (variables?: IUpsertUserMutationVariables) =>
-      fetcher<IUpsertUserMutation, IUpsertUserMutationVariables>(
-        client,
-        UpsertUserDocument,
-        variables,
-        headers
-      )(),
-    options
-  );
-useUpsertUserMutation.fetcher = (
-  client: GraphQLClient,
-  variables: IUpsertUserMutationVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IUpsertUserMutation, IUpsertUserMutationVariables>(
-    client,
-    UpsertUserDocument,
-    variables,
-    headers
-  );
+export const useUpsertUserMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<IUpsertUserMutation, TError, IUpsertUserMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<IUpsertUserMutation, TError, IUpsertUserMutationVariables, TContext>(
+      ['UpsertUser'],
+      (variables?: IUpsertUserMutationVariables) => fetcher<IUpsertUserMutation, IUpsertUserMutationVariables>(client, UpsertUserDocument, variables, headers)(),
+      options
+    );
+useUpsertUserMutation.fetcher = (client: GraphQLClient, variables: IUpsertUserMutationVariables, headers?: RequestInit['headers']) => fetcher<IUpsertUserMutation, IUpsertUserMutationVariables>(client, UpsertUserDocument, variables, headers);
 export const GetAllUsersDocument = /*#__PURE__*/ `
     query GetAllUsers($filter: UserArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllUsers(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -4509,36 +3743,25 @@ export const GetAllUsersDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetAllUsersQuery = <TData = IGetAllUsersQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetAllUsersQueryVariables,
-  options?: UseQueryOptions<IGetAllUsersQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAllUsersQuery, TError, TData>(
-    variables === undefined ? ['GetAllUsers'] : ['GetAllUsers', variables],
-    fetcher<IGetAllUsersQuery, IGetAllUsersQueryVariables>(
-      client,
-      GetAllUsersDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetAllUsersQuery = <
+      TData = IGetAllUsersQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAllUsersQueryVariables,
+      options?: UseQueryOptions<IGetAllUsersQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAllUsersQuery, TError, TData>(
+      variables === undefined ? ['GetAllUsers'] : ['GetAllUsers', variables],
+      fetcher<IGetAllUsersQuery, IGetAllUsersQueryVariables>(client, GetAllUsersDocument, variables, headers),
+      options
+    );
 
-useGetAllUsersQuery.getKey = (variables?: IGetAllUsersQueryVariables) =>
-  variables === undefined ? ['GetAllUsers'] : ['GetAllUsers', variables];
-useGetAllUsersQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAllUsersQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAllUsersQuery, IGetAllUsersQueryVariables>(
-    client,
-    GetAllUsersDocument,
-    variables,
-    headers
-  );
+useGetAllUsersQuery.getKey = (variables?: IGetAllUsersQueryVariables) => variables === undefined ? ['GetAllUsers'] : ['GetAllUsers', variables];
+;
+
+useGetAllUsersQuery.fetcher = (client: GraphQLClient, variables?: IGetAllUsersQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAllUsersQuery, IGetAllUsersQueryVariables>(client, GetAllUsersDocument, variables, headers);
 export const GetUserByIdDocument = /*#__PURE__*/ `
     query GetUserById($id: ID) {
   getUserById(_id: $id) {
@@ -4561,36 +3784,25 @@ export const GetUserByIdDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useGetUserByIdQuery = <TData = IGetUserByIdQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IGetUserByIdQueryVariables,
-  options?: UseQueryOptions<IGetUserByIdQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetUserByIdQuery, TError, TData>(
-    variables === undefined ? ['GetUserById'] : ['GetUserById', variables],
-    fetcher<IGetUserByIdQuery, IGetUserByIdQueryVariables>(
-      client,
-      GetUserByIdDocument,
-      variables,
-      headers
-    ),
-    options
-  );
+export const useGetUserByIdQuery = <
+      TData = IGetUserByIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetUserByIdQueryVariables,
+      options?: UseQueryOptions<IGetUserByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetUserByIdQuery, TError, TData>(
+      variables === undefined ? ['GetUserById'] : ['GetUserById', variables],
+      fetcher<IGetUserByIdQuery, IGetUserByIdQueryVariables>(client, GetUserByIdDocument, variables, headers),
+      options
+    );
 
-useGetUserByIdQuery.getKey = (variables?: IGetUserByIdQueryVariables) =>
-  variables === undefined ? ['GetUserById'] : ['GetUserById', variables];
-useGetUserByIdQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetUserByIdQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetUserByIdQuery, IGetUserByIdQueryVariables>(
-    client,
-    GetUserByIdDocument,
-    variables,
-    headers
-  );
+useGetUserByIdQuery.getKey = (variables?: IGetUserByIdQueryVariables) => variables === undefined ? ['GetUserById'] : ['GetUserById', variables];
+;
+
+useGetUserByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetUserByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetUserByIdQuery, IGetUserByIdQueryVariables>(client, GetUserByIdDocument, variables, headers);
 export const MeDocument = /*#__PURE__*/ `
     query Me {
   me {
@@ -4612,25 +3824,25 @@ export const MeDocument = /*#__PURE__*/ `
   }
 }
     `;
-export const useMeQuery = <TData = IMeQuery, TError = unknown>(
-  client: GraphQLClient,
-  variables?: IMeQueryVariables,
-  options?: UseQueryOptions<IMeQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IMeQuery, TError, TData>(
-    variables === undefined ? ['Me'] : ['Me', variables],
-    fetcher<IMeQuery, IMeQueryVariables>(client, MeDocument, variables, headers),
-    options
-  );
+export const useMeQuery = <
+      TData = IMeQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IMeQueryVariables,
+      options?: UseQueryOptions<IMeQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IMeQuery, TError, TData>(
+      variables === undefined ? ['Me'] : ['Me', variables],
+      fetcher<IMeQuery, IMeQueryVariables>(client, MeDocument, variables, headers),
+      options
+    );
 
-useMeQuery.getKey = (variables?: IMeQueryVariables) =>
-  variables === undefined ? ['Me'] : ['Me', variables];
-useMeQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IMeQueryVariables,
-  headers?: RequestInit['headers']
-) => fetcher<IMeQuery, IMeQueryVariables>(client, MeDocument, variables, headers);
+useMeQuery.getKey = (variables?: IMeQueryVariables) => variables === undefined ? ['Me'] : ['Me', variables];
+;
+
+useMeQuery.fetcher = (client: GraphQLClient, variables?: IMeQueryVariables, headers?: RequestInit['headers']) => fetcher<IMeQuery, IMeQueryVariables>(client, MeDocument, variables, headers);
 export const SubscriptionDocument = /*#__PURE__*/ `
     subscription Subscription {
   userAdded {
