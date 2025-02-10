@@ -7,7 +7,6 @@ import AddUserDialogForm from '../../forms/user/dashboard/addUser';
 import { dialogStore } from '../../../store/global/dialogStore';
 import { useAccessTokenData } from '../../../store/auth/store';
 
-
 export default function PageHeadingUser() {
   const { t } = useTranslation('common');
   const { visible, setVisible } = dialogStore();

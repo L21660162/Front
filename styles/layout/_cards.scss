@@ -1,0 +1,312 @@
+.elements{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+.oneelement {
+    width: 100%;
+  }
+
+.twoelements {
+    width: 100%;
+  }
+
+.trielements {
+    width: 100%;
+  }
+
+.fourelements {
+    width: 100%;
+  }
+
+.fiveelements {
+    width: 100%;
+  }
+
+.sixelements {
+    width: 100%;
+  }
+
+.sevenelements {
+    width: 100%;
+  }
+
+.eightelements {
+    width: 100%;
+  }
+
+.nineelements {
+    width: 100%;
+  }
+
+  .status_bar {
+    width: 25px;
+    height: 25px;
+    border: 2px solid;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 18%;
+  }
+
+  .title {
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .items{
+    margin-top: 2%;
+    justify-content: space-between;
+    font-size: small;
+    width: 100%;
+  }
+
+  .item{
+    width: 100%;
+  }
+
+  .select-button .p-button {
+    width: 100%;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .select-button .p-focus {
+    background-color: #13324b !important;
+    color: white !important;
+    border-color: #7fa9d3 !important;
+  }
+
+  .select-button .p-highlight {
+    background-color: #13324b !important;
+    color: white !important;
+    border-color: #7fa9d3 !important;
+  }
+
+  .icone {
+    right: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: 15px;
+  }
+
+  .p-content {
+    width: 100%;
+  }
+
+  .gap-2 {
+    gap: 0.5rem;
+  }
+
+  .ml-2 {
+    margin-left: 0.5rem;
+  }
+  
+@media(min-width: 750px) {
+  .status_bar {
+    width: 35px;
+    height: 35px;
+    border: 2px solid;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 18%;
+  }
+}
+
+
+@media(min-width: 900px) {
+    .element{
+        padding: 0 1%;
+        width: 98.5%;
+      }
+    
+    .elements{
+        padding: 0 0.5%;
+        align-items: center;
+        align-content: center;
+      }
+    .twoelements {
+        padding: 5px;
+        width: calc(51% - 10px);
+      }
+      
+      .trielements {
+        padding: 5px;
+        width: calc(34.3% - 10px);
+      }
+      
+      .fourelements {
+        padding: 5px;
+        width: calc(25.9% - 10px);
+      }
+      
+      .fiveelements {
+        padding: 5px;
+        width: calc(20% - 10px);
+      }
+      
+      .sixelements {
+        padding: 5px;
+        width: calc(17.8% - 10px);
+      }
+      
+      .sevenelements {
+        padding: 5px;
+        width: calc(14.28% - 10px);
+      }
+      
+      .eightelements {
+        padding: 5px;
+        width: calc(12.5% - 10px);
+      }
+      
+      .nineelements {
+        padding: 5px;
+        width: calc(11.11% - 10px);
+      }
+      
+      .tenelements {
+        padding: 5px;
+        width: calc(10% - 10px);
+      }
+
+      .status_bar {
+        width: 40px;
+        height: 40px;
+        border: 2px solid;
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 20%;
+      }
+    
+}
+
+@media(min-width: 1400px) {
+  .element{
+      padding: 0 1%;
+      width: 99.2%;
+    }
+  
+  .elements{
+      padding: 0 0.5%;
+      align-items: center;
+      align-content: center;
+    }
+  .twoelements {
+      padding: 5px;
+      width: calc(50.5% - 10px);
+    }
+    
+    .trielements {
+      padding: 5px;
+      width: calc(34% - 10px);
+    }
+    
+    .fourelements {
+      padding: 5px;
+      width: calc(25% - 10px);
+    }
+    
+    .fiveelements {
+      padding: 5px;
+      width: calc(20% - 10px);
+    }
+    
+    .sixelements {
+      padding: 5px;
+      width: calc(17.5% - 10px);
+    }
+    
+    .sevenelements {
+      padding: 5px;
+      width: calc(14.28% - 10px);
+    }
+    
+    .eightelements {
+      padding: 5px;
+      width: calc(12.5% - 10px);
+    }
+    
+    .nineelements {
+      padding: 5px;
+      width: calc(11.11% - 10px);
+    }
+    
+    .tenelements {
+      padding: 5px;
+      width: calc(10% - 10px);
+    }
+
+    .status_bar {
+      width: 40px;
+      height: 40px;
+      border: 2px solid;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 12%;
+    }
+  
+}
+
+
+
+@media(min-width: 500px) {
+  .element{
+      padding: 0 1%;
+      width: 99.2%;
+    }
+  
+  .elements{
+      padding: 0 0.5%;
+      align-items: center;
+      align-content: center;
+    }
+  .twoelements {
+      padding: 5px;
+      width: calc(51.5% - 10px);
+    }
+    
+    .trielements {
+      padding: 5px;
+      width: calc(34% - 10px);
+    }
+    
+    .fourelements {
+      padding: 5px;
+      width: calc(25.65% - 10px);
+    }
+    
+    .fiveelements {
+      padding: 5px;
+      width: calc(20.65% - 10px);
+    }
+    
+    .sixelements {
+      padding: 5px;
+      width: calc(17.5% - 10px);
+    }
+    
+    .sevenelements {
+      padding: 5px;
+      width: calc(14.28% - 10px);
+    }
+    
+    .eightelements {
+      padding: 5px;
+      width: calc(12.5% - 10px);
+    }
+    
+    .nineelements {
+      padding: 5px;
+      width: calc(11.11% - 10px);
+    }
+    
+    .tenelements {
+      padding: 5px;
+      width: calc(10% - 10px);
+    }
+  
+}
+

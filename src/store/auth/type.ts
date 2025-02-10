@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-const mongoIdSchema = z.string().regex(/^[0-9a-f]{24}$/);
+const userMongoIdSchema = z.string().regex(/^[0-9a-f]{24}$/);
+const periodMongoIdSchema = z.string().regex(/^[0-9a-f]{24}$/);
 const roles = z
   .enum([
     'SUPER_ADMINISTRATOR',
@@ -13,11 +14,10 @@ const roles = z
   ])
   .array();
 
-type Role = z.infer<typeof roles>;
-
 export const TokenDataSchema = z.object({
-  _id: mongoIdSchema,
+  _id: userMongoIdSchema,
   roles,
+  actualPeriod: periodMongoIdSchema,
   iat: z.number(),
   exp: z.number(),
 });

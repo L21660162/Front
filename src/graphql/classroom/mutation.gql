@@ -1,0 +1,12 @@
+mutation UploadClassroomPicture($data: UploadPictureClassroomInput!) {
+  uploadClassroomPicture(data: $data) {
+    _id
+    building
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    picturePath
+    updatedAt
+  }
+}

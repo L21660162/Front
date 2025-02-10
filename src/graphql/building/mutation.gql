@@ -1,0 +1,12 @@
+mutation UploadBuildingPicture($data: UploadPictureBuildingInput!) {
+  uploadBuildingPicture(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    isDeleted
+    letter
+    name
+    picturePath
+    updatedAt
+  }
+}

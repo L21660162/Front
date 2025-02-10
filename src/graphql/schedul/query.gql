@@ -36,6 +36,17 @@ query GetScheduleById($id: ID) {
   }
 }
 
+query GetUniqueOptionsCareer {
+  getUniqueOptionsCareer {
+    semesters
+    careers {
+      value
+      label
+    }
+  }
+}
+
+
 query GetSchedulesFormatted($teacher: ID, $schedule: ID) {
   getSchedulesFormatted(teacher: $teacher, schedule: $schedule) {
     _id

@@ -1,5 +1,5 @@
 import React from 'react';
-import PageHeading from '../../../components/ui/PageHeading';
+import PageHeading from '../../../components/ui/home/PageHeading';
 
 function Dashboard() {
   return (

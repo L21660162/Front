@@ -51,7 +51,6 @@ function SubjectCrud() {
   const dt = useRef<DataTable<any>>(null);
   const [selectedSubject, setSelectedSubject] = useState<ISubject | null>(null);
   const [visibleEditSubject, setVisibleEditSubject] = useState(false);
-  
 
   const { data } = useGetAllSubjectsQuery<IGetAllSubjectsQuery>(GRAPHQL_CLIENT, {
     limit: 500,
