@@ -1,0 +1,36 @@
+query GetUniqueOptionsCareer {
+  getUniqueOptionsCareer {
+    careers {
+      label
+      value
+    }
+    semesters
+  }
+}
+
+query GetAttendanceStatistics($career: ID, $department: ID, $period: ID, $semester: String, $teacher: ID) {
+  getAttendanceStatistics(career: $career, department: $department, period: $period, semester: $semester, teacher: $teacher) {
+    classAbsentDay
+    classAbsentMonth
+    classAbsentPeriod
+    classAbsentSemester
+    classAbsentYear
+    classJustifyDay
+    classJustifyMonth
+    classJustifyPeriod
+    classJustifySemester
+    classJustifyYear
+    classPresentDay
+    classPresentMonth
+    classPresentPeriod
+    classPresentSemester
+    classPresentYear
+    weekday1
+    weekday2
+    weekday3
+    weekday4
+    weekday5
+    weekday6
+    weekday7
+  }
+}

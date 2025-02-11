@@ -8,6 +8,7 @@ import 'primeicons/primeicons.css';
 import '../styles/layout/layout.scss';
 import { useGlobalAppStore } from './store/global/globalAppStore';
 import Auth from './pages/auth/auth';
+import Session from './pages/auth/session';
 
 type Props = {
   Component: Page;
@@ -19,7 +20,11 @@ function App({ Component, pageProps }: Props) {
   setTheme();
 
   if (Component.getLayout) {
-    return <LayoutProvider>{Component.getLayout(<Component {...pageProps} />)}</LayoutProvider>;
+    return (
+      <LayoutProvider>
+        <Session>{Component.getLayout(<Component {...pageProps} />)}</Session>
+      </LayoutProvider>
+    );
   }
   return (
     <LayoutProvider>

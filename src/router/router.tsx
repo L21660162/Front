@@ -52,44 +52,60 @@ const signUpRoute = new Route({
 const dashboardRoute = new Route({
   getParentRoute: () => rootRoute,
   path: 'home/dashboard',
-  component: () => <App Component={Dashboard} />,
-});
-
-const justifyRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: 'justify/dashboard',
-  component: () => <App Component={Justify} />,
-});
-
-const scheduleRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: 'schedule/dashboard',
-  component: () => <App Component={Schedule} />,
-});
-
-const eventsRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: 'events/dashboard',
   component: () => {
     const { roles } = useAccessTokenData() as TokenData;
-    const allowedroles = ['DIRTECTOR_ACADEMICO', 'SUBDIRECTOR_ACADEMICO', 'JEFE_ACADEMICO'];
+    const allowedroles = [
+      'DIRECTOR_ACADEMICO',
+      'SUBDIRECTOR_ACADEMICO',
+      'JEFE_ACADEMICO',
+      'SUPER_ADMINISTRATOR',
+      'DOCENTE',
+    ];
 
     if (allowedroles.some((role) => roles.includes(role))) {
-      return <App Component={Events} />;
+      return <App Component={Dashboard} />;
     }
     return <App Component={NotFoundPage} />;
   },
 });
 
-const migrateRoute = new Route({
+const userDashboard = new Route({
   getParentRoute: () => rootRoute,
-  path: 'migrate/dashboard',
+  path: '/user/dashboard',
   component: () => {
     const { roles } = useAccessTokenData() as TokenData;
     const allowedroles = ['SUPER_ADMINISTRATOR'];
 
     if (allowedroles.some((role) => roles.includes(role))) {
-      return <App Component={Migrate} />;
+      return <App Component={UserDashboard} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const scheduleRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'schedule/dashboard',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR', 'SUBDIRECTOR_ACADEMICO', 'JEFE_ACADEMICO'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={Schedule} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
+});
+
+const justifyRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'justify/dashboard',
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR', 'DOCENTE', 'RECURSOS_HUMANOS', 'JEFE_ACADEMICO'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={Justify} />;
     }
     return <App Component={NotFoundPage} />;
   },
@@ -116,7 +132,20 @@ const maintenanceRoute = new Route({
 const eventRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/event/dashboard',
-  component: () => <App Component={Events} />,
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = [
+      'DIRECTOR_ACADEMICO',
+      'SUBDIRECTOR_ACADEMICO',
+      'JEFE_ACADEMICO',
+      'SUPER_ADMINISTRATOR',
+    ];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={Events} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
 });
 
 const notFoundRoute = new Route({
@@ -125,57 +154,10 @@ const notFoundRoute = new Route({
   component: () => <App Component={NotFoundPage} />,
 });
 
-// RUTA DE USERS
-
-const userDashboard = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/user/dashboard',
-  component: () => <App Component={UserDashboard} />,
-});
-// RUTAS DE ORGANIZACION
-const organizationDashboard = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/organization/dashboard',
-  component: () => <App Component={OrganizationDashboard} />,
-});
-
-const organizationManagement = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/organization/management',
-  component: () => <App Component={OrganizationManagement} />,
-});
-
-const covenantRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/covenant/dashboard',
-  component: () => <App Component={CovenantPage} />,
-});
-
-// RUTAS DE VACANTES
-const vacancyDashboard = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/vacancy/dashboard',
-  component: () => <App Component={VacancyDashboard} />,
-});
-
 const userProfile = new Route({
   getParentRoute: () => rootRoute,
   path: '/me/profile',
   component: () => <App Component={UserProfile} />,
-});
-
-const userSettings = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/settings/users',
-  component: () => {
-    const { roles } = useAccessTokenData() as TokenData;
-    const allowedroles = ['SUPER_ADMINISTRATOR'];
-
-    if (allowedroles.some((role) => roles.includes(role))) {
-      return <App Component={UserSettings} />;
-    }
-    return <App Component={NotFoundPage} />;
-  },
 });
 
 const scheduleSettings = new Route({
@@ -271,16 +253,10 @@ const routeConfig = rootRoute.addChildren([
   notFoundRoute,
   passwordRecoveryRoute,
   userProfile,
-  organizationDashboard,
-  organizationManagement,
-  vacancyDashboard,
   maintenanceRoute,
   userDashboard,
-  covenantRoute,
   justifyRoute,
   scheduleRoute,
-  eventsRoute,
-  userSettings,
   scheduleSettings,
   subjectSettings,
   buildingSettings,

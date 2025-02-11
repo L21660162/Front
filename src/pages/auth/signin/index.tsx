@@ -36,7 +36,6 @@ function SignInPage(): Page {
       const { accessToken, refreshToken } = signIn;
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
-      navigate({ to: '/home/dashboard', replace: true });
     },
     onError: (errorResponse: IApiError) => {
       toast.current?.show({

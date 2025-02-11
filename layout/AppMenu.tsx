@@ -1,3 +1,4 @@
+/* eslint-disable no-else-return */
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppMenuitem from './AppMenuitem';
@@ -120,12 +121,44 @@ function AppMenu() {
     },
   ];
 
-  const [date, setDate] = useState<string | Date | Date[] | null>(null);
+  const filterMenu = model.filter((item) => {
+    if (roles.includes('SUPER_ADMINISTRATOR')) {
+      return true;
+    } else if (roles.includes('DIRECTOR_ACADEMICO')) {
+      return ['/home/dashboard', '/event/dashboard'].includes(item.items[0].to) && !item?.seperator;
+    } else if (roles.includes('SUBDIRECTOR_ACADEMICO')) {
+      return (
+        ['/home/dashboard', '/event/dashboard', 'schedule/dashboard'].includes(item.items[0].to) &&
+        !item?.seperator
+      );
+    } else if (roles.includes('JEFE_ACADEMICO')) {
+      return (
+        [
+          '/home/dashboard',
+          '/event/dashboard',
+          '/schedule/dashboard',
+          '/justify/dashboard',
+        ].includes(item.items[0].to) && !item?.seperator
+      );
+    } else if (roles.includes('DOCENTE')) {
+      return (
+        ['/home/dashboard', '/justify/dashboard'].includes(item.items[0].to) && !item?.seperator
+      );
+    } else if (roles.includes('RECURSOS_HUMANOS')) {
+      if (item.label === 'Panel de Control') {
+        item.items = item.items?.slice(1);
+      }
+
+      return ['/justify/dashboard'].includes(item.items[0].to) && !item?.seperator;
+    } else {
+      return false;
+    }
+  });
 
   return (
     <MenuProvider>
       <ul className="layout-menu">
-        {model.map((item, i) => {
+        {filterMenu.map((item, i) => {
           return !item?.seperator ? (
             <AppMenuitem item={item} root index={i} key={item.label} />
           ) : (
@@ -133,11 +166,6 @@ function AppMenu() {
           );
         })}
       </ul>
-      {/* <Calendar 
-              value={date} 
-              onChange={(e: CalendarChangeEvent) => setDate(e.value ?? null)} 
-              inline 
-            /> */}
     </MenuProvider>
   );
 }
