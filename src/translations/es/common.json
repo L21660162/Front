@@ -44,7 +44,15 @@
       "careers": "Carreras",
       "classroom": "Salones",
       "group": "Grupo"
-    }
+    },
+    "Classroom": {
+      "label": "Aulas",
+      "dashboard": "Panel de Aulas"
+    },
+    "Group": {
+    "label": "Grupos",
+    "dashboard": "Panel de Grupos"
+  }
   },
   "signUp": {
     "message": "Inicia sesión para continuar"
@@ -69,7 +77,16 @@
         "uppercase": "Al menos una letra mayúscula",
         "numeric": "Al menos una dígito numérico",
         "length": "Al menos 8 caracteres",
-        "pickPassword": "Establece una contraseña"
+        "pickPassword": "Establece una contraseña",
+        "selectPlaceholder": "Seleccionar edificio",
+        "loadingBuildings": "Cargando edificios...",
+        "errorLoadingBuildings": "Error cargando edificios",
+        "validation": {
+          "requiredField": "Este campo es obligatorio",
+          "maxLength": "Máximo {max} caracteres",
+          "ClassroomIdentifier": "El identificador del aula es obligatorio",
+          "Building": "El edificio es obligatorio"
+        }
       }
     },
     "dictionary": {
@@ -77,7 +94,23 @@
       "lastName": "Apellido",
       "email": "Correo electrónico",
       "password": "Contraseña",
-      "welcome": "Bienvenido"
+      "welcome": "Bienvenido",
+      "classroomDirectory": "Directorio de Aulas",
+      "noClassroomsFound": "No se encontraron aulas",
+      "tClassroomBuilding": "Edificio",
+      "tClassroomIdentifier": "Identificador",
+      "classrooms": "Aulas",
+      "building": "Edificio",
+      "identifier": "Identificador",
+      "Classroom": "Aula",
+      "ClassroomIdentifier": "Identificador del Aula",
+      "Building": "Edificio",
+      "careerdirectory": "Directorio de Carreras",
+      "NoGroup": "No se encontraron grupos",
+      "tGroupName": "Nombre del Grupo",
+      "tGroupDescription": "Descripción del Grupo",
+      "tGroupSemester": "Semestre",
+      "tGroupPeriod": "Periodo"
     },
     "toast": {
       "error": {
@@ -86,9 +119,23 @@
       "success": {
         "summary": "Realizado",
         "detail": {
-          "signUpSuccess": "Tu cuenta ha sido creada con éxito. \nRedireccionando al inicio de sesión..."
+          "signUpSuccess": "Tu cuenta ha sido creada con éxito. \nRedireccionando al inicio de sesión...",
+          "ClassroomCreateSuccess": "Aula creada exitosamente",
+          "ClassroomEditSuccess": "Aula actualizada exitosamente"
         }
       }
+    },
+    "confirmation": {
+      "deleteTitle": "Confirmar eliminación",
+      "deleteMessage": "¿Estás seguro de eliminar el aula {building} - {identifier}?",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "loading": {
+      "buildings": "Cargando edificios..."
+    },
+    "error": {
+      "loadingBuildings": "Error cargando edificios"
     }
   },
   "module": {
@@ -102,9 +149,30 @@
         }
       }
     },
-    "group":{
+    "Group":{
       "dashboard":{
-        
+        "addGroup": "Agregar Grupo",
+        "dialog": {
+          "add": {
+            "header": "Crear Grupo"
+          },
+          "edit": {
+            "header": "Editar Grupo"
+          }
+        }
+      }
+    },
+    "Classroom": {
+      "dashboard": {
+        "addClassroom": "Agregar Aula",
+        "dialog": {
+          "add": {
+            "header": "Crear Aula"
+          },
+          "edit": {
+            "header": "Editar Aula"
+          }
+        }
       }
     }
   }

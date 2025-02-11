@@ -190,7 +190,7 @@ function GroupCrud() {
 
           {selectedBuilds && visibleEditGroup && (
             <EditGroupDialogForm
-              headerTitle={t('module.Groups.dashboard.dialog.edit.header')}
+              headerTitle={t('module.Group.dashboard.dialog.edit.header')}
               visible={visibleEditGroup}
               setVisible={setVisibleEditGroup}
               Group={selectedBuilds}

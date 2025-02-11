@@ -159,8 +159,18 @@ function ClassroomCrud() {
 
   const deleteClassroomDialogFooter = (
     <>
-      <Button label="No" icon="pi pi-times" text onClick={hideDeleteClassroomDialog} />
-      <Button label="Yes" icon="pi pi-check" text onClick={deleteClassroom} />
+      <Button 
+        label={t('global.confirmation.no')} 
+        icon="pi pi-times" 
+        text 
+        onClick={hideDeleteClassroomDialog} 
+      />
+      <Button 
+        label={t('global.confirmation.yes')} 
+        icon="pi pi-check" 
+        text 
+        onClick={deleteClassroom} 
+      />
     </>
   );
 
@@ -216,7 +226,7 @@ function ClassroomCrud() {
           <Dialog
             visible={deleteClassroomDialog}
             style={{ width: '450px' }}
-            header="Confirm"
+            header={t('global.confirmation.deleteTitle')}
             modal
             footer={deleteClassroomDialogFooter}
             onHide={hideDeleteClassroomDialog}
@@ -224,9 +234,12 @@ function ClassroomCrud() {
             <div className="flex align-items-center justify-content-center">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
               {selectedClassroom && (
-                <span>
-                  Are you sure you want to delete <b>{selectedClassroom.building} - {selectedClassroom.identifier}</b>?
-                </span>
+                      <span>
+                      {t('global.confirmation.deleteMessage', {
+                        building: selectedClassroom.building,
+                        identifier: selectedClassroom.identifier
+                      })}
+                    </span>
               )}
             </div>
           </Dialog>
