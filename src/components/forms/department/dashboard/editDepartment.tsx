@@ -1,43 +1,49 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { RadioButton } from 'primereact/radiobutton';
-import { InputTextarea } from 'primereact/inputtextarea';
+import { Dropdown } from 'primereact/dropdown';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-  IGetAllDepartmentsQuery,
   IUpdateDepartmentInput,
-  useGetAllDepartmentsQuery,
   useUpdateDepartmentMutation,
   IDepartment,
+  useGetAllUsersQuery,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
-type departmentFormProps = {
+type DepartmentFormProps = {
   headerTitle: string;
   department: IDepartment;
 };
 
-type departmentFormPropsAndDialogStore = departmentFormProps & DialogStore;
+type DepartmentFormPropsAndDialogStore = DepartmentFormProps & DialogStore;
 
-export default function EditdepartmentDialogForm({
+export default function EditDepartmentDialogForm({
   headerTitle,
   visible,
   setVisible,
   department,
-}: PropsWithChildren<departmentFormPropsAndDialogStore>) {
+}: PropsWithChildren<DepartmentFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
   const toast = useRef<Toast>(null);
+  const formRef = useRef<HTMLFormElement>(null); // Referencia al formulario
 
+  // Obtener la lista de usuarios
+  const { data: usersData, isLoading: usersLoading } = useGetAllUsersQuery(GRAPHQL_CLIENT);
+
+  // Formatear los usuarios para el Dropdown
+  const usersOptions = usersData?.getAllUsers.docs.map((user) => ({
+    label: `${user.firstName} ${user.lastName}`, // Nombre completo como label
+    value: user._id, // ID del usuario como value
+  })) || [];
+
+  // Mutación para actualizar el departamento
   const { mutate } = useUpdateDepartmentMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
       toast.current?.show({
@@ -49,10 +55,9 @@ export default function EditdepartmentDialogForm({
       setTimeout(() => {
         window.location.reload();
       }, 50);
-      setIsButtonDisabld(false);
+      setIsButtonDisabled(false);
     },
     onError: (errorResponse: IApiError) => {
-      // TODO manage server error response for translation or something
       toast.current?.show({
         severity: 'error',
         summary: t('global.toast.error.summary'),
@@ -60,27 +65,32 @@ export default function EditdepartmentDialogForm({
         life: 5000,
       });
 
-      setIsButtonDisabld(false);
+      setIsButtonDisabled(false);
     },
   });
 
-  const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const {
     handleSubmit,
     control,
     formState: { errors },
     reset,
-    watch,
-    setValue,
   } = useForm<IUpdateDepartmentInput>({
     defaultValues: {
       _id: department._id,
-      departmentBoss: department.departmentBoss,
+      departmentBoss: department.departmentBoss || null,
       name: department.name,
       areaKey: department.areaKey,
     },
   });
+
+  const onSubmit: SubmitHandler<IUpdateDepartmentInput> = (data) => {
+    console.log('Datos enviados:', data); // Depuración
+    setIsButtonDisabled(true);
+    mutate({ data }); // Envuelve los datos en un objeto con propiedad 'data'
+  };
+
   const footerContent = (
     <div>
       <Button
@@ -93,10 +103,11 @@ export default function EditdepartmentDialogForm({
         }}
       />
       <Button
-        type="submit"
+        type="button" // Cambiado a type="button"
         label={t('global.forms.submit') as string}
         className="p-button-rounded p-button-raised mt-2"
-        disabled={isButtonDisablesed}
+        disabled={isButtonDisabled}
+        onClick={() => formRef.current?.requestSubmit()} // Enviar el formulario manualmente
       />
     </div>
   );
@@ -113,13 +124,12 @@ export default function EditdepartmentDialogForm({
       footer={footerContent}
     >
       <Toast ref={toast} />
-      <form className="p-fluid">
-        <div className="label">
-          <label htmlFor="contact">
-            <b>{t('global.dictionary.department')}</b> <br />
-          </label>
-        </div>
-        <hr />
+      <form
+        ref={formRef} // Asignar la referencia al formulario
+        className="p-fluid"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        {/* Campo Name */}
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
@@ -127,16 +137,13 @@ export default function EditdepartmentDialogForm({
               name="name"
               control={control}
               rules={{
-                // required: t('global.forms.validation.departmentName') as string,
-                validate: (value) =>
-                  value !== '' || (t('global.forms.validation.departmentName') as string),
+                required: t('global.forms.validation.required') as string,
               }}
               render={({ field, fieldState }) => (
                 <InputText
                   id={field.name}
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
-                  // defaultValue={departmentData?.getdepartmentById.name}
                 />
               )}
             />
@@ -144,16 +151,10 @@ export default function EditdepartmentDialogForm({
               {t('global.dictionary.departmentName')}*
             </label>
           </span>
-          {errors.name && <small className="p-error">{errors.name?.message}</small>}
+          {errors.name && <small className="p-error">{errors.name.message}</small>}
         </div>
-      </form>
-      <form className="p-fluid">
-        <div className="label">
-          <label htmlFor="contact">
-            <b>{t('global.dictionary.department')}</b> <br />
-          </label>
-        </div>
-        <hr />
+
+        {/* Campo AreaKey */}
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
@@ -161,58 +162,48 @@ export default function EditdepartmentDialogForm({
               name="areaKey"
               control={control}
               rules={{
-                // required: t('global.forms.validation.departmentName') as string,
-                validate: (value) =>
-                  value !== '' || (t('global.forms.validation.departmentName') as string),
+                required: t('global.forms.validation.required') as string,
               }}
               render={({ field, fieldState }) => (
                 <InputText
                   id={field.name}
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
-                  // defaultValue={departmentData?.getdepartmentById.name}
                 />
               )}
             />
-            <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-              {t('global.dictionary.departmentName')}*
+            <label htmlFor="areaKey" className={classNames({ 'p-error': !!errors.areaKey })}>
+              {t('global.dictionary.areaKey')}*
             </label>
           </span>
-          {errors.name && <small className="p-error">{errors.name?.message}</small>}
+          {errors.areaKey && <small className="p-error">{errors.areaKey.message}</small>}
         </div>
-      </form>
-      <form className="p-fluid">
-        <div className="label">
-          <label htmlFor="contact">
-            <b>{t('global.dictionary.department')}</b> <br />
-          </label>
-        </div>
-        <hr />
+
+        {/* Campo DepartmentBoss (Dropdown) */}
         <div className="field">
-          <span className="p-float-label p-input-icon-right">
-            <i className="pi pi-book" />
+          <span className="p-float-label">
             <Controller
               name="departmentBoss"
               control={control}
-              rules={{
-                // required: t('global.forms.validation.departmentName') as string,
-                validate: (value) =>
-                  value !== '' || (t('global.forms.validation.departmentName') as string),
-              }}
               render={({ field, fieldState }) => (
-                <InputText
+                <Dropdown
                   id={field.name}
                   {...field}
+                  value={field.value || null}
+                  options={usersOptions}
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder={t('form.placeholders.selectBoss') as string}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
-                  // defaultValue={departmentData?.getdepartmentById.name}
+                  disabled={usersLoading}
                 />
               )}
             />
-            <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-              {t('global.dictionary.departmentName')}*
+            <label htmlFor="departmentBoss" className={classNames({ 'p-error': !!errors.departmentBoss })}>
+              {t('global.dictionary.departmentBoss')}
             </label>
           </span>
-          {errors.name && <small className="p-error">{errors.name?.message}</small>}
+          {errors.departmentBoss && <small className="p-error">{errors.departmentBoss.message}</small>}
         </div>
       </form>
     </Dialog>

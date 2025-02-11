@@ -40,6 +40,7 @@ export interface IAttendance {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   firstPass: IAttendanceStatus;
   isDeleted: Scalars['Boolean']['output'];
+  justifyBy?: Maybe<IJustifyBy>;
   period: Scalars['ID']['output'];
   schedule: Scalars['ID']['output'];
   secondPass: IAttendanceStatus;
@@ -354,6 +355,14 @@ export interface IHorarios {
   subject: Scalars['String']['output'];
   teacher: Scalars['String']['output'];
   weekday: Scalars['String']['output'];
+}
+
+/** Define the reason of justification */
+export enum IJustifyBy {
+  /** Justificado por evento */
+  Event = 'EVENT',
+  /** Justificado por archivo */
+  File = 'FILE'
 }
 
 /** Model for access token after user refresh token */
@@ -936,8 +945,10 @@ export interface IQuery {
   getPeriodos: Array<IPeriodos>;
   getProfesores: Array<IProfesores>;
   getScheduleById: ISchedule;
+  getSchedulesByTimeRange: Array<ISchedule>;
   getSchedulesFormatted: Array<ISchedulesFormatted>;
   getSubjectById: ISubject;
+  getUniqueOptionsCareer: IUniqueOptionsCareer;
   getUserById: IUser;
   me: IUser;
   refreshToken: IJwtAccessToken;
@@ -1184,6 +1195,13 @@ export interface IQueryGetScheduleByIdArgs {
 }
 
 
+export interface IQueryGetSchedulesByTimeRangeArgs {
+  classGroup: Array<Scalars['ID']['input']>;
+  endTime: Scalars['DateTime']['input'];
+  startTime: Scalars['DateTime']['input'];
+}
+
+
 export interface IQueryGetSchedulesFormattedArgs {
   actualTime?: InputMaybe<Scalars['String']['input']>;
   classroom?: InputMaybe<Scalars['ID']['input']>;
@@ -1303,6 +1321,12 @@ export interface ISignUpInput {
   password: Scalars['String']['input'];
 }
 
+/** Small data for careers */
+export interface ISmallCareer {
+  label: Scalars['String']['output'];
+  value: Scalars['ID']['output'];
+}
+
 export interface ISoftDeleteResponse {
   deleted: Scalars['Float']['output'];
 }
@@ -1334,6 +1358,12 @@ export interface ISubjectIdArgs {
 export interface ISubscription {
   importedUsers: Array<IUser>;
   userAdded: IUser;
+}
+
+/** Object type for options statistics */
+export interface IUniqueOptionsCareer {
+  careers: Array<ISmallCareer>;
+  semesters: Array<Scalars['String']['output']>;
 }
 
 /** Update attendance info input */
@@ -1458,6 +1488,7 @@ export interface IUpdateUserInput {
 
 export interface IUploadFileInput {
   approvedBy?: InputMaybe<Scalars['ID']['input']>;
+  attendanceJustified?: InputMaybe<Scalars['ID']['input']>;
   file: Scalars['Upload']['input'];
   fileType: IFileType;
   userId: Scalars['ID']['input'];

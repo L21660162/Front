@@ -95,7 +95,7 @@ export default function EditClassroomDialogForm({
     });
   };
 
-  
+
   const footerContent = (
     <div>
       <Button
@@ -181,18 +181,18 @@ export default function EditClassroomDialogForm({
               required: t('global.forms.validation.Building') as string,
             }}
             render={({ field, fieldState }) => (
-<Dropdown
-  id={field.name}
-  {...field}
-  value={field.value}
-  options={data?.getAllBuildings.docs.map((building) => ({
-    label: building.name,
-    value: building._id,
-  }))}
-  onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
-  placeholder={t('global.forms.selectPlaceholder') ?? ''} // Coalescencia nula para garantizar que sea una cadena
-  className={classNames({ 'p-invalid': fieldState.invalid })}
-/>
+              <Dropdown
+                id={field.name}
+                {...field}
+                value={field.value}
+                options={data?.getAllBuildings.docs.map((building) => ({
+                  label: building.name,
+                  value: building._id,
+                }))}
+                onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
+                placeholder={t('global.forms.selectPlaceholder') ?? ''} // Coalescencia nula para garantizar que sea una cadena
+                className={classNames({ 'p-invalid': fieldState.invalid })}
+              />
 
             )}
           />
