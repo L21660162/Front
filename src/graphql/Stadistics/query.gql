@@ -8,8 +8,20 @@ query GetUniqueOptionsCareer {
   }
 }
 
-query GetAttendanceStatistics($career: ID, $department: ID, $period: ID, $semester: String, $teacher: ID) {
-  getAttendanceStatistics(career: $career, department: $department, period: $period, semester: $semester, teacher: $teacher) {
+query GetAttendanceStatistics(
+  $career: ID
+  $department: ID
+  $period: ID
+  $semester: String
+  $teacher: ID
+) {
+  getAttendanceStatistics(
+    career: $career
+    department: $department
+    period: $period
+    semester: $semester
+    teacher: $teacher
+  ) {
     classAbsentDay
     classAbsentMonth
     classAbsentPeriod

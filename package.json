@@ -20,6 +20,7 @@
     "@tanstack/react-query-devtools": "^4.32.5",
     "@tanstack/react-query-persist-client": "^4.32.5",
     "@tanstack/react-router": "0.0.1-beta.83",
+    "chart.js": "^4.4.7",
     "graphql": "^16.7.1",
     "graphql-request": "^5.2.0",
     "i18next": "^22.5.1",

@@ -6,41 +6,32 @@ import { Toast } from 'primereact/toast';
 import { Timeline } from 'primereact/timeline';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
-import { VacancyService } from '../service/VacancyService';
 import {
   IFile,
   IFileType,
-  IGetAllOrganizationsQuery,
-  IProgramTypeStatisticsQuery,
-  IUserStatisticsQuery,
-  IVacancyStatisticsQuery,
-} from '../../../../graphql/graphql';
-import { UserService } from '../service/UserService';
-import { OrganizationService } from '../service/OrganizationService';
-import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
-import { useAccessTokenData } from '../../../../store/auth/store';
-import { TokenData } from '../../../../store/auth/type';
-import FINSH from './modals/FINSH';
-import INPGR from './modals/INPGR';
-import DISPO from './modals/DISPO';
+  IGetUniqueOptionsCareerQuery,
+  IQueryGetAttendanceStatisticsArgs,
+} from '../../../graphql/graphql';
+import { useAccessTokenData } from '../../../store/auth/store';
+import { TokenData } from '../../../store/auth/type';
+import useStadisticService from './service/StadisticService';
 
-function DashboardVacancyPanel() {
+function DashboardAttendancePanel() {
   const { t } = useTranslation('common');
-  const [vacancyStatistics, setVacancyStatistics] = useState<IVacancyStatisticsQuery>();
-  const [programType, setProgramType] = useState<IProgramTypeStatisticsQuery>();
-  const [userStatistics, setUserStatistics] = useState<IUserStatisticsQuery>();
-  const [topNumProyectOrganizationStatistics, setTopNumProyectOrganizationStatistics] =
-    useState<IGetAllOrganizationsQuery>();
-  const [topVacancyNumbersOrganizationStatistics, setTopVacancyNumbersOrganizationStatistics] =
-    useState<IGetAllOrganizationsQuery>();
-
-  const programTypeData = VacancyService.getProgramTypeStatistics();
-  const vacancyStatisticsData = VacancyService.getVacancyStatistics();
-  const userStatisticsData = UserService.getUserStatistics();
-  const topNumProyectOrganizationStatisticsData =
-    OrganizationService.getTopNumProyectOrganizationStatistics();
-  const topVacancyNumbersOrganizationStatisticsData =
-    OrganizationService.getTopVacancyNumbersOrganizationStatistics();
+  const [careerOptions, setCareerOptions] = useState<IGetUniqueOptionsCareerQuery>();
+  const [attendanceStatistics, setAttendanceStatistics] =
+    useState<IQueryGetAttendanceStatisticsArgs>();
+  const careerOptionsQuery = useStadisticService().useToFilterCarrer();
+  const [selectedCareer, setSelectedCareer] = useState<string>('');
+  const [selectedPeriod, setSelectedPeriod] = useState<string>('');
+  const [selectedSemester, setSelectedSemester] = useState<string>('');
+  const [selectedTeacher, setSelectedTeacher] = useState<string>('');
+  const attendanceStatisticsQuery = useStadisticService().useAttendancesStadistic(
+    selectedCareer,
+    selectedPeriod,
+    selectedSemester,
+    selectedTeacher
+  );
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue('--text-color') || '#495057';
   const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary') || '#6c757d';
@@ -143,188 +134,186 @@ function DashboardVacancyPanel() {
       </div>
 
       <div className="col-12 lg:col-6 xl:col-3">
-          <div className="card mb-0 h-full">
-            <div className="flex justify-content-between mb-3">
-              <div>
-                <span className="block text-500 font-medium mb-3">
-                  {t('global.dictionary.activityTypes.CULT')}
-                </span>
-                <div className="text-900 font-medium text-3xl">
-                  {programType?.programTypeStatistics[0].vacanciesCULT}
-                </div>
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">
+                {t('global.dictionary.activityTypes.CULT')}
+              </span>
+              <div className="text-900 font-medium text-3xl">
+                {programType?.programTypeStatistics[0].vacanciesCULT}
               </div>
-              <div
-                className="flex align-items-center justify-content-center bg-yellow-100 text-yellow-500 text-xl border-round"
-                style={{ width: '2.5rem', height: '2.5rem' }}
-              >
-                <i className="pi pi-map text-yellow-500 text-xl" />
-              </div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-yellow-100 text-yellow-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-map text-yellow-500 text-xl" />
             </div>
           </div>
         </div>
-        <div className="col-12 lg:col-6 xl:col-3">
-          <div className="card mb-0 h-full">
-            <div className="flex justify-content-between mb-3">
-              <div>
-                <span className="block text-500 font-medium mb-3">
-                  {t('global.dictionary.activityTypes.CIVIC')}
-                </span>
-                <div className="text-900 font-medium text-3xl">
-                  {programType?.programTypeStatistics[0].vacanciesCIVIC}
-                </div>
+      </div>
+      <div className="col-12 lg:col-6 xl:col-3">
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">
+                {t('global.dictionary.activityTypes.CIVIC')}
+              </span>
+              <div className="text-900 font-medium text-3xl">
+                {programType?.programTypeStatistics[0].vacanciesCIVIC}
               </div>
-              <div
-                className="flex align-items-center justify-content-center bg-red-100 text-red-500 text-xl border-round"
-                style={{ width: '2.5rem', height: '2.5rem' }}
-              >
-                <i className="pi pi-id-card text-red-500 text-xl" />
-              </div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-red-100 text-red-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-id-card text-red-500 text-xl" />
             </div>
           </div>
         </div>
-        <div className="col-12 lg:col-6 xl:col-3">
-          <div className="card mb-0 h-full">
-            <div className="flex justify-content-between mb-3">
-              <div>
-                <span className="block text-500 font-medium mb-3">
-                  {t('global.dictionary.activityTypes.DEP')}
-                </span>
-                <div className="text-900 font-medium text-3xl">
-                  {programType?.programTypeStatistics[0].vacanciesDEP}
-                </div>
+      </div>
+      <div className="col-12 lg:col-6 xl:col-3">
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">
+                {t('global.dictionary.activityTypes.DEP')}
+              </span>
+              <div className="text-900 font-medium text-3xl">
+                {programType?.programTypeStatistics[0].vacanciesDEP}
               </div>
-              <div
-                className="flex align-items-center justify-content-center bg-indigo-100 text-indigo-500 text-xl border-round"
-                style={{ width: '2.5rem', height: '2.5rem' }}
-              >
-                <i className="pi pi-stopwatch text-indigo-500 text-xl" />
-              </div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-indigo-100 text-indigo-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-stopwatch text-indigo-500 text-xl" />
             </div>
           </div>
         </div>
-        <div className="col-12 lg:col-6 xl:col-3">
-          <div className="card mb-0 h-full">
-            <div className="flex justify-content-between mb-3">
-              <div>
-                <span className="block text-500 font-medium mb-3">
-                  {t('global.dictionary.activityTypes.SALUD')}
-                </span>
-                <div className="text-900 font-medium text-3xl">
-                  {programType?.programTypeStatistics[0].vacanciesSALUD}
-                </div>
+      </div>
+      <div className="col-12 lg:col-6 xl:col-3">
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">
+                {t('global.dictionary.activityTypes.SALUD')}
+              </span>
+              <div className="text-900 font-medium text-3xl">
+                {programType?.programTypeStatistics[0].vacanciesSALUD}
               </div>
-              <div
-                className="flex align-items-center justify-content-center bg-purple-100 text-purple-500 text-xl border-round"
-                style={{ width: '2.5rem', height: '2.5rem' }}
-              >
-                <i className="pi pi-heart text-purple-500 text-xl" />
-              </div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-purple-100 text-purple-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-heart text-purple-500 text-xl" />
             </div>
           </div>
         </div>
-        <div className="col-12 lg:col-6 xl:col-3">
-          <div className="card mb-0 h-full">
-            <div className="flex justify-content-between mb-3">
-              <div>
-                <span className="block text-500 font-medium mb-3">
-                  {t('global.dictionary.activityTypes.COMUN')}
-                </span>
-                <div className="text-900 font-medium text-3xl">
-                  {programType?.programTypeStatistics[0].vacanciesCOMUN}
-                </div>
+      </div>
+      <div className="col-12 lg:col-6 xl:col-3">
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">
+                {t('global.dictionary.activityTypes.COMUN')}
+              </span>
+              <div className="text-900 font-medium text-3xl">
+                {programType?.programTypeStatistics[0].vacanciesCOMUN}
               </div>
-              <div
-                className="flex align-items-center justify-content-center bg-purple-100 text-purple-500 text-xl border-round"
-                style={{ width: '2.5rem', height: '2.5rem' }}
-              >
-                <i className="pi pi-inbox text-purple-500 text-xl" />
-              </div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-purple-100 text-purple-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-inbox text-purple-500 text-xl" />
             </div>
           </div>
         </div>
-        <div className="col-12 lg:col-6 xl:col-3">
-          <div className="card mb-0 h-full">
-            <div className="flex justify-content-between mb-3">
-              <div>
-                <span className="block text-500 font-medium mb-3">
-                  {t('global.dictionary.activityTypes.SUST')}
-                </span>
-                <div className="text-900 font-medium text-3xl">
-                  {programType?.programTypeStatistics[0].vacanciesSUST}
-                </div>
+      </div>
+      <div className="col-12 lg:col-6 xl:col-3">
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">
+                {t('global.dictionary.activityTypes.SUST')}
+              </span>
+              <div className="text-900 font-medium text-3xl">
+                {programType?.programTypeStatistics[0].vacanciesSUST}
               </div>
-              <div
-                className="flex align-items-center justify-content-center bg-cyan-100 text-cyan-500 text-xl border-round"
-                style={{ width: '2.5rem', height: '2.5rem' }}
-              >
-                <i className="pi pi-sun text-cyan-500 text-xl" />
-              </div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-cyan-100 text-cyan-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-sun text-cyan-500 text-xl" />
             </div>
           </div>
         </div>
-        <div className="col-12 lg:col-6 xl:col-3">
-          <div className="card mb-0 h-full">
-            <div className="flex justify-content-between mb-3">
-              <div>
-                <span className="block text-500 font-medium mb-3">
-                  {t('global.dictionary.activityTypes.ADULT')}
-                </span>
-                <div className="text-900 font-medium text-3xl">
-                  {programType?.programTypeStatistics[0].vacanciesADULT}
-                </div>
+      </div>
+      <div className="col-12 lg:col-6 xl:col-3">
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">
+                {t('global.dictionary.activityTypes.ADULT')}
+              </span>
+              <div className="text-900 font-medium text-3xl">
+                {programType?.programTypeStatistics[0].vacanciesADULT}
               </div>
-              <div
-                className="flex align-items-center justify-content-center bg-pink-100 text-pink-500 text-xl border-round"
-                style={{ width: '2.5rem', height: '2.5rem' }}
-              >
-                <i className="pi pi-users text-pink-500 text-xl" />
-              </div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-pink-100 text-pink-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-users text-pink-500 text-xl" />
             </div>
           </div>
         </div>
-        <div className="col-12 lg:col-6 xl:col-3">
-          <div className="card mb-0 h-full">
-            <div className="flex justify-content-between mb-3">
-              <div>
-                <span className="block text-500 font-medium mb-3">
-                  {t('global.dictionary.activityTypes.AMB')}
-                </span>
-                <div className="text-900 font-medium text-3xl">
-                  {programType?.programTypeStatistics[0].vacanciesAMB}
-                </div>
+      </div>
+      <div className="col-12 lg:col-6 xl:col-3">
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">
+                {t('global.dictionary.activityTypes.AMB')}
+              </span>
+              <div className="text-900 font-medium text-3xl">
+                {programType?.programTypeStatistics[0].vacanciesAMB}
               </div>
-              <div
-                className="flex align-items-center justify-content-center bg-teal-100 text-teal-500 text-xl border-round"
-                style={{ width: '2.5rem', height: '2.5rem' }}
-              >
-                <i className="pi pi-cloud text-teal-500 text-xl" />
-              </div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-teal-100 text-teal-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-cloud text-teal-500 text-xl" />
             </div>
           </div>
         </div>
-        <div className="col-12 lg:col-6 xl:col-3">
-          <div className="card mb-0 h-full">
-            <div className="flex justify-content-between mb-3">
-              <div>
-                <span className="block text-500 font-medium mb-3">
-                  {t('global.dictionary.activityTypes.OTROS')}
-                </span>
-                <div className="text-900 font-medium text-3xl">
-                  {programType?.programTypeStatistics[0].vacanciesOTROS}
-                </div>
+      </div>
+      <div className="col-12 lg:col-6 xl:col-3">
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">
+                {t('global.dictionary.activityTypes.OTROS')}
+              </span>
+              <div className="text-900 font-medium text-3xl">
+                {programType?.programTypeStatistics[0].vacanciesOTROS}
               </div>
-              <div
-                className="flex align-items-center justify-content-center bg-orange-100 text-orange-500 text-xl border-round"
-                style={{ width: '2.5rem', height: '2.5rem' }}
-              >
-                <i className="pi pi-send text-orange-500 text-xl" />
-              </div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-orange-100 text-orange-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-send text-orange-500 text-xl" />
             </div>
           </div>
         </div>
+      </div>
 
-        
-        
       <div className="col-12 lg:col-6 xl:col-3">
         <div className="card mb-0">
           <div className="flex justify-content-between mb-3">
@@ -424,7 +413,7 @@ function DashboardVacancyPanel() {
           </div>
         </div>
       </div>
-      {visibleDISPO && (
+      {/* {visibleDISPO && (
         <DISPO
           headerTitle={t('module.home.dashboard.dashboardPanel.vacanciesAvaliable')}
           visible={visibleDISPO}
@@ -444,9 +433,9 @@ function DashboardVacancyPanel() {
           visible={visibleFINSH}
           setVisible={setVisibleFINSH}
         />
-      )}
+      )} */}
     </div>
   );
 }
 
-export default DashboardVacancyPanel;
+export default DashboardAttendancePanel;

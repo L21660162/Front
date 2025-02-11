@@ -40,6 +40,7 @@ export interface IAttendance {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   firstPass: IAttendanceStatus;
   isDeleted: Scalars['Boolean']['output'];
+  justifyBy?: Maybe<IJustifyBy>;
   period: Scalars['ID']['output'];
   schedule: Scalars['ID']['output'];
   secondPass: IAttendanceStatus;
@@ -354,6 +355,14 @@ export interface IHorarios {
   subject: Scalars['String']['output'];
   teacher: Scalars['String']['output'];
   weekday: Scalars['String']['output'];
+}
+
+/** Define the reason of justification */
+export enum IJustifyBy {
+  /** Justificado por evento */
+  Event = 'EVENT',
+  /** Justificado por archivo */
+  File = 'FILE'
 }
 
 /** Model for access token after user refresh token */
@@ -936,6 +945,7 @@ export interface IQuery {
   getPeriodos: Array<IPeriodos>;
   getProfesores: Array<IProfesores>;
   getScheduleById: ISchedule;
+  getSchedulesByTimeRange: Array<ISchedule>;
   getSchedulesFormatted: Array<ISchedulesFormatted>;
   getSubjectById: ISubject;
   getUniqueOptionsCareer: IUniqueOptionsCareer;
@@ -1182,6 +1192,14 @@ export interface IQueryGetPeriodByIdArgs {
 export interface IQueryGetScheduleByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
+}
+
+
+export interface IQueryGetSchedulesByTimeRangeArgs {
+  classGroup: Array<Scalars['ID']['input']>;
+  endTime: Scalars['DateTime']['input'];
+  startTime: Scalars['DateTime']['input'];
+  uploadedBy: Scalars['ID']['input'];
 }
 
 
@@ -1622,6 +1640,22 @@ export interface ICreateDepartmentInput {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+export type IGetUniqueOptionsCareerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IGetUniqueOptionsCareerQuery = { getUniqueOptionsCareer: { semesters: Array<string>, careers: Array<{ label: string, value: string }> } };
+
+export type IGetAttendanceStatisticsQueryVariables = Exact<{
+  career?: InputMaybe<Scalars['ID']['input']>;
+  department?: InputMaybe<Scalars['ID']['input']>;
+  period?: InputMaybe<Scalars['ID']['input']>;
+  semester?: InputMaybe<Scalars['String']['input']>;
+  teacher?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type IGetAttendanceStatisticsQuery = { getAttendanceStatistics: { classAbsentDay: number, classAbsentMonth: number, classAbsentPeriod: number, classAbsentSemester: number, classAbsentYear: number, classJustifyDay: number, classJustifyMonth: number, classJustifyPeriod: number, classJustifySemester: number, classJustifyYear: number, classPresentDay: number, classPresentMonth: number, classPresentPeriod: number, classPresentSemester: number, classPresentYear: number, weekday1: number, weekday2: number, weekday3: number, weekday4: number, weekday5: number, weekday6: number, weekday7: number } };
+
 export type IGetAllAttendancesQueryVariables = Exact<{
   filter?: InputMaybe<IAttendanceArgs>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1921,11 +1955,6 @@ export type IGetScheduleByIdQueryVariables = Exact<{
 
 export type IGetScheduleByIdQuery = { getScheduleById: { _id: string, classroom: string, createdAt?: any | null, deletedAt?: any | null, finalTime: any, classGroup: string, isDeleted: boolean, period: string, teacher: string, weekday: number, startTime: any, subject: string, updatedAt?: any | null } };
 
-export type IGetUniqueOptionsCareerQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type IGetUniqueOptionsCareerQuery = { getUniqueOptionsCareer: { semesters: Array<string>, careers: Array<{ value: string, label: string }> } };
-
 export type IGetSchedulesFormattedQueryVariables = Exact<{
   teacher?: InputMaybe<Scalars['ID']['input']>;
   schedule?: InputMaybe<Scalars['ID']['input']>;
@@ -2021,6 +2050,89 @@ export type ISubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }
 export type ISubscriptionSubscription = { userAdded: { _id?: string | null, createdAt?: any | null, email: string, firstName: string, lastName: string, middleName?: string | null, roles: Array<IRoles> } };
 
 
+export const GetUniqueOptionsCareerDocument = /*#__PURE__*/ `
+    query GetUniqueOptionsCareer {
+  getUniqueOptionsCareer {
+    careers {
+      label
+      value
+    }
+    semesters
+  }
+}
+    `;
+export const useGetUniqueOptionsCareerQuery = <
+      TData = IGetUniqueOptionsCareerQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetUniqueOptionsCareerQueryVariables,
+      options?: UseQueryOptions<IGetUniqueOptionsCareerQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetUniqueOptionsCareerQuery, TError, TData>(
+      variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables],
+      fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(client, GetUniqueOptionsCareerDocument, variables, headers),
+      options
+    );
+
+useGetUniqueOptionsCareerQuery.getKey = (variables?: IGetUniqueOptionsCareerQueryVariables) => variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables];
+;
+
+useGetUniqueOptionsCareerQuery.fetcher = (client: GraphQLClient, variables?: IGetUniqueOptionsCareerQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(client, GetUniqueOptionsCareerDocument, variables, headers);
+export const GetAttendanceStatisticsDocument = /*#__PURE__*/ `
+    query GetAttendanceStatistics($career: ID, $department: ID, $period: ID, $semester: String, $teacher: ID) {
+  getAttendanceStatistics(
+    career: $career
+    department: $department
+    period: $period
+    semester: $semester
+    teacher: $teacher
+  ) {
+    classAbsentDay
+    classAbsentMonth
+    classAbsentPeriod
+    classAbsentSemester
+    classAbsentYear
+    classJustifyDay
+    classJustifyMonth
+    classJustifyPeriod
+    classJustifySemester
+    classJustifyYear
+    classPresentDay
+    classPresentMonth
+    classPresentPeriod
+    classPresentSemester
+    classPresentYear
+    weekday1
+    weekday2
+    weekday3
+    weekday4
+    weekday5
+    weekday6
+    weekday7
+  }
+}
+    `;
+export const useGetAttendanceStatisticsQuery = <
+      TData = IGetAttendanceStatisticsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: IGetAttendanceStatisticsQueryVariables,
+      options?: UseQueryOptions<IGetAttendanceStatisticsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<IGetAttendanceStatisticsQuery, TError, TData>(
+      variables === undefined ? ['GetAttendanceStatistics'] : ['GetAttendanceStatistics', variables],
+      fetcher<IGetAttendanceStatisticsQuery, IGetAttendanceStatisticsQueryVariables>(client, GetAttendanceStatisticsDocument, variables, headers),
+      options
+    );
+
+useGetAttendanceStatisticsQuery.getKey = (variables?: IGetAttendanceStatisticsQueryVariables) => variables === undefined ? ['GetAttendanceStatistics'] : ['GetAttendanceStatistics', variables];
+;
+
+useGetAttendanceStatisticsQuery.fetcher = (client: GraphQLClient, variables?: IGetAttendanceStatisticsQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetAttendanceStatisticsQuery, IGetAttendanceStatisticsQueryVariables>(client, GetAttendanceStatisticsDocument, variables, headers);
 export const GetAllAttendancesDocument = /*#__PURE__*/ `
     query GetAllAttendances($filter: AttendanceArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllAttendances(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -3387,36 +3499,6 @@ useGetScheduleByIdQuery.getKey = (variables?: IGetScheduleByIdQueryVariables) =>
 ;
 
 useGetScheduleByIdQuery.fetcher = (client: GraphQLClient, variables?: IGetScheduleByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetScheduleByIdQuery, IGetScheduleByIdQueryVariables>(client, GetScheduleByIdDocument, variables, headers);
-export const GetUniqueOptionsCareerDocument = /*#__PURE__*/ `
-    query GetUniqueOptionsCareer {
-  getUniqueOptionsCareer {
-    semesters
-    careers {
-      value
-      label
-    }
-  }
-}
-    `;
-export const useGetUniqueOptionsCareerQuery = <
-      TData = IGetUniqueOptionsCareerQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables?: IGetUniqueOptionsCareerQueryVariables,
-      options?: UseQueryOptions<IGetUniqueOptionsCareerQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<IGetUniqueOptionsCareerQuery, TError, TData>(
-      variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables],
-      fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(client, GetUniqueOptionsCareerDocument, variables, headers),
-      options
-    );
-
-useGetUniqueOptionsCareerQuery.getKey = (variables?: IGetUniqueOptionsCareerQueryVariables) => variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables];
-;
-
-useGetUniqueOptionsCareerQuery.fetcher = (client: GraphQLClient, variables?: IGetUniqueOptionsCareerQueryVariables, headers?: RequestInit['headers']) => fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(client, GetUniqueOptionsCareerDocument, variables, headers);
 export const GetSchedulesFormattedDocument = /*#__PURE__*/ `
     query GetSchedulesFormatted($teacher: ID, $schedule: ID) {
   getSchedulesFormatted(teacher: $teacher, schedule: $schedule) {
