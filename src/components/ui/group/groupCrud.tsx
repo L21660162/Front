@@ -19,6 +19,10 @@ import {
   IGetAllGroupsQuery,
   useDeleteGroupMutation,
   useGetAllGroupsQuery,
+  useGetAllCareersQuery,  // Nueva importación
+  IGetAllCareersQuery,  // Nueva importación
+  useGetAllPeriodsQuery,
+  IGetAllPeriodsQuery
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import { dialogStore } from '../../../store/global/dialogStore';
@@ -56,6 +60,33 @@ function GroupCrud() {
     page: 1,
     offset: 0,
   });
+
+  // Nueva consulta para obtener carreras
+  const { data: careersData } = useGetAllCareersQuery<IGetAllCareersQuery>(GRAPHQL_CLIENT, {
+    limit: 500,
+    page: 1,
+    offset: 0,
+  });
+
+  const { data: periodsData } = useGetAllPeriodsQuery<IGetAllPeriodsQuery>(GRAPHQL_CLIENT, {
+    limit: 500,
+    page: 1,
+    offset: 0,
+  });
+
+  // Función para obtener el nombre de la carrera por ID
+  const getCareerNameById = (careerId: string): string => {
+    if (!careersData) return 'Cargando...';
+    const career = careersData.getAllCareers.docs.find(c => c._id === careerId);
+    return career ? career.name : 'Carrera no encontrada';
+  };
+
+  const getPeriodNameById = (periodId: string): string => {
+    if (!periodsData) return t('global.loading'); // Usa la traducción para "Cargando..."
+    const period = periodsData.getAllPeriods.docs.find(p => p._id === periodId);
+    return period ? period.name : t('global.dictionary.periodNotFound');
+  };
+
 
   const { mutate } = useDeleteGroupMutation<IApiError>(GRAPHQL_CLIENT, { //Pendiente
     onSuccess: () => {
@@ -105,20 +136,20 @@ function GroupCrud() {
     dt.current?.exportCSV();
   };
 
-  const nameBodyTemplate = (Group: IGroup) => {
+  const nameBodyTemplate = (group: IGroup) => {
     return (
       <>
-        <span className="p-column-title">Name</span>
-        {Group.career}
+        <span className="p-column-title">Carrera</span>
+        {getCareerNameById(group.career)}
       </>
     );
   };
 
-  const descriptionBodyTemplate = (Group: IGroup) => {
+  const descriptionBodyTemplate = (group: IGroup) => {
     return (
       <>
-        <span className="p-column-title">Letter</span>
-        {Group.period}
+        <span className="p-column-title">{t('global.dictionary.tPeriodName')}</span>
+        {getPeriodNameById(group.period)}
       </>
     );
   };
@@ -208,36 +239,41 @@ function GroupCrud() {
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} carreras"
+            currentPageReportTemplate={t('global.dictionary.currentPageReportTemplate', {
+              first: '{first}',
+              last: '{last}',
+              totalRecords: '{totalRecords}'
+            })}
             globalFilter={globalFilter}
             emptyMessage={t('global.dictionary.NoGroup')}
             header={header}
             responsiveLayout="scroll"
           >
+            {/* Columnas manteniendo tus traducciones */}
             <Column
               field="name"
-              header={t('global.dictionary.tGroupName')}
+              header={t('global.dictionary.tCareerName')}
               sortable
-              body={nameBodyTemplate}
+              body={nameBodyTemplate}  // Usa la plantilla modificada
               headerStyle={{ minWidth: '15rem' }}
             />
             <Column
               field="description"
-              header={t('global.dictionary.tGroupDescription')}
+              header={t('global.dictionary.tPeriodName')}
               sortable
               body={descriptionBodyTemplate}
               headerStyle={{ minWidth: '15rem' }}
             />
-                        <Column
+            <Column
               field="description"
-              header={t('global.dictionary.tGroupDescription')}
+              header={t('global.dictionary.tSemesterName')}
               sortable
               body={semesterBodyTemplate}
               headerStyle={{ minWidth: '15rem' }}
             />
-                        <Column
+            <Column
               field="description"
-              header={t('global.dictionary.tGroupDescription')}
+              header={t('global.dictionary.tIndentifier')}
               sortable
               body={periodBodyTemplate}
               headerStyle={{ minWidth: '15rem' }}

@@ -182,7 +182,7 @@ function ClassroomCrud() {
 
           {selectedClassroom && visibleEditClassroom && (
             <EditClassroomDialogForm
-              headerTitle={t('module.classrooms.dashboard.dialog.edit.header')}
+              headerTitle={t('module.Classroom.dashboard.dialog.edit.header')}
               visible={visibleEditClassroom}
               setVisible={setVisibleEditClassroom}
               Classroom={selectedClassroom}

@@ -32,6 +32,10 @@
       "label": "Instituto",
       "dashboard": "Panel de Instituto"
     },
+    "building": {
+      "label": "Edificios",
+      "dashboard": "Panel de Edificios"
+    },
     "settings": {
       "label": "Configuración",
       "dashboard": "Panel de Configuración",
@@ -81,11 +85,25 @@
         "selectPlaceholder": "Seleccionar edificio",
         "loadingBuildings": "Cargando edificios...",
         "errorLoadingBuildings": "Error cargando edificios",
+        "selectCareer": "Seleccionar carrera",
+        "selectPeriod": "Seleccionar período",
+        "invalidSemester": "El semestre debe ser un número",
+        "groupName": "Nombre del grupo es requerido",
+        "abbreviationGroup": "Abreviatura es requerida",
+        "cancel": "Cancelar",
+        "errors": {
+          "missingId": "No se pudo actualizar, falta el ID del edificio"
+        },
         "validation": {
           "requiredField": "Este campo es obligatorio",
           "maxLength": "Máximo {max} caracteres",
           "ClassroomIdentifier": "El identificador del aula es obligatorio",
-          "Building": "El edificio es obligatorio"
+          "Building": "El edificio es obligatorio",
+          "identifierRequired": "El identificador es requerido",
+          "semesterRequired": "El semestre es requerido",
+          "periodRequired": "El período es requerido",
+          "buildingName": "Nombre del edificio es requerido",
+          "buildingAbbreviation": "Abreviatura es requerida"
         }
       }
     },
@@ -110,7 +128,39 @@
       "tGroupName": "Nombre del Grupo",
       "tGroupDescription": "Descripción del Grupo",
       "tGroupSemester": "Semestre",
-      "tGroupPeriod": "Periodo"
+      "tGroupPeriod": "Periodo",
+      "tCareerName": "Nombre de la Carrera",
+      "tPeriodName": "Nombre del Periodo",
+      "tSemesterName": "Nombre del Semestre",
+      "tIndentifier": "Identificador",
+      "group": "Grupo",
+      "career": "Carrera",
+      "semester": "Semestre",
+      "period": "Período",
+      "Group": "Grupo",
+      "abbreviationGroup": "Abreviatura",
+      "letter": "Letra",
+      "NoBuilding": "No se encontraron edificios",
+      "tBuildingName": "Nombre del Edificio",
+      "tBuildingDescription": "Letra del Edificio",
+      "buildingName": "Nombre del Edificio",
+      "buildingAbbreviation": "Abreviatura del Edificio"
+    },
+    "buttons": {
+      "yes": "Sí",
+      "no": "No"
+    },
+    "dialog": {
+      "delete": {
+        "title": "Confirmar eliminación",
+        "message": "¿Estás seguro de eliminar {name}?"
+      }
+    },
+    "search": {
+      "placeholder": "Buscar..."
+    },
+    "paginator": {
+      "currentReport": "Mostrando del {first} al {last} de {totalRecords} edificios"
     },
     "toast": {
       "error": {
@@ -121,7 +171,11 @@
         "detail": {
           "signUpSuccess": "Tu cuenta ha sido creada con éxito. \nRedireccionando al inicio de sesión...",
           "ClassroomCreateSuccess": "Aula creada exitosamente",
-          "ClassroomEditSuccess": "Aula actualizada exitosamente"
+          "ClassroomEditSuccess": "Aula actualizada exitosamente",
+          "groupCreateSuccess": "Grupo creado exitosamente",
+          "GroupEditSuccess": "Grupo actualizado exitosamente",
+          "buildingDeleteSuccess": "Edificio eliminado exitosamente",
+          "buildingCreateSuccess": "Edificio creado exitosamente"
         }
       }
     },
@@ -132,7 +186,8 @@
       "no": "No"
     },
     "loading": {
-      "buildings": "Cargando edificios..."
+      "buildings": "Cargando edificios...",
+      "careers": "Cargando carreras..."
     },
     "error": {
       "loadingBuildings": "Error cargando edificios"
@@ -171,6 +226,16 @@
           },
           "edit": {
             "header": "Editar Aula"
+          }
+        }
+      }
+    },
+    "building": {
+      "dashboard": {
+        "addbuilding": "Agregar Edificio",
+        "dialog": {
+          "add": {
+            "header": "Crear Nuevo Edificio"
           }
         }
       }

@@ -157,7 +157,7 @@ return (
             name="letter"
             control={control}
             rules={{
-                required: t('global.forms.validation.abbreviationbuilding') as string,
+                required: t('global.forms.validation.buildingAbbreviation') as string,
             }}
             render={({ field, fieldState }) => (
                 <InputText
@@ -169,7 +169,7 @@ return (
             )}
             />
             <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-            {t('global.dictionary.abbreviationbuilding')}*
+            {t('global.dictionary.buildingAbbreviation')}*
             </label>
         </span>
         {errors.name && <small className="p-error">{errors.name?.message}</small>}

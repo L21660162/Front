@@ -191,7 +191,7 @@ export default function groupDialogForm({
               name="identifier"
               control={control}
               rules={{
-                required: t('global.forms.validation.abbreviationgroup') as string,
+                required: t('global.forms.validation.group') as string,
               }}
               render={({ field, fieldState }) => (
                 <InputText
@@ -203,7 +203,7 @@ export default function groupDialogForm({
               )}
             />
             <label htmlFor="identifier" className={classNames({ 'p-error': !!errors.identifier })}>
-              {t('global.dictionary.abbreviationgroup')}*
+              {t('global.dictionary.group')}*
             </label>
           </span>
           {errors.identifier && <small className="p-error">{errors.identifier?.message}</small>}
@@ -216,7 +216,7 @@ export default function groupDialogForm({
               name="semester"
               control={control}
               rules={{
-                required: t('global.forms.validation.semestergroup') as string,
+                required: t('global.forms.validation.semester') as string,
               }}
               render={({ field, fieldState }) => (
                 <InputText
@@ -228,7 +228,7 @@ export default function groupDialogForm({
               )}
             />
             <label htmlFor="semester" className={classNames({ 'p-error': !!errors.semester })}>
-              {t('global.dictionary.semestergroup')}*
+              {t('global.dictionary.semester')}*
             </label>
           </span>
           {errors.semester && <small className="p-error">{errors.semester?.message}</small>}
@@ -241,7 +241,7 @@ export default function groupDialogForm({
               name="period"
               control={control}
               rules={{
-                required: t('global.forms.validation.periodgroup') as string,
+                required: t('global.forms.validation.period') as string,
               }}
               render={({ field, fieldState }) => (
                 <Dropdown
@@ -258,7 +258,7 @@ export default function groupDialogForm({
               )}
             />
             <label htmlFor="period" className={classNames({ 'p-error': !!errors.period })}>
-              {t('global.dictionary.periodgroup')}*
+              {t('global.dictionary.period')}*
             </label>
           </span>
           {errors.period && <small className="p-error">{errors.period?.message}</small>}
