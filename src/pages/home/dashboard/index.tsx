@@ -6,12 +6,7 @@ function Dashboard() {
   return (
     <div className="grid">
       <div className="col-12">
-        <div className="card">
-          <PageHeading />
-        </div>
-        <div className="col-12">
-          <DashboardAttendancePanel />
-        </div>
+        <DashboardAttendancePanel />
       </div>
     </div>
   );

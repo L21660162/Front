@@ -1,33 +1,28 @@
 import {
-  IGetUniqueOptionsCareerQuery,
-  IQueryGetAttendanceStatisticsArgs,
-  useGetAttendanceStatisticsQuery,
   useGetUniqueOptionsCareerQuery,
+  useGetAttendanceStatisticsQuery,
+  IGetAttendanceStatisticsQuery,
+  IGetUniqueOptionsCareerQuery,
 } from '../../../../graphql/graphql';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
-const useStadisticService = () => {
-  const useToFilterCarrer = (): IGetUniqueOptionsCareerQuery => {
-    const { data } = useGetUniqueOptionsCareerQuery(GRAPHQL_CLIENT);
-    return data as IGetUniqueOptionsCareerQuery;
-  };
+// eslint-disable-next-line import/prefer-default-export
+export const StadisticServices = (
+  career: string | null,
+  department: string | null,
+  semester: string | null,
+  period: string | null,
+  teacher: string | null
+) => {
+  const { data: careerOptionsData } = useGetUniqueOptionsCareerQuery(GRAPHQL_CLIENT);
 
-  const useAttendancesStadistic = (
-    career: string,
-    period: string,
-    semester: string,
-    teacher: string
-  ): IQueryGetAttendanceStatisticsArgs => {
-    const { data } = useGetAttendanceStatisticsQuery(GRAPHQL_CLIENT, {
-      career: career || null,
-      period: period || null,
-      semester: semester || null,
-      teacher: teacher || null,
-    });
-    return data as IQueryGetAttendanceStatisticsArgs;
-  };
+  const { data: attendanceStatistics } = useGetAttendanceStatisticsQuery(GRAPHQL_CLIENT, {
+    career,
+    department,
+    semester,
+    period,
+    teacher,
+  });
 
-  return { useToFilterCarrer, useAttendancesStadistic };
+  return { careerOptionsData, attendanceStatistics };
 };
-
-export default useStadisticService;

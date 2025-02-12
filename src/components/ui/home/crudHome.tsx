@@ -8,30 +8,33 @@ import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import {
   IFile,
-  IFileType,
+  IGetAttendanceStatisticsQuery,
   IGetUniqueOptionsCareerQuery,
-  IQueryGetAttendanceStatisticsArgs,
+  useGetAllDepartmentsQuery,
 } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
-import useStadisticService from './service/StadisticService';
+import { StadisticServices } from './service/StadisticService'; // Importa el hook personalizado
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 
 function DashboardAttendancePanel() {
   const { t } = useTranslation('common');
-  const [careerOptions, setCareerOptions] = useState<IGetUniqueOptionsCareerQuery>();
-  const [attendanceStatistics, setAttendanceStatistics] =
-    useState<IQueryGetAttendanceStatisticsArgs>();
-  const careerOptionsQuery = useStadisticService().useToFilterCarrer();
-  const [selectedCareer, setSelectedCareer] = useState<string>('');
-  const [selectedPeriod, setSelectedPeriod] = useState<string>('');
-  const [selectedSemester, setSelectedSemester] = useState<string>('');
-  const [selectedTeacher, setSelectedTeacher] = useState<string>('');
-  const attendanceStatisticsQuery = useStadisticService().useAttendancesStadistic(
+  const [loading, setLoading] = useState(false);
+  const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
+  const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
+  const [selectedTeacher, setSelectedTeacher] = useState<string | null>(null);
+  const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
+
+  // Usa el hook personalizado
+  const { careerOptionsData, attendanceStatistics } = StadisticServices(
     selectedCareer,
-    selectedPeriod,
+    selectedDepartment,
     selectedSemester,
+    selectedPeriod,
     selectedTeacher
   );
+
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue('--text-color') || '#495057';
   const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary') || '#6c757d';
@@ -54,25 +57,44 @@ function DashboardAttendancePanel() {
     setVisibleFINSH(true);
   };
 
+  // Actualiza las opciones de carrera cuando los datos estén disponibles
+  useEffect(() => {
+    if (careerOptionsData) {
+      console.log('Career Options:', careerOptionsData);
+    }
+    if (attendanceStatistics) {
+      console.log('Attendance Statistics:', attendanceStatistics);
+    }
+  }, [careerOptionsData, attendanceStatistics]);
+
+  if (loading) {
+    return <p>Cargando...</p>;
+  }
+
+  
+
   const pieDataOrg: ChartData = {
-    labels: topNumProyectOrganizationStatistics?.getAllOrganizations.docs.map(({ name }) => name),
+    labels: [
+      attendanceStatistics?.getAttendanceStatistics.weekday1,
+      attendanceStatistics?.getAttendanceStatistics.weekday2,
+      attendanceStatistics?.getAttendanceStatistics.weekday3,
+      attendanceStatistics?.getAttendanceStatistics.weekday4,
+      attendanceStatistics?.getAttendanceStatistics.weekday5,
+      attendanceStatistics?.getAttendanceStatistics.weekday6,
+      attendanceStatistics?.getAttendanceStatistics.weekday7,
+    ],
     datasets: [
       {
         label: t('module.home.dashboard.dashboardPanel.graph.headers.vacancies') as string,
-        data: topNumProyectOrganizationStatistics?.getAllOrganizations.docs.map(
-          ({ numProyect }) => numProyect
-        ) as number[],
-      },
-    ],
-  };
-
-  const pieDataAlumns: ChartData = {
-    labels: topNumProyectOrganizationStatistics?.getAllOrganizations.docs.map(({ name }) => name),
-    datasets: [
-      {
-        data: topNumProyectOrganizationStatistics?.getAllOrganizations.docs.map(
-          ({ vacancyNumbers }) => vacancyNumbers
-        ) as number[],
+        data: [
+          attendanceStatistics?.getAttendanceStatistics.weekday1,
+          attendanceStatistics?.getAttendanceStatistics.weekday2,
+          attendanceStatistics?.getAttendanceStatistics.weekday3,
+          attendanceStatistics?.getAttendanceStatistics.weekday4,
+          attendanceStatistics?.getAttendanceStatistics.weekday5,
+          attendanceStatistics?.getAttendanceStatistics.weekday6,
+          attendanceStatistics?.getAttendanceStatistics.weekday7,
+        ],
       },
     ],
   };
@@ -88,17 +110,6 @@ function DashboardAttendancePanel() {
     },
   };
 
-  useEffect(() => {
-    setVacancyStatistics(vacancyStatisticsData);
-    setProgramType(programTypeData);
-    setTopNumProyectOrganizationStatistics(topNumProyectOrganizationStatisticsData);
-    setTopVacancyNumbersOrganizationStatistics(topVacancyNumbersOrganizationStatisticsData);
-  }, [
-    vacancyStatisticsData,
-    programTypeData,
-    topNumProyectOrganizationStatisticsData,
-    topVacancyNumbersOrganizationStatisticsData,
-  ]);
 
   return (
     <div className="grid">
@@ -138,10 +149,10 @@ function DashboardAttendancePanel() {
           <div className="flex justify-content-between mb-3">
             <div>
               <span className="block text-500 font-medium mb-3">
-                {t('global.dictionary.activityTypes.CULT')}
+                {t('global.dictionary.Absents')}
               </span>
               <div className="text-900 font-medium text-3xl">
-                {programType?.programTypeStatistics[0].vacanciesCULT}
+                {attendanceStatistics?.getAttendanceStatistics.classAbsentDay}
               </div>
             </div>
             <div
@@ -158,10 +169,10 @@ function DashboardAttendancePanel() {
           <div className="flex justify-content-between mb-3">
             <div>
               <span className="block text-500 font-medium mb-3">
-                {t('global.dictionary.activityTypes.CIVIC')}
+                {t('global.dictionary.Justified')}
               </span>
               <div className="text-900 font-medium text-3xl">
-                {programType?.programTypeStatistics[0].vacanciesCIVIC}
+                {attendanceStatistics?.getAttendanceStatistics.classJustifyDay}
               </div>
             </div>
             <div
@@ -178,10 +189,10 @@ function DashboardAttendancePanel() {
           <div className="flex justify-content-between mb-3">
             <div>
               <span className="block text-500 font-medium mb-3">
-                {t('global.dictionary.activityTypes.DEP')}
+                {t('global.dictionary.Presented')}
               </span>
               <div className="text-900 font-medium text-3xl">
-                {programType?.programTypeStatistics[0].vacanciesDEP}
+                {attendanceStatistics?.getAttendanceStatistics.classPresentDay}
               </div>
             </div>
             <div
@@ -193,7 +204,7 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
-      <div className="col-12 lg:col-6 xl:col-3">
+      {/* <div className="col-12 lg:col-6 xl:col-3">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
@@ -391,7 +402,7 @@ function DashboardAttendancePanel() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="col-12 xl:col-6">
         <div className="card">
@@ -403,7 +414,7 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
-      <div className="col-12 xl:col-6">
+      {/* <div className="col-12 xl:col-6">
         <div className="card">
           <div className="flex flex-column align-items-center">
             <h5 className="text-left w-full">
@@ -412,7 +423,7 @@ function DashboardAttendancePanel() {
             <Chart type="pie" data={pieDataAlumns} options={pieOptions} />
           </div>
         </div>
-      </div>
+      </div> */}
       {/* {visibleDISPO && (
         <DISPO
           headerTitle={t('module.home.dashboard.dashboardPanel.vacanciesAvaliable')}

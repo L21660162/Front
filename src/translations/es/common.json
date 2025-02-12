@@ -176,6 +176,9 @@
       "TimeStart": "Hora de inicio",
       "TimeEnd": "Hora de finalización",
       "schedule": "Horario",
+      "Absents": "Ausentes",
+      "Justified": "Justificados",
+      "Presented": "Presentes",
       "roles": {
         "rules": "Rol del usuario",
         "DIRECTOR": "Director Academico",
