@@ -33,7 +33,7 @@ return (
         </div>
         <div className="mt-3 lg:mt-0">
         <Button
-            label={t('module.period.dashboard.addperiod') as string}
+            label={t('module.period.dashboard.addPeriod') as string}
             className="p-button-rounded p-button-raised mr-2"
             icon="pi pi-briefcase"
             onClick={() => setVisible(true)}

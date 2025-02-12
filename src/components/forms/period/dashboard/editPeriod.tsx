@@ -247,7 +247,7 @@ export default function EditPeriodDialogForm({
               name="finalDate"
               control={control}
               rules={{
-                required: t('global.forms.validation.finalDate') as string,
+                required: t('global.forms.validation.endDate') as string,
               }}
               render={({ field, fieldState }) => (
                 <Calendar
@@ -260,7 +260,7 @@ export default function EditPeriodDialogForm({
               )}
             />
             <label htmlFor="finalDate" className={classNames({ 'p-error': !!errors.finalDate })}>
-              {t('global.dictionary.finalDate')}*
+              {t('global.dictionary.endDate')}*
             </label>
           </span>
           {errors.startDate && (

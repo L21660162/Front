@@ -36,6 +36,14 @@
       "label": "Edificios",
       "dashboard": "Panel de Edificios"
     },
+    "period": {
+      "label": "Períodos",
+      "dashboard": "Panel de Períodos"
+    },
+    "department": {
+      "label": "Departamentos",
+      "dashboard": "Panel de Departamentos"
+    },
     "settings": {
       "label": "Configuración",
       "dashboard": "Panel de Configuración",
@@ -70,6 +78,11 @@
   "global": {
     "forms": {
       "submit": "Enviar",
+      "placeholders": {
+        "selectStartDate": "Seleccione fecha inicial",
+        "selectEndDate": "Seleccione fecha final",
+        "addDepartment": "Abrir formulario de nuevo departamento"
+      },
       "validation": {
         "firstName": "El nombre es obligatiorio",
         "lastName": "El apellido es obligatorio",
@@ -91,6 +104,11 @@
         "groupName": "Nombre del grupo es requerido",
         "abbreviationGroup": "Abreviatura es requerida",
         "cancel": "Cancelar",
+        "periodNameRequired": "El nombre del período es requerido",
+        "startDateRequired": "La fecha de inicio es requerida",
+        "endDateRequired": "La fecha de fin es requerida",
+        "largeIdentifierRequired": "La fecha larga es requerida",
+        "shortIdentifierRequired": "La fecha corta es requerida",
         "errors": {
           "missingId": "No se pudo actualizar, falta el ID del edificio"
         },
@@ -144,7 +162,22 @@
       "tBuildingName": "Nombre del Edificio",
       "tBuildingDescription": "Letra del Edificio",
       "buildingName": "Nombre del Edificio",
-      "buildingAbbreviation": "Abreviatura del Edificio"
+      "buildingAbbreviation": "Abreviatura del Edificio",
+      "perioddirectory": "Directorio de Períodos",
+      "tperiodName": "Nombre del Período",
+      "tlargeIdentifier": "Fecha Larga",
+      "tshortIdentifier": "Fecha Corta",
+      "Noperiod": "No se encontraron períodos",
+      "name": "Nombre",
+      "largeIdentifier": "Fecha Larga",
+      "periodName": "Nombre del Período",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "shortIdentifier": "Fecha Corta",
+      "departmentDirectory": "Directorio de Departamentos",
+      "departmentBoss": "Jefe de Departamento",
+      "areaKey": "Clave de Área",
+      "noDepartments": "No se encontraron departamentos"
     },
     "buttons": {
       "yes": "Sí",
@@ -160,7 +193,8 @@
       "placeholder": "Buscar..."
     },
     "paginator": {
-      "currentReport": "Mostrando del {first} al {last} de {totalRecords} edificios"
+      "currentReport": "Mostrando del {first} al {last} de {totalRecords} edificios",
+      "periodReport": "Mostrando del {first} al {last} de {totalRecords} períodos"
     },
     "toast": {
       "error": {
@@ -175,7 +209,8 @@
           "groupCreateSuccess": "Grupo creado exitosamente",
           "GroupEditSuccess": "Grupo actualizado exitosamente",
           "buildingDeleteSuccess": "Edificio eliminado exitosamente",
-          "buildingCreateSuccess": "Edificio creado exitosamente"
+          "buildingCreateSuccess": "Edificio creado exitosamente",
+          "periodDeleteSuccess": "Período eliminado exitosamente"
         }
       }
     },
@@ -236,6 +271,37 @@
         "dialog": {
           "add": {
             "header": "Crear Nuevo Edificio"
+          }
+        }
+      }
+    },
+    "periods": {
+      "dashboard": {
+        "dialog": {
+          "edit": {
+            "header": "Editar Período"
+          }
+        }
+      }
+    },
+    "period": {
+      "dashboard": {
+        "addPeriod": "Agregar Período",
+        "dialog": {
+          "add": {
+            "header": "Crear Nuevo Período"
+          }
+        }
+      }
+    },
+    "department": {
+      "showingDepartments": "Mostrando del {first} al {last} de {totalRecords} departamentos",
+      "deleteConfirmation": "¿Estás seguro de eliminar <b>{name}</b>?",
+      "dashboard": {
+        "addDepartment": "Agregar Departamento",
+        "dialog": {
+          "add": {
+            "header": "Nuevo Departamento"
           }
         }
       }

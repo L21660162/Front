@@ -33,7 +33,7 @@ return (
         </div>
         <div className="mt-3 lg:mt-0">
         <Button
-            label={t('module.department.dashboard.adddepartment') as string}
+            label={t('module.department.dashboard.addDepartment') as string}
             className="p-button-rounded p-button-raised mr-2"
             icon="pi pi-briefcase"
             onClick={() => setVisible(true)}

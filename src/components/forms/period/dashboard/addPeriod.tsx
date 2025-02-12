@@ -177,7 +177,7 @@ return (
       )}
     />
             <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-            {t('global.dictionary.abbreviationperiod')}*
+            {t('global.dictionary.startDate')}*
             </label>
         </span>
         {errors.name && <small className="p-error">{errors.name?.message}</small>}
@@ -205,7 +205,7 @@ return (
       )}
     />
             <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-            {t('global.dictionary.abbreviationperiod')}*
+            {t('global.dictionary.endDate')}*
             </label>
         </span>
         {errors.name && <small className="p-error">{errors.name?.message}</small>}
@@ -217,7 +217,7 @@ return (
             name="largeIdentifier"
             control={control}
             rules={{
-                required: t('global.forms.validation.abbreviationperiod') as string,
+                required: t('global.forms.validation.largeIdentifier') as string,
             }}
             render={({ field, fieldState }) => (
                 <InputText
@@ -228,7 +228,7 @@ return (
             )}
             />
             <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-            {t('global.dictionary.abbreviationperiod')}*
+            {t('global.dictionary.largeIdentifier')}*
             </label>
         </span>
         {errors.name && <small className="p-error">{errors.name?.message}</small>}
@@ -241,7 +241,7 @@ return (
             name="shortIdentifier"
             control={control}
             rules={{
-                required: t('global.forms.validation.abbreviationperiod') as string,
+                required: t('global.forms.validation.shortIdentifier') as string,
             }}
             render={({ field, fieldState }) => (
                 <InputText
@@ -252,7 +252,7 @@ return (
             )}
             />
             <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-            {t('global.dictionary.abbreviationperiod')}*
+            {t('global.dictionary.shortIdentifier')}*
             </label>
         </span>
         {errors.name && <small className="p-error">{errors.name?.message}</small>}
