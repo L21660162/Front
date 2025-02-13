@@ -4,7 +4,12 @@ import { Badge } from 'primereact/badge';
 import { IAttendanceStatus, useGetAllAttendancesQuery } from '../../../graphql/graphql';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 
-export default function JustifyStatus(id: string, onVisibilityChange: (visible: boolean) => void) {
+interface JustifyStatusProps {
+  id: string;
+  onVisibilityChange: (visible: boolean, id: string) => void;
+}
+
+export default function JustifyStatus({ id, onVisibilityChange }: JustifyStatusProps) {
   const [visible, setVisible] = useState(false);
   const { data: status } = useGetAllAttendancesQuery(GRAPHQL_CLIENT, {
     page: 1,
@@ -21,7 +26,7 @@ export default function JustifyStatus(id: string, onVisibilityChange: (visible: 
 
   const handleClick = () => {
     setVisible(true);
-    onVisibilityChange(true);
+    onVisibilityChange(true, id);
   };
 
   return (

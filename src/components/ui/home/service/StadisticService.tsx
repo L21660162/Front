@@ -3,7 +3,11 @@ import {
   useGetAttendanceStatisticsQuery,
   IGetAttendanceStatisticsQuery,
   IGetUniqueOptionsCareerQuery,
+  useGetAllUsersQuery,
+  IRoles,
+  IUser,
 } from '../../../../graphql/graphql';
+import Justify from '../../../../pages/justifies';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -24,5 +28,31 @@ export const StadisticServices = (
     teacher,
   });
 
-  return { careerOptionsData, attendanceStatistics };
+  const { data: users } = useGetAllUsersQuery(GRAPHQL_CLIENT, {
+    page: 1,
+    limit: 500,
+    offset: 0,
+    filter: {
+      roles: [IRoles.Docente],
+    },
+  });
+
+  const datosDocente = users?.getAllUsers.docs.map((user: IUser) => ({
+    id: user._id,
+    fullname: `${user.firstName} ${user.lastName} ${user.middleName}`,
+  }));
+
+  // const DatosCareera = careerOptionsData?.getUniqueOptionsCareer.careers.map((career) => {
+  //   const datacareer = useGetAttendanceStatisticsQuery(GRAPHQL_CLIENT, {
+  //     career: career.value,
+  //   });
+  //   return {
+  //     name: career.label,
+  //     absent: datacareer.data?.getAttendanceStatistics.classAbsentPeriod,
+  //     present: datacareer.data?.getAttendanceStatistics.classPresentPeriod,
+  //     justify: datacareer.data?.getAttendanceStatistics.classJustifyPeriod,
+  //   };
+  // });
+
+  return { careerOptionsData, attendanceStatistics, datosDocente };
 };

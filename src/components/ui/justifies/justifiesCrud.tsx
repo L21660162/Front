@@ -43,9 +43,11 @@ export default function JustifyCrud() {
   const { visible, setVisible } = dialogStore();
   const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const currentDay = new Date().getDay();
+  const [scheduleId, setScheduleId] = useState<string | null>(null);
 
-  const handleVisibilityChange = (newVisible) => {
-    setVisible(newVisible);
+  const handleVisibilityChange = (visible: boolean, id: string) => {
+    setVisible(visible);
+    setScheduleId(id);
   };
 
   const {
@@ -64,7 +66,7 @@ export default function JustifyCrud() {
   const { data: allScheduleData, refetch: requestUserById } = useGetSchedulesFormattedQuery(
     GRAPHQL_CLIENT,
     {
-      teacher: '678fdf64e5dab4d5b006408c',
+      teacher: userId,
     }
   );
 
@@ -142,16 +144,19 @@ export default function JustifyCrud() {
             >
               <h3 className="text-center">{daysOfWeek[day - 1]}</h3>
               {schedules.map((product) => (
-                <div key={`${product._id}`} className="p-2 border-1 surface-border border-round">
+                <div
+                  key={`${product._id}`}
+                  className="p-2 border-1 surface-border border-round bg-white shadow-2 hover:shadow-3 transition-shadow"
+                >
                   <div className="gap-2">
                     <div className="flex align-items-center gap-2">
                       <i className="pi pi-clock" />
-                      <span className="font-semibold text-center text-xs">
+                      <span className="font-semibold text-xs">
                         {time(product.startTime)} - {time(product.finalTime)}
                       </span>
                     </div>
                   </div>
-                  <div className=" gap-3 py-5">
+                  <div className="flex flex-column gap-3 py-5">
                     <div className="font-bold text-center">{product.subjectLargeName}</div>
                   </div>
                   <div className="grid ">
@@ -162,7 +167,10 @@ export default function JustifyCrud() {
                     </div>
                     <div className="col-4">
                       <span className="font-semibold text-center text-sm">
-                        {JustifyStatus(product._id, handleVisibilityChange)}
+                        <JustifyStatus
+                          id={product._id}
+                          onVisibilityChange={handleVisibilityChange}
+                        />
                       </span>
                     </div>
                     <div className="col-4 text-right">
@@ -186,7 +194,7 @@ export default function JustifyCrud() {
             visible={visible}
             setVisible={setVisible}
             headerTitle={t('module.subject.dashboard.dialog.edit.header')}
-            id="678fe4cbe5dab4d5b006450f"
+            id={scheduleId}
           />
         )}
       </div>
