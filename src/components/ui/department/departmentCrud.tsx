@@ -48,14 +48,12 @@ function DepartmentCrud() {
   const dt = useRef<DataTable<any>>(null);
   const [visibleEditDepartment, setVisibleEditDepartment] = useState(false);
 
-  // Obtener departamentos
   const { data, refetch } = useGetAllDepartmentsQuery<IGetAllDepartmentsQuery>(GRAPHQL_CLIENT, {
     limit: 500,
     page: 1,
     offset: 0,
   });
 
-  // Obtener usuarios
   const { data: usersData } = useGetAllUsersQuery<IGetAllUsersQuery>(GRAPHQL_CLIENT, {
     limit: 500,
     page: 1,
@@ -124,7 +122,6 @@ function DepartmentCrud() {
 
   const bossBodyTemplate = (department: IDepartment) => {
     const bossUser = users.find(user => user._id === department.departmentBoss);
-
     return (
       <>
         <span className="p-column-title">Boss</span>
@@ -144,21 +141,25 @@ function DepartmentCrud() {
 
   const actionBodyTemplate = (rowData: IDepartment) => {
     return (
-      <>
+      <div className="flex align-items-center">
         <Button
           icon="pi pi-pencil"
+          className="mb-2"
           rounded
-          severity="success"
-          className="mr-2"
+          outlined
+          severity="warning"
           onClick={() => editDepartment(rowData)}
+          style={{ marginRight: '10px' }}
         />
         <Button
           icon="pi pi-trash"
+          className="mb-2"
           rounded
-          severity="warning"
+          outlined
+          severity="danger"
           onClick={() => confirmDeleteDepartment(rowData)}
         />
-      </>
+      </div>
     );
   };
 
@@ -218,39 +219,69 @@ function DepartmentCrud() {
               header={t('global.dictionary.departmentName')}
               sortable
               body={nameBodyTemplate}
-              headerStyle={{ minWidth: '15rem' }}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
             />
             <Column
               field="departmentBoss"
               header={t('global.dictionary.departmentBoss')}
               sortable
               body={bossBodyTemplate}
-              headerStyle={{ minWidth: '15rem' }}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
             />
             <Column
               field="areaKey"
               header={t('global.dictionary.areaKey')}
               sortable
               body={areaKeyBodyTemplate}
-              headerStyle={{ minWidth: '15rem' }}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
             />
-            <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }} />
+            <Column
+              body={actionBodyTemplate}
+              header={t('global.dictionary.actions')}
+              headerStyle={{
+                minWidth: '10rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+            />
           </DataTable>
 
           <Dialog
             visible={deleteDepartmentDialog}
             style={{ width: '450px' }}
-            header={t('global.confirmation')}
+            header={t('global.confirmation.deleteTitle')}
             modal
             footer={deleteDepartmentDialogFooter}
             onHide={hideDeleteDepartmentDialog}
           >
             <div className="flex align-items-center justify-content-center">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              <i 
+                className="pi pi-exclamation-triangle mr-3" 
+                style={{ fontSize: '2rem', color: '#e57373' }}
+              />
               {selectedDepartment && (
                 <span>
-                  {t('module.departments.deleteConfirmation', {
-                    name: selectedDepartment.name,
+                  {t('module.department.deleteConfirmation', {
+                    name: <b>{selectedDepartment.name}</b>,
                   })}
                 </span>
               )}

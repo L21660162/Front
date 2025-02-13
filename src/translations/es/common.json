@@ -171,6 +171,7 @@
       "buildingName": "Nombre del Edificio",
       "buildingAbbreviation": "Abreviatura del Edificio",
       "perioddirectory": "Directorio de Períodos",
+      "GroupDirectory": "Directorio de Grupos",
       "tperiodName": "Nombre del Período",
       "tlargeIdentifier": "Fecha Larga",
       "tshortIdentifier": "Fecha Corta",
@@ -189,7 +190,8 @@
       "selectPeriod": "Seleccionar período",
       "departmentName": "Nombre del Departamento",
       "boss": "Jefe",
-      "abbreviationDepartment": "Abreviatura del Departamento"
+      "abbreviationDepartment": "Abreviatura del Departamento",
+      "actions": "Editar/Borrar"
     },
     "buttons": {
       "yes": "Sí",
@@ -315,7 +317,7 @@
     },
     "department": {
       "showingDepartments": "Mostrando del {first} al {last} de {totalRecords} departamentos",
-      "deleteConfirmation": "¿Estás seguro de eliminar <b>{name}</b>?",
+      "deleteConfirmation": "¿Estás seguro de eliminar?",
       "dashboard": {
         "addDepartment": "Agregar Departamento",
         "dialog": {

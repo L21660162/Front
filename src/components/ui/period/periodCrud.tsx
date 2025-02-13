@@ -16,11 +16,10 @@ import {
   useGetAllPeriodsQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
-import { dialogStore } from '../../../store/global/dialogStore';
 import EditperiodDialogForm from '../../forms/period/dashboard/editPeriod';
 
 function PeriodCrud() {
-  const emptyperiod: IPeriod = {
+  const emptyPeriod: IPeriod = {
     _id: '',
     name: '',
     largeIdentifier: '',
@@ -37,16 +36,13 @@ function PeriodCrud() {
   const navigate = useNavigate({ from: '/career/dashboard' });
   const toast = useRef<Toast>(null);
 
-  const [periods, setperiods] = useState(null);
-  const [deleteBuildsDialog, setDeleteBuildsDialog] = useState(false);
-  const [period, setperiod] = useState<IPeriod>(emptyperiod);
-  const [selectedperiods, setSelectedperiods] = useState(null);
+  const [deletePeriodDialog, setDeletePeriodDialog] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState<IPeriod>(emptyPeriod);
   const [globalFilter, setGlobalFilter] = useState('');
   const dt = useRef<DataTable<any>>(null);
-  const [selectedBuilds, setSelectedBuilds] = useState<IPeriod | null>(null);
-  const [visibleEditperiod, setVisibleEditperiod] = useState(false);
+  const [visibleEditPeriod, setVisibleEditPeriod] = useState(false);
 
-  const { data } = useGetAllPeriodsQuery<IGetAllPeriodsQuery>(GRAPHQL_CLIENT, {
+  const { data, refetch } = useGetAllPeriodsQuery<IGetAllPeriodsQuery>(GRAPHQL_CLIENT, {
     limit: 500,
     page: 1,
     offset: 0,
@@ -59,10 +55,7 @@ function PeriodCrud() {
         summary: t('global.toast.success.summary'),
         detail: t('global.toast.success.detail.periodDeleteSuccess'),
       });
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 50);
+      refetch();
     },
     onError: (errorResponse: IApiError) => {
       toast.current?.show({
@@ -74,24 +67,23 @@ function PeriodCrud() {
     },
   });
 
-  const hideDeleteperiodsDialog = () => {
-    setDeleteBuildsDialog(false);
+  const hideDeletePeriodDialog = () => {
+    setDeletePeriodDialog(false);
   };
 
-  const editperiod = (period: IPeriod) => {
-    setSelectedBuilds(period);
-    setVisibleEditperiod(true);
+  const editPeriod = (period: IPeriod) => {
+    setSelectedPeriod(period);
+    setVisibleEditPeriod(true);
   };
 
-  const confirmDeleteperiod = (period: IPeriod) => {
-    setperiod(period);
-    setDeleteBuildsDialog(true);
+  const confirmDeletePeriod = (period: IPeriod) => {
+    setSelectedPeriod(period);
+    setDeletePeriodDialog(true);
   };
 
-  const deleteperiod = () => {
-    const _periods = period._id;
-    mutate({ data: { _id: _periods } });
-    setDeleteBuildsDialog(false);
+  const deletePeriod = () => {
+    mutate({ data: { _id: selectedPeriod._id } });
+    setDeletePeriodDialog(false);
   };
 
   const exportCSV = () => {
@@ -101,59 +93,82 @@ function PeriodCrud() {
   const nameBodyTemplate = (period: IPeriod) => {
     return (
       <>
-        <span className="p-column-title">Name</span>
+        <span className="p-column-title">{t('global.dictionary.name')}</span>
         {period.name}
       </>
     );
   };
 
-  const descriptionBodyTemplate = (period: IPeriod) => {
+  const identifierBodyTemplate = (field: 'largeIdentifier' | 'shortIdentifier') => (period: IPeriod) => {
     return (
       <>
-        <span className="p-column-title">Large Identifier</span>
-        {period.largeIdentifier}
+        <span className="p-column-title">{t(`global.dictionary.t${field}`)}</span>
+        {period[field]}
+      </>
+    );
+  };
+
+  const dateBodyTemplate = (field: 'startDate' | 'finalDate') => (period: IPeriod) => {
+    return (
+      <>
+        <span className="p-column-title">{t(`global.dictionary.t${field}`)}</span>
+        {new Date(period[field]).toLocaleDateString()}
       </>
     );
   };
 
   const actionBodyTemplate = (rowData: IPeriod) => {
     return (
-      <>
+      <div className="flex align-items-center">
         <Button
           icon="pi pi-pencil"
+          className="mb-2"
           rounded
-          severity="success"
-          className="mr-2"
-          onClick={() => editperiod(rowData)}
+          outlined
+          severity="warning"
+          onClick={() => editPeriod(rowData)}
+          style={{ marginRight: '10px' }}
         />
         <Button
           icon="pi pi-trash"
+          className="mb-2"
           rounded
-          severity="warning"
-          onClick={() => confirmDeleteperiod(rowData)}
+          outlined
+          severity="danger"
+          onClick={() => confirmDeletePeriod(rowData)}
         />
-      </>
+      </div>
     );
   };
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t('global.dictionary.perioddirectory')}</h5>
+      <h5 className="m-0">{t('global.dictionary.periodDirectory')}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           type="search"
           onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-          placeholder="Search..."
+          placeholder={t('global.search') || ''}
         />
       </span>
     </div>
   );
 
-  const deleteperiodDialogFooter = () => (
+  const deletePeriodDialogFooter = (
     <>
-      <Button label="No" icon="pi pi-times" text onClick={hideDeleteperiodsDialog} />
-      <Button label="Yes" icon="pi pi-check" text onClick={deleteperiod} />
+      <Button 
+        label={t('global.no')} 
+        icon="pi pi-times" 
+        text 
+        onClick={hideDeletePeriodDialog} 
+      />
+      <Button 
+        label={t('global.yes')} 
+        icon="pi pi-check" 
+        text 
+        onClick={deletePeriod} 
+      />
     </>
   );
 
@@ -163,29 +178,27 @@ function PeriodCrud() {
         <div className="card">
           <Toast ref={toast} />
 
-          {selectedBuilds && visibleEditperiod && (
+          {selectedPeriod && visibleEditPeriod && (
             <EditperiodDialogForm
               headerTitle={t('module.periods.dashboard.dialog.edit.header')}
-              visible={visibleEditperiod}
-              setVisible={setVisibleEditperiod}
-              period={selectedBuilds}
+              visible={visibleEditPeriod}
+              setVisible={setVisibleEditPeriod}
+              period={selectedPeriod}
             />
           )}
 
           <DataTable
             ref={dt}
             value={data?.getAllPeriods.docs}
-            selection={selectedperiods}
-            onSelectionChange={(e) => setSelectedperiods(e.value as any)}
             dataKey="_id"
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} períodos"
+            currentPageReportTemplate={t('global.paginator.periodReport') as string}
             globalFilter={globalFilter}
-            emptyMessage={t('global.dictionary.Noperiod')}
+            emptyMessage={t('global.dictionary.noPeriods')}
             header={header}
             responsiveLayout="scroll"
           >
@@ -194,38 +207,70 @@ function PeriodCrud() {
               header={t('global.dictionary.tperiodName')}
               sortable
               body={nameBodyTemplate}
-              headerStyle={{ minWidth: '15rem' }}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
             />
             <Column
               field="largeIdentifier"
               header={t('global.dictionary.tlargeIdentifier')}
               sortable
-              body={(rowData: IPeriod) => rowData.largeIdentifier}
-              headerStyle={{ minWidth: '15rem' }}
+              body={identifierBodyTemplate('largeIdentifier')}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
             />
             <Column
               field="shortIdentifier"
               header={t('global.dictionary.tshortIdentifier')}
               sortable
-              body={(rowData: IPeriod) => rowData.shortIdentifier}
-              headerStyle={{ minWidth: '15rem' }}
+              body={identifierBodyTemplate('shortIdentifier')}
+              headerStyle={{
+                minWidth: '15rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+              style={{ textAlign: 'left' }}
             />
-            <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }} />
+            <Column
+              body={actionBodyTemplate}
+              header={t('global.dictionary.actions')}
+              headerStyle={{
+                minWidth: '10rem',
+                border: '1px solid #2a497b',
+                backgroundColor: '#2a497b',
+                color: 'white',
+              }}
+            />
           </DataTable>
 
           <Dialog
-            visible={deleteBuildsDialog}
+            visible={deletePeriodDialog}
             style={{ width: '450px' }}
-            header="Confirm"
+            header={t('global.confirmation.deleteTitle')}
             modal
-            footer={deleteperiodDialogFooter}
-            onHide={hideDeleteperiodsDialog}
+            footer={deletePeriodDialogFooter}
+            onHide={hideDeletePeriodDialog}
           >
             <div className="flex align-items-center justify-content-center">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {period && (
+              <i 
+                className="pi pi-exclamation-triangle mr-3" 
+                style={{ fontSize: '2rem', color: '#e57373' }}
+              />
+              {selectedPeriod && (
                 <span>
-                  ¿Estás seguro de que quieres eliminar <b>{period.name}</b>?
+                  {t('module.period.deleteConfirmation', {
+                    name: <b>{selectedPeriod.name}</b>,
+                  })}
                 </span>
               )}
             </div>
