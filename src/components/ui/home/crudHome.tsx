@@ -7,26 +7,38 @@ import { Timeline } from 'primereact/timeline';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import {
+  IDepartment,
   IFile,
   IGetAttendanceStatisticsQuery,
   IGetUniqueOptionsCareerQuery,
   useGetAllDepartmentsQuery,
+  useGetAllPeriodsQuery,
 } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
 import { StadisticServices } from './service/StadisticService'; // Importa el hook personalizado
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import { MenuItem } from 'primereact/menuitem';
+import { Menubar } from 'primereact/menubar';
+import { ScrollPanel } from 'primereact/scrollpanel';
+import { AutoComplete, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
+
+
 
 function DashboardAttendancePanel() {
   const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);
   const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
+  const [filteredCareers, setFilteredCareers] = useState<string[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
+  const [filteredPeriod, setFilteredPeriod] = useState<string[]>([]);
   const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
+  const [filteredSemester, setFilteredSemester] = useState<string[]>([]);
   const [selectedTeacher, setSelectedTeacher] = useState<string | null>(null);
+  const [filteredTeacher, setFilteredTeacher] = useState<string[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
-
-  // Usa el hook personalizado
+  const [filteredDepartment, setFilteredDepartment] = useState<string[]>([]);
+  const [value, setValue] = useState<number>(4);
   const { careerOptionsData, attendanceStatistics } = StadisticServices(
     selectedCareer,
     selectedDepartment,
@@ -46,6 +58,90 @@ function DashboardAttendancePanel() {
   const [visibleDISPO, setVisibleDISPO] = useState(false);
   const [visibleINPGR, setVisibleINPGR] = useState(false);
   const [visibleFINSH, setVisibleFINSH] = useState(false);
+
+  const { data: department } = useGetAllDepartmentsQuery(GRAPHQL_CLIENT, {
+    page: 1,
+    offset: 0,
+    limit: 100
+  })
+
+  const { data: period } = useGetAllPeriodsQuery(GRAPHQL_CLIENT, {
+    limit: 100,
+    page: 1,
+    offset: 0
+  })
+
+  const searchCareers = (event: AutoCompleteCompleteEvent) => {
+    setTimeout(() => {
+      let query;
+      if (!event.query.trim().length) {
+        query = [...careerOptionsData.getUniqueOptionsCareer.careers];
+      } else {
+        query = careerOptionsData.getUniqueOptionsCareer.careers.filter((option) => {
+          return option.label.toLowerCase().includes(query.toLowerCase());
+        });
+      }
+      setFilteredCareers(query);
+    }, 250);
+  }
+
+  const searchPeriods = (event: AutoCompleteCompleteEvent) => {
+    setTimeout(() => {
+      let query;
+      if (!event.query.trim().length) {
+        query = [...period.getAllPeriods.docs];
+      } else {
+        query = period.getAllPeriods.docs.filter((option) => {
+          return option.name.toLowerCase().includes(query.toLowerCase());
+        });
+      }
+      setFilteredPeriod(query);
+    }, 250);
+  }
+
+  const searchDepartments = (event: AutoCompleteCompleteEvent) => {
+    setTimeout(() => {
+      let query;
+      if (!event.query.trim().length) {
+        query = [...department.getAllDepartments.docs];
+      } else {
+        query = department.getAllDepartments.docs.filter((option) => {
+          return option.name.toLowerCase().includes(query.toLowerCase());
+        });
+      }
+      setFilteredDepartment(query);
+    }, 250);
+  }
+
+  const searchSemesters = (event: AutoCompleteCompleteEvent) => {
+    setTimeout(() => {
+      let query;
+      if (!event.query.trim().length) {
+        query = [...careerOptionsData.getUniqueOptionsCareer.semesters];
+      } else {
+        query = careerOptionsData.getUniqueOptionsCareer.semesters.filter((option) => {
+          return option.toLowerCase().includes(query.toLowerCase());
+        });
+      }
+      setFilteredSemester(query);
+    }, 250);
+  }
+
+  const searchTeachers = (event: AutoCompleteCompleteEvent) => {
+    setTimeout(() => {
+      let query;
+      if (!event.query.trim().length) {
+        query = [...careerOptionsData.getUniqueOptionsCareer.teachers];
+      } else {
+        query = careerOptionsData.getUniqueOptionsCareer.teachers.filter((option) => {
+          return option.toLowerCase().includes(query.toLowerCase());
+        });
+      }
+      setFilteredTeacher(query);
+    }, 250);
+  }
+
+
 
   const showDISPO = () => {
     setVisibleDISPO(true);
@@ -67,11 +163,6 @@ function DashboardAttendancePanel() {
     }
   }, [careerOptionsData, attendanceStatistics]);
 
-  if (loading) {
-    return <p>Cargando...</p>;
-  }
-
-  
 
   const pieDataOrg: ChartData = {
     labels: [
@@ -140,6 +231,10 @@ function DashboardAttendancePanel() {
                 {t('sidebar.home.dashboard.vacancy')}
               </div>
             </div>
+            
+            <div className="flex align-items-center justify-content-between">
+            <AutoComplete value={selectedCareer} suggestions={filteredCareers} completeMethod={searchCareers} field="label" onChange={(e) => setSelectedCareer(e.value)} placeholder="Carrera" />
+          </div>
           </div>
         </div>
       </div>
@@ -152,7 +247,7 @@ function DashboardAttendancePanel() {
                 {t('global.dictionary.Absents')}
               </span>
               <div className="text-900 font-medium text-3xl">
-                {attendanceStatistics?.getAttendanceStatistics.classAbsentDay}
+                {value === 1 ? attendanceStatistics?.getAttendanceStatistics.classAbsentDay : value === 2 ? attendanceStatistics?.getAttendanceStatistics.classAbsentMonth : value === 3 ? attendanceStatistics?.getAttendanceStatistics.classAbsentSemester : attendanceStatistics?.getAttendanceStatistics.classAbsentYear}
               </div>
             </div>
             <div
@@ -172,7 +267,7 @@ function DashboardAttendancePanel() {
                 {t('global.dictionary.Justified')}
               </span>
               <div className="text-900 font-medium text-3xl">
-                {attendanceStatistics?.getAttendanceStatistics.classJustifyDay}
+                {value === 1 ? attendanceStatistics?.getAttendanceStatistics.classJustifyDay : value === 2 ? attendanceStatistics?.getAttendanceStatistics.classJustifyMonth : value === 3 ? attendanceStatistics?.getAttendanceStatistics.classJustifySemester : attendanceStatistics?.getAttendanceStatistics.classJustifyYear}
               </div>
             </div>
             <div
@@ -192,7 +287,7 @@ function DashboardAttendancePanel() {
                 {t('global.dictionary.Presented')}
               </span>
               <div className="text-900 font-medium text-3xl">
-                {attendanceStatistics?.getAttendanceStatistics.classPresentDay}
+                {value === 1 ? attendanceStatistics?.getAttendanceStatistics.classPresentDay : value === 2 ? attendanceStatistics?.getAttendanceStatistics.classPresentMonth : value === 3 ? attendanceStatistics?.getAttendanceStatistics.classPresentSemester : attendanceStatistics?.getAttendanceStatistics.classPresentYear}
               </div>
             </div>
             <div
