@@ -114,7 +114,7 @@ export default function EditDepartmentDialogForm({
 
   return (
     <Dialog
-      header={headerTitle}
+    header={t('module.department.dashboard.dialog.edit.header')}
       visible={visible}
       style={{ width: '35rem' }}
       onHide={() => {

@@ -141,7 +141,7 @@ export default function ClassroomDialogForm({
                                     {...field}
                                     className={classNames({ 'p-invalid': fieldState.invalid })}
                                 >
-                                    <option value="">{t('global.forms.selectPlaceholder')}</option>
+                                    <option value="">{t('global.forms.placeholders.selectPlaceholder')}</option>
                                     {data?.getAllBuildings.docs.map((building: IBuilding) => (
                                         <option key={building._id} value={building._id}>
                                             {building.name}

@@ -239,11 +239,7 @@ function GroupCrud() {
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate={t('global.dictionary.currentPageReportTemplate', {
-              first: '{first}',
-              last: '{last}',
-              totalRecords: '{totalRecords}'
-            })}
+            currentPageReportTemplate={t('global.paginator.groupReport')}
             globalFilter={globalFilter}
             emptyMessage={t('global.dictionary.NoGroup')}
             header={header}

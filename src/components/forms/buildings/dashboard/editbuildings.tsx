@@ -13,11 +13,11 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-    IGetBuildingByIdQuery,
-    IUpdateBuildingInput,
-    useGetBuildingByIdQuery,
-    useUpdateBuildingMutation,
-    IBuilding,
+  IGetBuildingByIdQuery,
+  IUpdateBuildingInput,
+  useGetBuildingByIdQuery,
+  useUpdateBuildingMutation,
+  IBuilding,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
@@ -76,7 +76,7 @@ export default function EditbuildingDialogForm({
     setValue,
   } = useForm<IUpdateBuildingInput>({
     defaultValues: {
-      _id: building._id || "", 
+      _id: building._id || "",
       name: building.name || '', // Usa un valor predeterminado si es null
       letter: building.letter || '', // Similar aquí
     },
@@ -84,9 +84,9 @@ export default function EditbuildingDialogForm({
 
   const onSubmit = (data: IUpdateBuildingInput) => {
     setIsButtonDisabld(true);
-    
+
     console.log("Datos enviados:", data);  // Debug
-  
+
     if (!data._id) {
       console.error("Error: _id está vacío");
       toast.current?.show({
@@ -98,7 +98,7 @@ export default function EditbuildingDialogForm({
       setIsButtonDisabld(false);
       return;
     }
-  
+
     mutate({
       data: {
         _id: data._id, // ✅ Se agrega el ID
@@ -106,7 +106,7 @@ export default function EditbuildingDialogForm({
         name: data.name,
       },
     });
-  };  
+  };
 
   const footerContent = (
     <div>
@@ -131,7 +131,7 @@ export default function EditbuildingDialogForm({
 
   return (
     <Dialog
-      header={headerTitle}
+      header={t('module.building.dashboard.dialog.edit.header')}
       visible={visible}
       style={{ width: '35rem' }}
       onHide={() => {
@@ -164,7 +164,7 @@ export default function EditbuildingDialogForm({
                   id={field.name}
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
-                  // defaultValue={buildingData?.getbuildingById.name}
+                // defaultValue={buildingData?.getbuildingById.name}
                 />
               )}
             />

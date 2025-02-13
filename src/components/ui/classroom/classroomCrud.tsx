@@ -19,6 +19,8 @@ import {
   IGetAllClassroomsQuery,
   useDeleteClassroomMutation,
   useGetAllClassroomsQuery,
+  useGetAllBuildingsQuery, 
+  IGetAllBuildingsQuery
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import { dialogStore } from '../../../store/global/dialogStore';
@@ -37,6 +39,7 @@ function ClassroomCrud() {
     deletedAt: undefined,
   };
 
+  const [buildings, setBuildings] = useState<Array<{ _id: string; name: string }>>([]);
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/career/dashboard' });
 
@@ -53,6 +56,15 @@ function ClassroomCrud() {
     page: 1,
     offset: 0,
   });
+
+  const { data: buildingsData } = useGetAllBuildingsQuery<IGetAllBuildingsQuery>(
+    GRAPHQL_CLIENT,
+    { 
+      limit: 500,
+      page: 1,
+      offset: 0 
+    }
+  );
 
   const { mutate } = useDeleteClassroomMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -79,6 +91,23 @@ function ClassroomCrud() {
       setClassrooms(data.getAllClassrooms.docs);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (buildingsData?.getAllBuildings.docs) {
+      setBuildings(buildingsData.getAllBuildings.docs);
+    }
+  }, [buildingsData]);
+
+  useEffect(() => {
+    if (data?.getAllClassrooms.docs && buildings.length > 0) {
+      const classroomsWithBuildingNames = data.getAllClassrooms.docs.map(classroom => ({
+        ...classroom,
+        building: buildings.find(b => b._id === classroom.building)?.name || 'Unknown'
+      }));
+      
+      setClassrooms(classroomsWithBuildingNames);
+    }
+  }, [data, buildings]); // Añadimos buildings como dependencia
 
   const hideDeleteClassroomDialog = () => {
     setDeleteClassroomDialog(false);
@@ -109,7 +138,7 @@ function ClassroomCrud() {
     return (
       <>
         <span className="p-column-title">Building</span>
-        {classroom.building}
+        {classroom.building} {/* Ahora mostrará el nombre */}
       </>
     );
   };
@@ -200,7 +229,7 @@ function ClassroomCrud() {
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} classrooms"
+            currentPageReportTemplate={t('global.paginator.classroomReport')}
             globalFilter={globalFilter}
             emptyMessage={t('global.dictionary.noClassroomsFound')}
             header={header}

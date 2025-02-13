@@ -136,11 +136,11 @@ export default function DepartmentDialogForm({
 
         {/* Campo para la clave del área */}
         <div className="field">
-          <label htmlFor="areaKey">{t('global.dictionary.abbreviationdepartment')}*</label>
+          <label htmlFor="areaKey">{t('global.dictionary.areaKey')}*</label>
           <Controller
             name="areaKey"
             control={control}
-            rules={{ required: t('global.forms.validation.abbreviationdepartment') as string }}
+            rules={{ required: t('global.forms.validation.areaKeyField') as string }}
             render={({ field, fieldState }) => (
               <span className="p-float-label">
                 <InputText
@@ -172,7 +172,7 @@ export default function DepartmentDialogForm({
           value={field.value || ""} // Convierte `null` o `undefined` a `""`
           className={classNames({ 'p-invalid': fieldState.invalid })}
         >
-          <option value="">{t('global.forms.selectPlaceholder')}</option>
+          <option value="">{t('global.forms.placeholders.selectDepartmentBoss')}</option>
           {usersData?.getAllUsers.docs.map((user) => (
             <option key={user._id} value={user._id}>
               {`${user.firstName} ${user.lastName}`}

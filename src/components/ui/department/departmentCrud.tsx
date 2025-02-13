@@ -164,7 +164,7 @@ function DepartmentCrud() {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t('global.dictionary.careerDirectory')}</h5>
+      <h5 className="m-0">{t('global.dictionary.departmentDirectory')}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -207,7 +207,7 @@ function DepartmentCrud() {
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate={t('module.departments.showingDepartments') as string}
+            currentPageReportTemplate={t('global.paginator.departmentReport') as string}
             globalFilter={globalFilter}
             emptyMessage={t('global.dictionary.noDepartments')}
             header={header}

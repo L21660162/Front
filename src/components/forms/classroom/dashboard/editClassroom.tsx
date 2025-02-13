@@ -190,7 +190,7 @@ export default function EditClassroomDialogForm({
                   value: building._id,
                 }))}
                 onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
-                placeholder={t('global.forms.selectPlaceholder') ?? ''} // Coalescencia nula para garantizar que sea una cadena
+                placeholder={t('global.forms.placeholders.selectPlaceholder') ?? ''} // Coalescencia nula para garantizar que sea una cadena
                 className={classNames({ 'p-invalid': fieldState.invalid })}
               />
 

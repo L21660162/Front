@@ -81,7 +81,9 @@
       "placeholders": {
         "selectStartDate": "Seleccione fecha inicial",
         "selectEndDate": "Seleccione fecha final",
-        "addDepartment": "Abrir formulario de nuevo departamento"
+        "addDepartment": "Abrir formulario de nuevo departamento",
+        "selectPlaceholder": "Seleccione un edificio",
+        "selectDepartmentBoss": "Seleccione jefe de departamento"
       },
       "validation": {
         "firstName": "El nombre es obligatiorio",
@@ -109,6 +111,11 @@
         "endDateRequired": "La fecha de fin es requerida",
         "largeIdentifierRequired": "La fecha larga es requerida",
         "shortIdentifierRequired": "La fecha corta es requerida",
+        "Classroom": "El aula es obligatoria",
+        "departmentName": "El nombre del departamento es obligatorio",
+        "abbreviationDepartment": "La abreviatura es obligatoria",
+        "requiredField": "Este campo es obligatorio",
+        "areaKeyField":"Clave de Área Obligatoria",
         "errors": {
           "missingId": "No se pudo actualizar, falta el ID del edificio"
         },
@@ -177,7 +184,12 @@
       "departmentDirectory": "Directorio de Departamentos",
       "departmentBoss": "Jefe de Departamento",
       "areaKey": "Clave de Área",
-      "noDepartments": "No se encontraron departamentos"
+      "noDepartments": "No se encontraron departamentos",
+      "selectCareer":"Seleccionar carrera",
+      "selectPeriod": "Seleccionar período",
+      "departmentName": "Nombre del Departamento",
+      "boss": "Jefe",
+      "abbreviationDepartment": "Abreviatura del Departamento"
     },
     "buttons": {
       "yes": "Sí",
@@ -194,7 +206,10 @@
     },
     "paginator": {
       "currentReport": "Mostrando del {first} al {last} de {totalRecords} edificios",
-      "periodReport": "Mostrando del {first} al {last} de {totalRecords} períodos"
+      "periodReport": "Mostrando del {first} al {last} de {totalRecords} períodos",
+      "classroomReport": "Mostrando del {first} al {last} de {totalRecords} aulas",
+      "groupReport": "Mostrando del {first} al {last} de {totalRecords} grupos",
+      "departmentReport": "Mostrando del {first} al {last} de {totalRecords} departamentos"
     },
     "toast": {
       "error": {
@@ -210,13 +225,14 @@
           "GroupEditSuccess": "Grupo actualizado exitosamente",
           "buildingDeleteSuccess": "Edificio eliminado exitosamente",
           "buildingCreateSuccess": "Edificio creado exitosamente",
-          "periodDeleteSuccess": "Período eliminado exitosamente"
+          "periodDeleteSuccess": "Período eliminado exitosamente",
+          "departmentCreateSuccess": "Departamento creado exitosamente"
         }
       }
     },
     "confirmation": {
       "deleteTitle": "Confirmar eliminación",
-      "deleteMessage": "¿Estás seguro de eliminar el aula {building} - {identifier}?",
+      "deleteMessage": "¿Estás seguro de eliminar el aula?",
       "yes": "Sí",
       "no": "No"
     },
@@ -271,6 +287,9 @@
         "dialog": {
           "add": {
             "header": "Crear Nuevo Edificio"
+          },
+          "edit": {
+            "header": "Editar Edificio"  
           }
         }
       }
@@ -302,6 +321,9 @@
         "dialog": {
           "add": {
             "header": "Nuevo Departamento"
+          },
+          "edit": {
+            "header": "Editar Departamento"  
           }
         }
       }
