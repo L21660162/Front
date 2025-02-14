@@ -165,7 +165,7 @@ function GroupCrud() {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t('global.dictionary.groupDirectory')}</h5>
+      <h5 className="m-0">{t('global.dictionary.GroupDirectory')}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -180,13 +180,13 @@ function GroupCrud() {
   const deleteGroupDialogFooter = (
     <>
       <Button
-        label={t('global.no')}
+        label={t('global.buttons.no')}
         icon="pi pi-times"
         text
         onClick={hideDeleteGroupDialog}
       />
       <Button
-        label={t('global.yes')}
+        label={t('global.buttons.yes')}
         icon="pi pi-check"
         text
         onClick={deleteGroup}
@@ -202,10 +202,10 @@ function GroupCrud() {
 
           {selectedGroup && visibleEditGroup && (
             <EditGroupDialogForm
-              headerTitle={t('module.group.dashboard.dialog.edit.header')}
+              headerTitle={t('module.Group.dashboard.dialog.edit.header')}
               visible={visibleEditGroup}
               setVisible={setVisibleEditGroup}
-              group={selectedGroup}
+              Group={selectedGroup}
             />
           )}
 
@@ -239,7 +239,7 @@ function GroupCrud() {
             />
             <Column
               field="period"
-              header={t('global.dictionary.tPeriodName')}
+              header={t('global.dictionary.period')}
               sortable
               body={periodBodyTemplate}
               headerStyle={{
@@ -252,7 +252,7 @@ function GroupCrud() {
             />
             <Column
               field="semester"
-              header={t('global.dictionary.tSemesterName')}
+              header={t('global.dictionary.semester')}
               sortable
               body={semesterBodyTemplate}
               headerStyle={{
@@ -303,7 +303,7 @@ function GroupCrud() {
               />
               {selectedGroup && (
                 <span>
-                  {t('module.group.deleteConfirmation', {
+                  {t('global.confirmation.deleteTitle', {
                     name: <b>{selectedGroup.identifier}</b>,
                   })}
                 </span>

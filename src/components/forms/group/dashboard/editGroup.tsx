@@ -202,7 +202,7 @@ export default function EditGroupDialogForm({
               name="identifier"
               control={control}
               rules={{
-                required: t('global.forms.validation.abbreviationGroup') as string,
+                required: t('global.dictionary.tIndentifier') as string,
               }}
               render={({ field, fieldState }) => (
                 <InputText
@@ -214,7 +214,7 @@ export default function EditGroupDialogForm({
               )}
             />
             <label htmlFor="identifier" className={classNames({ 'p-error': !!errors.identifier })}>
-              {t('global.dictionary.abbreviationGroup')}*
+              {t('global.dictionary.tIndentifier')}*
             </label>
           </span>
           {errors.identifier && <small className="p-error">{errors.identifier?.message}</small>}
@@ -227,7 +227,7 @@ export default function EditGroupDialogForm({
               name="semester"
               control={control}
               rules={{
-                required: t('global.forms.validation.abbreviationGroup') as string,
+                required: t('global.dictionary.semester') as string,
                 validate: (value) => !isNaN(Number(value)) || "El semestre debe ser un número",
               }}
               render={({ field, fieldState }) => (
@@ -240,7 +240,7 @@ export default function EditGroupDialogForm({
               )}
             />
             <label htmlFor="semester" className={classNames({ 'p-error': !!errors.semester })}>
-              {t('global.dictionary.abbreviationGroup')}*
+              {t('global.dictionary.semester')}*
             </label>
           </span>
           {errors.semester && <small className="p-error">{errors.semester?.message}</small>}

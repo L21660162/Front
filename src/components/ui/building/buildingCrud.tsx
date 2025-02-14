@@ -152,13 +152,13 @@ function BuildingCrud() {
   const deleteBuildingDialogFooter = (
     <>
       <Button 
-        label={t('global.no')} 
+        label={t('global.buttons.no')} 
         icon="pi pi-times" 
         text 
         onClick={hideDeleteBuildingDialog} 
       />
       <Button 
-        label={t('global.yes')} 
+        label={t('global.buttons.yes')} 
         icon="pi pi-check" 
         text 
         onClick={deleteBuilding} 
@@ -190,7 +190,7 @@ function BuildingCrud() {
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate={t('global.paginator.buildingReport') as string}
+            currentPageReportTemplate={t('global.paginator.BuildingReport') as string}
             globalFilter={globalFilter}
             emptyMessage={t('global.dictionary.noBuildings')}
             header={header}
@@ -249,7 +249,7 @@ function BuildingCrud() {
               />
               {selectedBuilding && (
                 <span>
-                  {t('module.building.deleteConfirmation', {
+                  {t('global.confirmation.deleteTitle', {
                     name: <b>{selectedBuilding.name}</b>,
                   })}
                 </span>

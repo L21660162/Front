@@ -183,6 +183,7 @@
       "endDate": "Fecha de Fin",
       "shortIdentifier": "Fecha Corta",
       "departmentDirectory": "Directorio de Departamentos",
+      "buildingDirectory": "Directorio de Edificios",
       "departmentBoss": "Jefe de Departamento",
       "areaKey": "Clave de Área",
       "noDepartments": "No se encontraron departamentos",
@@ -207,7 +208,7 @@
       "placeholder": "Buscar..."
     },
     "paginator": {
-      "currentReport": "Mostrando del {first} al {last} de {totalRecords} edificios",
+      "BuildingReport": "Mostrando del {first} al {last} de {totalRecords} edificios",
       "periodReport": "Mostrando del {first} al {last} de {totalRecords} períodos",
       "classroomReport": "Mostrando del {first} al {last} de {totalRecords} aulas",
       "groupReport": "Mostrando del {first} al {last} de {totalRecords} grupos",
