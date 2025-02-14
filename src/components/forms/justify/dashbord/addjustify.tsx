@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
@@ -6,22 +6,21 @@ import { Tooltip } from 'primereact/tooltip';
 import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
 import { DataView } from 'primereact/dataview';
+import { Card } from 'primereact/card';
+import { useNavigate } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
 import {
   IAttendance,
   IAttendanceStatus,
   IFileType,
-  IUploadFileInput,
   useGetAllAttendancesQuery,
   useGetAllFilesQuery,
   useGetSchedulesFormattedQuery,
   useUploadFileMutation,
-} from '../../../graphql/graphql';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
-import { DialogStore } from '../../../store/global/types';
-import { Card } from 'primereact/card';
-import { useNavigate } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { IApiError } from '../../../../types/apierror';
+} from '../../../../graphql/graphql';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
+import { DialogStore } from '../../../../store/global/types';
+import { IApiError } from '../../../../../types/apierror';
 
 type JustifyFormProps = {
   headerTitle: string;
@@ -70,30 +69,31 @@ export default function AddJustify({
     },
   });
 
-  const { data: status } = useGetAllAttendancesQuery(GRAPHQL_CLIENT, {
-    page: 1,
-    limit: 10,
-    offset: 0,
-    filter: {
-      schedule: id,
-      firstPass: IAttendanceStatus.Absent,
-      secondPass: IAttendanceStatus.Absent,
-    },
-  });
-
-  console.log(status);
+  const { data: status, isLoading: isLoadingAttendances } = useGetAllAttendancesQuery(
+    GRAPHQL_CLIENT,
+    {
+      page: 1,
+      limit: 10,
+      offset: 0,
+      filter: {
+        schedule: id,
+        firstPass: IAttendanceStatus.Absent,
+        secondPass: IAttendanceStatus.Absent,
+      },
+    }
+  );
 
   const { data: file, isSuccess } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
     page: 1,
     limit: 10,
     offset: 0,
     filter: {
-      attendanceJustified: status?.getAllAttendances.docs[0]._id,
+      attendanceJustified: status?.getAllAttendances.docs[0]?._id,
     },
   });
 
   const { data: scheduledata } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
-    schedule: status?.getAllAttendances.docs[0].schedule,
+    schedule: status?.getAllAttendances.docs[0]?.schedule,
   });
 
   const itemTemplate2 = (data: IAttendance) => {
@@ -104,22 +104,18 @@ export default function AddJustify({
             <div className="flex flex-column align-items-center lg:align-items-start gap-3">
               <div className="flex flex-column gap-1">
                 <div className="text-2 font-bold text-900">
-                  {scheduledata?.getSchedulesFormatted[0].subjectShortName}
-                  {isSuccess && file.getAllFiles.docs.length > 0 ? (
-                file.getAllFiles.docs[0].approvedBy !== null ? (
-                  <Tag
-                    value="Justificado"
-                    severity="success"
-                    className="p-tag-rounded mx-1"
-                  />
-                ) : file.getAllFiles.docs[0].comments[0]._id !== null ? (
-                  <Tag value="No Aceptado" severity="danger" className="p-tag-rounded mx-1" />
-                ) : (
-                  <Tag value="En revición" severity="warning" className="p-tag-rounded mx-1" />
-                )
-              ) : (
-                <Tag value="Sin Justificar" severity="info" className="p-tag-rounded mx-1" />
-              )}
+                  {scheduledata?.getSchedulesFormatted[0]?.subjectShortName}
+                  {isSuccess && file?.getAllFiles.docs.length > 0 ? (
+                    file.getAllFiles.docs[0].approvedBy !== null ? (
+                      <Tag value="Justificado" severity="success" className="p-tag-rounded mx-1" />
+                    ) : file.getAllFiles.docs[0].comments[0]?._id !== null ? (
+                      <Tag value="No Aceptado" severity="danger" className="p-tag-rounded mx-1" />
+                    ) : (
+                      <Tag value="En revisión" severity="warning" className="p-tag-rounded mx-1" />
+                    )
+                  ) : (
+                    <Tag value="Sin Justificar" severity="info" className="p-tag-rounded mx-1" />
+                  )}
                 </div>
                 <div className="text-1 text-700">
                   {new Date(data.createdAt).toLocaleDateString('es-MX', {
@@ -145,13 +141,10 @@ export default function AddJustify({
                 className="p-button-rounded mx-1"
                 outlined
                 onClick={() => {
-                  setViewFile(file.getAllFiles.docs[0].path);
+                  setViewFile(file?.getAllFiles.docs[0]?.path || null);
                   setSelectedSchedule(null);
                 }}
-                disabled={isSuccess && file.getAllFiles.docs.length > 0 ? (
-                  false) : (
-                    true
-                  )}
+                disabled={!isSuccess || file?.getAllFiles.docs.length === 0}
               />
             </div>
           </div>
@@ -174,17 +167,21 @@ export default function AddJustify({
   };
 
   const onTemplateUpload = (e) => {
-    console.log('Hola, antes ', selectedFile);
-    mutate({ data: { 
-      file: selectedFile,
-      userId: scheduledata?.getSchedulesFormatted[0].teacherId,
-      fileType: IFileType.Justificante,
-      attendanceJustified: selectedSchedule } });
-    
+    if (selectedFile && scheduledata?.getSchedulesFormatted[0]?.teacherId) {
+      mutate({
+        data: {
+          file: selectedFile,
+          userId: scheduledata.getSchedulesFormatted[0].teacherId,
+          fileType: IFileType.Justificante,
+          attendanceJustified: selectedSchedule,
+        },
+      });
+    }
   };
 
   const onTemplateClear = () => {
-    setTotalSize(0);
+    setSelectedFile(null);
+    setLogo(null);
   };
 
   const headerTemplate = (options) => {
@@ -200,23 +197,15 @@ export default function AddJustify({
           {cancelButton}
 
           {file?.getAllFiles.docs[0]?.comments[0]?._id !== null ? (
-          <div className="flex flex-column gap-2 ml-3">
-            <div className="flex flex-column gap-1">
-              <div className="text-2 font-bold text-900">Comentarios</div>
-              <div className="text-1 text-700">
-                {file?.getAllFiles.docs[0]?.comments[0]?.comment}
+            <div className="flex flex-column gap-2 ml-3">
+              <div className="flex flex-column gap-1">
+                <div className="text-2 font-bold text-900">Comentarios</div>
+                <div className="text-1 text-700">
+                  {file?.getAllFiles.docs[0]?.comments[0]?.comment}
+                </div>
               </div>
             </div>
-          </div>
-        ) : (
-          // <div className="flex flex-column gap-2 ml-3">
-          //   <div className="flex flex-column gap-1">
-          //     <div className="text-2 font-bold text-900">Comentarios</div>
-          //     <div className="text-1 text-700">Sin comentarios</div>
-          //   </div>
-          // </div>
-          null
-        )}
+          ) : null}
         </div>
       );
     }
@@ -230,7 +219,6 @@ export default function AddJustify({
   };
 
   const itemTemplate = (doc, props) => {
-    
     const object = URL.createObjectURL(doc);
     return (
       <div className="flex w-full h-full flex-grow-1">
@@ -245,7 +233,6 @@ export default function AddJustify({
 
   const emptyTemplate = () => {
     if (file?.getAllFiles.docs.length > 0 && viewFile !== null) {
-    
       return (
         <div className="flex w-full h-full flex-grow-1">
           <iframe
@@ -309,7 +296,13 @@ export default function AddJustify({
         <div className="grid h-full">
           <div className="col-4 flex flex-column h-full">
             <Card title="Historial" className="p-4 flex-grow-1">
-              <DataView value={status?.getAllAttendances.docs} itemTemplate={itemTemplate2} />
+              {isLoadingAttendances ? (
+                <div>Cargando asistencias...</div>
+              ) : status?.getAllAttendances.docs.length === 0 ? (
+                <div>No hay faltas registradas para este docente.</div>
+              ) : (
+                <DataView value={status?.getAllAttendances.docs} itemTemplate={itemTemplate2} />
+              )}
             </Card>
           </div>
           <div className="col-8 flex flex-column h-full">
@@ -326,7 +319,7 @@ export default function AddJustify({
               customUpload
               uploadHandler={async ({ files }) => {
                 onTemplateUpload(files);
-              } }
+              }}
               onSelect={onTemplateSelect}
               onError={onTemplateClear}
               onClear={onTemplateClear}

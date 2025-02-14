@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 'use client';
 
 import { Button } from 'primereact/button';
@@ -8,8 +6,7 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Demo } from '../../../../types/types';
@@ -20,7 +17,6 @@ import {
   useDeleteSubjectMutation,
   useGetAllSubjectsQuery,
   useGetDepartmentByIdQuery,
-  useGetSubjectByIdQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import EditSubjectDialogForm from '../../forms/subjects/dashboard/editSubject';

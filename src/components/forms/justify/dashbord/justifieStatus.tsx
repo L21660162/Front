@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
-import { IAttendanceStatus, useGetAllAttendancesQuery } from '../../../graphql/graphql';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import { IAttendanceStatus, useGetAllAttendancesQuery } from '../../../../graphql/graphql';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
 interface JustifyStatusProps {
   id: string;
@@ -21,8 +21,6 @@ export default function JustifyStatus({ id, onVisibilityChange }: JustifyStatusP
       secondPass: IAttendanceStatus.Absent,
     },
   });
-
-  console.log(status);
 
   const handleClick = () => {
     setVisible(true);

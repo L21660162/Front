@@ -159,8 +159,6 @@ function ScheduleView() {
     }
   }, [dataTeacherSerch]);
 
-  console.log('schedule', filterstudents);
-
   const dataviewGridItem = () => {
     const time = (data) => {
       return new Date(data).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });

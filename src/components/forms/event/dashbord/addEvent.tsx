@@ -10,6 +10,8 @@ import { Dialog } from 'primereact/dialog';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
+import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
+import { addLocale } from 'primereact/api';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
@@ -21,8 +23,6 @@ import {
   useGetAllPeriodsQuery,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
-import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
-import { addLocale } from 'primereact/api';
 import { useAccessTokenData } from '../../../../store/auth/store';
 import { TokenData } from '../../../../store/auth/type';
 
@@ -49,10 +49,36 @@ export default function EventDialogForm({
     dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
     dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
     dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
-    monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-    monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+    monthNames: [
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
+    ],
+    monthNamesShort: [
+      'ene',
+      'feb',
+      'mar',
+      'abr',
+      'may',
+      'jun',
+      'jul',
+      'ago',
+      'sep',
+      'oct',
+      'nov',
+      'dic',
+    ],
     today: 'Hoy',
-    clear: 'Limpiar'
+    clear: 'Limpiar',
 });
 
   const { mutate } = useCreateEventMutation<IApiError>(GRAPHQL_CLIENT, {

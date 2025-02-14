@@ -13,9 +13,6 @@ import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
   ISubject,
-  useUpdateSubjectMutation,
-  IUpdateSubjectInput,
-  ISchedule,
   IClassroom,
   IGroup,
   IPeriod,

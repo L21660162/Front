@@ -7,7 +7,6 @@ import { Toast } from 'primereact/toast';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
-import { SelectButton } from 'primereact/selectbutton';
 import { FilterMatchMode } from 'primereact/api';
 import { Demo } from '../../../../types/types';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
@@ -17,8 +16,6 @@ import {
   useDeleteUserMutation,
   useGetAllUsersQuery,
   IRoles,
-  useGetAllCareersQuery,
-  IGetAllCareersQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import { dialogStore } from '../../../store/global/dialogStore';
@@ -56,7 +53,6 @@ function UserCrud() {
   const { _id: actuallyUser, roles } = useAccessTokenData() as TokenData;
 
   const [users, setUsers] = useState(null);
-  const [customers, setCustomers] = useState(null);
   const [filters, setFilters] = useState({
     global: {
       value: null,
@@ -85,14 +81,10 @@ function UserCrud() {
   const [selectedUsers, setSelectedUsers] = useState(null);
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<any>>(null);
-  const { visible, setVisible } = dialogStore();
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [visibleEditUser, setVisibleEditUser] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
 
-  const handleRoleChange = (e) => {
-    setSelectedRole(e.value);
-  };
 
   const { data } = useGetAllUsersQuery<IGetAllUsersQuery>(GRAPHQL_CLIENT, {
     limit: 99999,
@@ -290,8 +282,6 @@ function UserCrud() {
       </span>
     </div>
   );
-
-  console.log(selectedUser);
 
   const deleteuserDialogFooter = () => (
     <>

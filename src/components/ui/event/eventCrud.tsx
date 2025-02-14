@@ -156,18 +156,8 @@ function EventCrud() {
   };
 
   const actionBodyTemplate = (rowData: Demo.event) => {
-
     return (
       <div className="flex align-items-center">
-        <Button
-          icon="pi pi-pencil"
-          className="mb-2"
-          rounded
-          outlined
-          severity="warning"
-          onClick={() => editEvent(rowData)}
-          style={{ marginRight: '10px' }}
-        />
         {roles.includes('SUPER_ADMINISTRATOR') && (
           <Button
             icon="pi pi-trash"
@@ -184,7 +174,7 @@ function EventCrud() {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t('global.dictionary.careerdirectory')}</h5>
+      <h5 className="m-0">{t('global.dictionary.eventlist')}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -195,8 +185,6 @@ function EventCrud() {
       </span>
     </div>
   );
-
-  console.log('Eventdata', selectedEvent);
 
   const deletecareerDialogFooter = () => (
     <>
@@ -231,7 +219,7 @@ function EventCrud() {
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} carreras"
+            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} eventos"
             globalFilter={globalFilter}
             emptyMessage={t('global.dictionary.Nocareer')}
             header={header}
@@ -252,7 +240,7 @@ function EventCrud() {
             />
             <Column
               field="description"
-              header={t('global.dictionary.tcareerDescription')}
+              header={t('global.dictionary.startDate')}
               sortable
               body={startDateBodyTemplate}
               headerStyle={{
@@ -265,7 +253,7 @@ function EventCrud() {
             />
             <Column
               field="duration"
-              header={t('global.dictionary.tduration')}
+              header={t('global.dictionary.finalDate')}
               sortable
               body={finishDataBodyTemplate}
               headerStyle={{
@@ -278,7 +266,7 @@ function EventCrud() {
             />
             <Column
               field="institute"
-              header={t('global.dictionary.tcredits')}
+              header={t('global.dictionary.groups')}
               sortable
               body={groupsBodyTemplate}
               headerStyle={{
@@ -291,7 +279,7 @@ function EventCrud() {
             />
             <Column
               body={actionBodyTemplate}
-              header="Editar / Borrar"
+              header="Borrar"
               headerStyle={{
                 minWidth: '10rem',
                 border: '1px solid #2a497b',

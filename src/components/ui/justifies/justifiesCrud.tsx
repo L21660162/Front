@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DataView } from 'primereact/dataview';
-import { Button } from 'primereact/button';
 import { useTranslation } from 'react-i18next';
-import { Controller, useForm } from 'react-hook-form';
-import { AutoComplete } from 'primereact/autocomplete';
-import { classNames } from 'primereact/utils';
 import {
   IRoles,
   ISchedule,
@@ -15,9 +11,8 @@ import { useAccessTokenData } from '../../../store/auth/store';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import { TokenData } from '../../../store/auth/type';
 import { dialogStore } from '../../../store/global/dialogStore';
-import EditScheduleViewDialogForm from '../../forms/Schedule/dashboard/editScheduleView';
-import JustifyStatus from '../../justify/dashbord/justifieStatus';
-import Addjustify from '../../justify/dashbord/addjustify';
+import JustifyStatus from '../../forms/justify/dashbord/justifieStatus';
+import Addjustify from '../../forms/justify/dashbord/addjustify';
 
 interface ITeacherSearchResult {
   _id?: string | null | undefined;
@@ -39,7 +34,6 @@ export default function JustifyCrud() {
   >([]);
   const [dataTeacherSerch, setDatsTeacherSerch] = useState<ITeacherSearchResult[] | undefined>();
   const [schedule, setSchedules] = useState<ISchedule>();
-  const [selectSchedule, setSelectSchedule] = useState<string>();
   const { visible, setVisible } = dialogStore();
   const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const currentDay = new Date().getDay();
@@ -87,10 +81,7 @@ export default function JustifyCrud() {
   };
 
   const {
-    control,
     formState: { errors },
-    getValues,
-    reset,
   } = useForm({ defaultValues });
 
   useEffect(() => {
@@ -199,11 +190,6 @@ export default function JustifyCrud() {
         )}
       </div>
     );
-  };
-
-  const handleEdit = (id) => {
-    setVisible(true);
-    setSelectSchedule(id);
   };
 
   const itemTemplate = (data: IVacancy, layout: 'grid', selectedStatus: IVacancyStatus | null) => {

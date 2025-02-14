@@ -115,23 +115,6 @@ function DashboardAttendancePanel() {
     setVisibleFINSH(true);
   };
 
-  // Actualiza las opciones de carrera cuando los datos estén disponibles
-  useEffect(() => {
-    if (careerOptionsData) {
-      console.log('Career Options:', careerOptionsData);
-    }
-    if (attendanceStatistics) {
-      console.log('Attendance Statistics:', attendanceStatistics);
-    }
-  }, [careerOptionsData, attendanceStatistics, tiempo]);
-
-  const Total = attendanceStatistics?.getAttendanceStatistics.classAbsentYear +
-    attendanceStatistics?.getAttendanceStatistics.classJustifyYear +
-    attendanceStatistics?.getAttendanceStatistics.classPresentYear
-
-  const PresentTotal = (attendanceStatistics?.getAttendanceStatistics.classPresentYear / Total) * 100
-  
-
   const pieDataOrg: ChartData = {
     labels: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
     datasets: [
@@ -195,14 +178,17 @@ function DashboardAttendancePanel() {
               <div className="mr-3 align-content-center">
                 <span className="block font-semibold ">Filtr de Carera: </span>
               </div>
-              <Dropdown
-                value={selectedCareer}
-                onChange={(e: DropdownChangeEvent) => setSelectedCareer(e.value)}
-                options={careerOptionsData?.getUniqueOptionsCareer.careers}
-                placeholder={t('global.dictionary.Career')}
-                optionLabel="label"
-                optionValue="value"
-              />
+              <div className="flex justify-content-center">
+                <Dropdown
+                  value={selectedCareer}
+                  onChange={(e: DropdownChangeEvent) => setSelectedCareer(e.value)}
+                  options={careerOptionsData?.getUniqueOptionsCareer.careers}
+                  placeholder={t('global.dictionary.Career')}
+                  optionLabel="label"
+                  optionValue="value"
+                  className="w-14rem"
+                />
+              </div>
               <div className="align-content-center pl-1">
                 <Button
                   icon="pi pi-replay"
@@ -226,6 +212,7 @@ function DashboardAttendancePanel() {
                 onChange={(e: DropdownChangeEvent) => setSelectedSemester(e.value)}
                 options={careerOptionsData?.getUniqueOptionsCareer.semesters}
                 placeholder={t('global.dictionary.Career')}
+                className="w-14rem"
               />
               <div className="align-content-center pl-1">
                 <Button

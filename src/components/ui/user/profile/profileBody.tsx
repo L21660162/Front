@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Toast } from 'primereact/toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
@@ -16,10 +16,8 @@ import {
   IUpdateUserInput,
   useGetUserByIdQuery,
   useUpdateUserMutation,
-  useUpsertUserMutation,
 } from '../../../../graphql/graphql';
 import { IApiError } from '../../../../../types/apierror';
-import UserCrud from '../userCrud';
 
 function BodyProfile() {
   const { t } = useTranslation('common');
@@ -42,8 +40,6 @@ function BodyProfile() {
 
       const blob = await response.blob();
       const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
-
-      console.log('Imagen convertida:', file);
 
       return file;
     } catch (error) {
@@ -185,7 +181,6 @@ function BodyProfile() {
                   key={selectedFile ? selectedFile.name : 'default-key'}
                   customUpload // Habilitar carga personalizada
                   uploadHandler={(e) => {
-                    console.log('Custom upload logic here:', e.files[0]);
                     setSelectedFile(e.files[0]);
                   }}
                 />

@@ -7,14 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { RadioButton } from 'primereact/radiobutton';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { IApiError } from '../../../../types/apierror';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
-import { ICreateCareerInput, ICreateFileCommentInput, useCreateCareerMutation, useCreateFileCommentMutation } from '../../../graphql/graphql';
-import { DialogStore } from '../../../store/global/types';
-import { useAccessTokenData } from '../../../store/auth/store';
-import { TokenData } from '../../../store/auth/type';
+import { IApiError } from '../../../../../types/apierror';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
+import { ICreateFileCommentInput, useCreateFileCommentMutation } from '../../../../graphql/graphql';
+import { DialogStore } from '../../../../store/global/types';
+import { useAccessTokenData } from '../../../../store/auth/store';
+import { TokenData } from '../../../../store/auth/type';
 
 type CommentFormProps = {
   headerTitle: string;
@@ -36,16 +34,16 @@ export default function AddCommentDialogForm({
 
   const { mutate } = useCreateFileCommentMutation(GRAPHQL_CLIENT, {
     onSettled: (data) => {
-        toast.current?.show({
-          severity: 'success',
-          summary: t('global.messages.success'),
-          detail: t('global.messages.successMessage'),
-        });
-        setTimeout(() => {
-            navigate({ to: '/settings/career' });
-            window.location.reload();
-        }, 200);
-        setIsButtonDisabld(false);
+      toast.current?.show({
+        severity: 'success',
+        summary: t('global.messages.success'),
+        detail: t('global.messages.successMessage'),
+      });
+      setTimeout(() => {
+        navigate({ to: '/settings/career' });
+        window.location.reload();
+      }, 200);
+      setIsButtonDisabld(false);
     },
     onError: (error: IApiError) => {
       setIsButtonDisabld(false);
@@ -131,10 +129,7 @@ export default function AddCommentDialogForm({
                 />
               )}
             />
-            <label
-              htmlFor="comment"
-              className={classNames({ 'p-error': !!errors.comment })}
-            >
+            <label htmlFor="comment" className={classNames({ 'p-error': !!errors.comment })}>
               {t('global.dictionary.comment')}*
             </label>
           </span>

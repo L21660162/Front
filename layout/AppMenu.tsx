@@ -64,16 +64,6 @@ function AppMenu() {
       ],
     },
     {
-      label: t('sidebar.maintenance.label'),
-      items: [
-        {
-          label: t('sidebar.maintenance.dashboard'),
-          icon: 'pi pi-fw pi-wrench',
-          to: '/maintenance/dashboard',
-        },
-      ],
-    },
-    {
       label: t('sidebar.settings.label'),
       items: [
         {
@@ -81,37 +71,37 @@ function AppMenu() {
           icon: 'pi pi-fw pi-cog',
           items: [
             {
-              label: t('sidebar.settings.schedule'), //Horario
+              label: t('sidebar.settings.schedule'),
               icon: 'pi pi-fw pi-calendar',
               to: '/settings/schedule',
             },
             {
-              label: t('sidebar.settings.users'), // Usuario
+              label: t('sidebar.settings.users'),
               icon: 'pi pi-fw pi-users',
               to: '/settings/users',
             },
             {
-              label: t('sidebar.settings.subject'), // Materia
+              label: t('sidebar.settings.subject'),
               icon: 'pi pi-fw pi-briefcase',
               to: '/settings/subject',
             },
             {
-              label: t('sidebar.settings.buildings'), // edifgici{o}
+              label: t('sidebar.settings.buildings'),
               icon: 'pi pi-fw pi-building',
               to: '/settings/building',
             },
             {
-              label: t('sidebar.settings.departments'), // departamento
+              label: t('sidebar.settings.departments'),
               icon: 'pi pi-fw pi-briefcase',
               to: '/settings/departamnt',
             },
             {
-              label: t('sidebar.settings.periods'), // periodo
+              label: t('sidebar.settings.periods'),
               icon: 'pi pi-fw pi-calendar-plus',
               to: '/settings/period',
             },
             {
-              label: t('sidebar.settings.careers'), // carrera
+              label: t('sidebar.settings.careers'),
               icon: 'pi pi-fw pi-book',
               to: '/settings/career',
             },

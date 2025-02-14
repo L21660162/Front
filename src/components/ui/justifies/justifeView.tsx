@@ -2,39 +2,31 @@
 
 'use client';
 
+import { useNavigate } from '@tanstack/react-router';
+import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils';
-import React, { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
 import { Tag } from 'primereact/tag';
-import { Avatar } from 'primereact/avatar';
-import { Demo } from '../../../../types/types';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import { Toast } from 'primereact/toast';
+import React, { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { IApiError } from '../../../../types/apierror';
 import {
   IAttendance,
   IAttendanceStatus,
-  ICareer,
-  IGetAllCareersQuery,
   useApproveFileMutation,
-  useDeletedCareerMutation,
   useGetAllAttendancesQuery,
-  useGetAllCareersQuery,
   useGetAllFilesQuery,
   useGetSchedulesFormattedQuery,
   useGetUserByIdQuery,
 } from '../../../graphql/graphql';
-import { IApiError } from '../../../../types/apierror';
-import { dialogStore } from '../../../store/global/dialogStore';
-import EditCareerDialogForm from '../../forms/career/dashboard/editcareer';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
-import AddCommentDialogForm from '../../justify/dashbord/addcomment';
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import AddCommentDialogForm from '../../forms/justify/dashbord/addcomment';
 
 function CareerCrud() {
   const { t } = useTranslation('common');
@@ -96,8 +88,6 @@ function CareerCrud() {
     },
   });
 
-  console.log(file);
-
   const dataBodyTemplate = (atendans: IAttendance) => {
     return (
       <>
@@ -113,8 +103,12 @@ function CareerCrud() {
 
   const nameBodyTemplate = (atendans: IAttendance) => {
     let img = 'http://localhost:4000/uploads/users/default_profile.jpg';
+    const { data } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
+      schedule: atendans.schedule,
+    });
+
     const { data: user } = useGetUserByIdQuery(GRAPHQL_CLIENT, {
-      id: atendans.uploadedBy,
+      id: data?.getSchedulesFormatted[0].teacherId,
     });
 
     if (user?.getUserById?.photo) {
@@ -212,7 +206,7 @@ function CareerCrud() {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t('global.dictionary.careerdirectory')}</h5>
+      <h5 className="m-0">{t('global.dictionary.justifilist')}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -267,7 +261,7 @@ function CareerCrud() {
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} carreras"
+            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} registros"
             globalFilter={globalFilter}
             emptyMessage={t('global.dictionary.Nocareer')}
             header={header}
@@ -310,7 +304,7 @@ function CareerCrud() {
                 backgroundColor: '#2a497b',
                 color: 'white',
               }}
-              style={{ textAlign: 'center' }}
+              style={{ textAlign: 'left' }}
             />
             <Column
               field="institute"
@@ -329,7 +323,6 @@ function CareerCrud() {
               field="certificate"
               header={t('global.dictionary.tisCertified')}
               dataType="boolean"
-              style={{ minWidth: '8rem' }}
               body={certificateBodyTemplate}
               headerStyle={{
                 minWidth: '5rem',
@@ -337,7 +330,7 @@ function CareerCrud() {
                 backgroundColor: '#2a497b',
                 color: 'white',
               }}
-              style={{ textAlign: 'center' }}
+              style={{ textAlign: 'left', minWidth: '8rem' }}
             />
             <Column
               body={actionBodyTemplate}

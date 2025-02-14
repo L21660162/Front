@@ -8,13 +8,22 @@ import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { IApiError } from '../../../../../types/apierror';
-import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
-import { IUpdateCareerInput, IEvent, useUpdateEventMutation, IUpdateEventInput, IGroup, IPeriod, useGetAllPeriodsQuery, useGetAllGroupsQuery } from '../../../../graphql/graphql';
-import { DialogStore } from '../../../../store/global/types';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
 import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
+import { IApiError } from '../../../../../types/apierror';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
+import {
+  IUpdateCareerInput,
+  IEvent,
+  useUpdateEventMutation,
+  IUpdateEventInput,
+  IGroup,
+  IPeriod,
+  useGetAllPeriodsQuery,
+  useGetAllGroupsQuery,
+} from '../../../../graphql/graphql';
+import { DialogStore } from '../../../../store/global/types';
 import { useAccessTokenData } from '../../../../store/auth/store';
 import { TokenData } from '../../../../store/auth/type';
 

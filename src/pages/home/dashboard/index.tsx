@@ -1,5 +1,4 @@
 import React from 'react';
-import PageHeading from '../../../components/ui/home/PageHeading';
 import DashboardAttendancePanel from '../../../components/ui/home/crudHome';
 
 function Dashboard() {
