@@ -143,13 +143,13 @@ function PeriodCrud() {
 
   const header = (
     <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t('global.dictionary.periodDirectory')}</h5>
+      <h5 className="m-0">{t('global.dictionary.perioddirectory')}</h5>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           type="search"
           onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-          placeholder={t('global.search') || ''}
+          placeholder={t('global.search.placeholder') || ''}
         />
       </span>
     </div>
@@ -158,13 +158,13 @@ function PeriodCrud() {
   const deletePeriodDialogFooter = (
     <>
       <Button 
-        label={t('global.no')} 
+        label={t('global.buttons.no')} 
         icon="pi pi-times" 
         text 
         onClick={hideDeletePeriodDialog} 
       />
       <Button 
-        label={t('global.yes')} 
+        label={t('global.buttons.yes')} 
         icon="pi pi-check" 
         text 
         onClick={deletePeriod} 
@@ -268,7 +268,7 @@ function PeriodCrud() {
               />
               {selectedPeriod && (
                 <span>
-                  {t('module.period.deleteConfirmation', {
+                  {t('global.confirmation.deleteTitle', {
                     name: <b>{selectedPeriod.name}</b>,
                   })}
                 </span>

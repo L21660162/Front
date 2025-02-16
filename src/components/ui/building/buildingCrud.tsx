@@ -143,7 +143,7 @@ function BuildingCrud() {
         <InputText
           type="search"
           onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-          placeholder={t('global.search') || ''}
+          placeholder={t('global.search.placeholder') || ''}
         />
       </span>
     </div>

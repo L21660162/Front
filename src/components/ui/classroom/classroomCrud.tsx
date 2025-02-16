@@ -63,7 +63,7 @@ function ClassroomCrud() {
       toast.current?.show({
         severity: 'success',
         summary: t('global.toast.success.summary'),
-        detail: t('global.toast.success.detail.classroomDeleteSuccess'),
+        detail: t('global.toast.success.detail.ClassroomDeleteSuccess'),
       });
       refetch();
     },
@@ -137,7 +137,7 @@ function ClassroomCrud() {
         <InputText
           type="search"
           onInput={(e) => setGlobalFilter(e.currentTarget.value)}
-          placeholder={t('global.search') || ''}
+          placeholder={t('global.search.placeholder') || ''}
         />
       </span>
     </div>

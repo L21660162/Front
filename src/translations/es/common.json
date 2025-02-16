@@ -229,7 +229,14 @@
           "buildingDeleteSuccess": "Edificio eliminado exitosamente",
           "buildingCreateSuccess": "Edificio creado exitosamente",
           "periodDeleteSuccess": "Período eliminado exitosamente",
-          "departmentCreateSuccess": "Departamento creado exitosamente"
+          "departmentCreateSuccess": "Departamento creado exitosamente",
+          "ClassroomDeleteSuccess": "Aula eliminada exitosamente",
+          "departmentDeleteSuccess": "Departamento eliminado exitosamente",
+          "groupDeleteSuccess": "Grupo eliminado exitosamente",
+          "buildingEditSuccess": "Edificio actualizada exitosamente",
+          "periodCreateSuccess": "Periodo creada exitosamente",
+          "periodEditSuccess": "Periodo actualizado exitosamente",
+          "departmentEditSuccess": "Departamento actualizado exitosamente"
         }
       }
     },
