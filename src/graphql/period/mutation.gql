@@ -1,0 +1,35 @@
+mutation CreatePeriod($data: UpsertPeriodInput!) {
+  createPeriod(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    finalDate
+    isDeleted
+    largeIdentifier
+    name
+    shortIdentifier
+    startDate
+    updatedAt
+  }
+}
+
+mutation UpdatePeriod($data: UpdatePeriodInput!) {
+  updatePeriod(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    finalDate
+    isDeleted
+    largeIdentifier
+    name
+    shortIdentifier
+    startDate
+    updatedAt
+  }
+}
+
+mutation DeletePeriod($data: PeriodIdArgs!) {
+  deletePeriod(data: $data) {
+    deleted
+  }
+}

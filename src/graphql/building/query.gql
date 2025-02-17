@@ -1,10 +1,11 @@
-query GetAllDepartments($filter: DepartmentArgs, $page: Int, $offset: Int, $limit: Int) {
-  getAllDepartments(filter: $filter, page: $page, offset: $offset, limit: $limit) {
+query GetAllBuildings($filter: BuildingArgs, $limit: Int, $offset: Int, $page: Int) {
+  getAllBuildings(filter: $filter, limit: $limit, offset: $offset, page: $page) {
     docs {
       _id
       createdAt
       deletedAt
       isDeleted
+      letter
       name
       updatedAt
     }
@@ -21,14 +22,13 @@ query GetAllDepartments($filter: DepartmentArgs, $page: Int, $offset: Int, $limi
   }
 }
 
-query GetDepartmentById($id: ID) {
-  getDepartmentById(_id: $id) {
+query GetBuildingById($id: ID) {
+  getBuildingById(_id: $id) {
     _id
-    areaKey
     createdAt
     deletedAt
-    departmentBoss
     isDeleted
+    letter
     name
     updatedAt
   }

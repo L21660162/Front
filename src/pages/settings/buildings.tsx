@@ -1,16 +1,20 @@
 import React from 'react';
+import BuildingCrud from '../../components/ui/building/buildingCrud';
+import PageHeadingbuilding from '../../components/ui/building/buildingHeading';
 
-function BuildingSettings() {
+function BuildingDashboard() {
   return (
     <div className="grid">
       <div className="col-12">
         <div className="card">
-          <h5>Empty Page - Building Settings</h5>
-          <p>Use this page to start from scratch and place your custom content.</p>
+          <PageHeadingbuilding />
         </div>
+      </div>
+      <div className="col-12">
+        <BuildingCrud />
       </div>
     </div>
   );
 }
 
-export default BuildingSettings;
+export default BuildingDashboard;

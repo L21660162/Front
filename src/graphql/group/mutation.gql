@@ -1,0 +1,33 @@
+mutation CreateGroup($data: UpsertGroupInput!) {
+  createGroup(data: $data) {
+    _id
+    career
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    period
+    semester
+    updatedAt
+  }
+}
+
+mutation UpdateGroup($data: UpdateGroupInput!) {
+  updateGroup(data: $data) {
+    _id
+    career
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    period
+    semester
+    updatedAt
+  }
+}
+
+mutation DeleteGroup($data: GroupIdArgs!) {
+  deleteGroup(data: $data) {
+    deleted
+  }
+}

@@ -21,6 +21,7 @@ query GetAllSchedules($filter: ScheduleArgs, $limit: Int, $offset: Int, $page: I
 query GetScheduleById($id: ID) {
   getScheduleById(_id: $id) {
     _id
+    classGroup
     classroom
     createdAt
     deletedAt

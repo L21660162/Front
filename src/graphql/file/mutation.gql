@@ -36,9 +36,54 @@ mutation UpdateFile($data: UpdateFile!) {
   }
 }
 
-mutation UploadFile($data: UploadFileInput!) {
-  uploadFile(data: $data) {
+mutation UpdateFile($data: UpdateFile!) {
+  updateFile(data: $data) {
     _id
+    approvedBy
+    comments {
+      _id
+      comment
+      createdAt
+      createdBy
+    }
+    createdAt
+    deletedAt
+    extension
+    isDeleted
+    nameFile
+    path
+    size
+    type
+    updatedAt
+    uploadedBy {
+      _id
+      createdAt
+      deletedAt
+      department
+      email
+      firstName
+      gender
+      isDeleted
+      lastName
+      middleName
+      password
+      rfc
+      roles
+      updatedAt
+    }
+  }
+}
+
+mutation CreateFileComment($data: CreateFileCommentInput!) {
+  createFileComment(data: $data) {
+    _id
+    approvedBy
+    comments {
+      _id
+      comment
+      createdAt
+      createdBy
+    }
     createdAt
     deletedAt
     extension
@@ -68,22 +113,40 @@ mutation UploadFile($data: UploadFileInput!) {
   }
 }
 
-mutation CreateFileComment($data: CreateFileCommentInput!) {
-  createFileComment(data: $data) {
-    _id
-    comments {
-      _id
-      comment
-      createdBy
-      createdAt
-    }
-  }
-}
-
 mutation ApproveFile($data: ApproveFileInput!) {
   approveFile(data: $data) {
     _id
-    nameFile
     approvedBy
+    comments {
+      _id
+      comment
+      createdAt
+      createdBy
+    }
+    createdAt
+    deletedAt
+    extension
+    isDeleted
+    nameFile
+    path
+    size
+    type
+    updatedAt
+    uploadedBy {
+      _id
+      createdAt
+      deletedAt
+      department
+      email
+      firstName
+      gender
+      isDeleted
+      lastName
+      middleName
+      password
+      rfc
+      roles
+      updatedAt
+    }
   }
 }

@@ -42,6 +42,18 @@
       "label": "Instituto",
       "dashboard": "Panel de Instituto"
     },
+    "building": {
+      "label": "Edificios",
+      "dashboard": "Panel de Edificios"
+    },
+    "period": {
+      "label": "Períodos",
+      "dashboard": "Panel de Períodos"
+    },
+    "department": {
+      "label": "Departamentos",
+      "dashboard": "Panel de Departamentos"
+    },
     "career": {
       "label": "Carrera",
       "dashboard": "Panel de Carrera"
@@ -72,8 +84,18 @@
       "buildings": "Edificios",
       "departments": "Departamentos",
       "periods": "Periodos",
-      "careers": "Carreras"
-    }
+      "careers": "Carreras",
+      "classroom": "Salones",
+      "group": "Grupo"
+    },
+    "Classroom": {
+      "label": "Aulas",
+      "dashboard": "Panel de Aulas"
+    },
+    "Group": {
+    "label": "Grupos",
+    "dashboard": "Panel de Grupos"
+  }
   },
   "signUp": {
     "message": "Inicia sesión para continuar"
@@ -86,7 +108,14 @@
   },
   "global": {
     "forms": {
-      "submit": "Guardar",
+      "submit": "Enviar",
+      "placeholders": {
+        "selectStartDate": "Seleccione fecha inicial",
+        "selectEndDate": "Seleccione fecha final",
+        "addDepartment": "Abrir formulario de nuevo departamento",
+        "selectPlaceholder": "Seleccione un edificio",
+        "selectDepartmentBoss": "Seleccione jefe de departamento"
+      },
       "edit": "Editar",
       "validation": {
         "firstName": "El nombre es obligatiorio",
@@ -119,7 +148,40 @@
         "startDate": "Debes colocar la fecha de inicio",
         "finishDate": "Debes colocar la fecha de finalización",
         "activity": "Debes colocar la actividad",
-        "groupsIncluded": "Debes colocar los grupos incluidos"
+        "groupsIncluded": "Debes colocar los grupos incluidos",
+        "selectPlaceholder": "Seleccionar edificio",
+        "loadingBuildings": "Cargando edificios...",
+        "errorLoadingBuildings": "Error cargando edificios",
+        "selectCareer": "Seleccionar carrera",
+        "selectPeriod": "Seleccionar período",
+        "invalidSemester": "El semestre debe ser un número",
+        "groupName": "Nombre del grupo es requerido",
+        "abbreviationGroup": "Abreviatura es requerida",
+        "cancel": "Cancelar",
+        "periodNameRequired": "El nombre del período es requerido",
+        "startDateRequired": "La fecha de inicio es requerida",
+        "endDateRequired": "La fecha de fin es requerida",
+        "largeIdentifierRequired": "La fecha larga es requerida",
+        "shortIdentifierRequired": "La fecha corta es requerida",
+        "Classroom": "El aula es obligatoria",
+        "departmentName": "El nombre del departamento es obligatorio",
+        "abbreviationDepartment": "La abreviatura es obligatoria",
+        "requiredField": "Este campo es obligatorio",
+        "areaKeyField":"Clave de Área Obligatoria",
+        "errors": {
+          "missingId": "No se pudo actualizar, falta el ID del edificio"
+        },
+        "validation": {
+          "requiredField": "Este campo es obligatorio",
+          "maxLength": "Máximo {max} caracteres",
+          "ClassroomIdentifier": "El identificador del aula es obligatorio",
+          "Building": "El edificio es obligatorio",
+          "identifierRequired": "El identificador es requerido",
+          "semesterRequired": "El semestre es requerido",
+          "periodRequired": "El período es requerido",
+          "buildingName": "Nombre del edificio es requerido",
+          "buildingAbbreviation": "Abreviatura es requerida"
+        }
       }
     },
     "dictionary": {
@@ -130,6 +192,62 @@
       "email": "Correo electrónico",
       "edita": "Editar / Borrar",
       "password": "Contraseña",
+      "welcome": "Bienvenido",
+      "classroomDirectory": "Directorio de Aulas",
+      "noClassroomsFound": "No se encontraron aulas",
+      "tClassroomBuilding": "Edificio",
+      "tClassroomIdentifier": "Identificador",
+      "classrooms": "Aulas",
+      "building": "Edificio",
+      "identifier": "Identificador",
+      "Classroom": "Aula",
+      "ClassroomIdentifier": "Identificador del Aula",
+      "Building": "Edificio",
+      "careerdirectory": "Directorio de Carreras",
+      "NoGroup": "No se encontraron grupos",
+      "tGroupName": "Nombre del Grupo",
+      "tGroupDescription": "Descripción del Grupo",
+      "tGroupSemester": "Semestre",
+      "tGroupPeriod": "Periodo",
+      "tCareerName": "Nombre de la Carrera",
+      "tPeriodName": "Nombre del Periodo",
+      "tSemesterName": "Nombre del Semestre",
+      "tIndentifier": "Identificador",
+      "group": "Grupo",
+      "career": "Carrera",
+      "semester": "Semestre",
+      "period": "Período",
+      "Group": "Grupo",
+      "abbreviationGroup": "Abreviatura",
+      "letter": "Letra",
+      "NoBuilding": "No se encontraron edificios",
+      "tBuildingName": "Nombre del Edificio",
+      "tBuildingDescription": "Letra del Edificio",
+      "buildingName": "Nombre del Edificio",
+      "buildingAbbreviation": "Abreviatura del Edificio",
+      "perioddirectory": "Directorio de Períodos",
+      "GroupDirectory": "Directorio de Grupos",
+      "tperiodName": "Nombre del Período",
+      "tlargeIdentifier": "Fecha Larga",
+      "tshortIdentifier": "Fecha Corta",
+      "Noperiod": "No se encontraron períodos",
+      "name": "Nombre",
+      "largeIdentifier": "Fecha Larga",
+      "periodName": "Nombre del Período",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "shortIdentifier": "Fecha Corta",
+      "departmentDirectory": "Directorio de Departamentos",
+      "buildingDirectory": "Directorio de Edificios",
+      "departmentBoss": "Jefe de Departamento",
+      "areaKey": "Clave de Área",
+      "noDepartments": "No se encontraron departamentos",
+      "selectCareer":"Seleccionar carrera",
+      "selectPeriod": "Seleccionar período",
+      "departmentName": "Nombre del Departamento",
+      "boss": "Jefe",
+      "abbreviationDepartment": "Abreviatura del Departamento",
+      "actions": "Editar/Borrar",
       "passwordRecovery": "Recuperar Contraseña",
       "welcome": "Bienvenido",
       "gender": "Sexo:",
@@ -194,6 +312,26 @@
       },
       "Nouser": "No existen usuarios registrados"
     },
+    "buttons": {
+      "yes": "Sí",
+      "no": "No"
+    },
+    "dialog": {
+      "delete": {
+        "title": "Confirmar eliminación",
+        "message": "¿Estás seguro de eliminar {name}?"
+      }
+    },
+    "search": {
+      "placeholder": "Buscar..."
+    },
+    "paginator": {
+      "BuildingReport": "Mostrando del {first} al {last} de {totalRecords} edificios",
+      "periodReport": "Mostrando del {first} al {last} de {totalRecords} períodos",
+      "classroomReport": "Mostrando del {first} al {last} de {totalRecords} aulas",
+      "groupReport": "Mostrando del {first} al {last} de {totalRecords} grupos",
+      "departmentReport": "Mostrando del {first} al {last} de {totalRecords} departamentos"
+    },
     "toast": {
       "error": {
         "summary": "Error",
@@ -205,9 +343,37 @@
         "summary": "Realizado",
         "detail": {
           "signUpSuccess": "Tu cuenta ha sido creada con éxito. \nRedireccionando al inicio de sesión...",
-          "profileEditSuccess": "Tu perfil ha sido actualizado con éxito."
+          "profileEditSuccess": "Tu perfil ha sido actualizado con éxito.",
+          "ClassroomCreateSuccess": "Aula creada exitosamente",
+          "ClassroomEditSuccess": "Aula actualizada exitosamente",
+          "groupCreateSuccess": "Grupo creado exitosamente",
+          "GroupEditSuccess": "Grupo actualizado exitosamente",
+          "buildingDeleteSuccess": "Edificio eliminado exitosamente",
+          "buildingCreateSuccess": "Edificio creado exitosamente",
+          "periodDeleteSuccess": "Período eliminado exitosamente",
+          "departmentCreateSuccess": "Departamento creado exitosamente",
+          "ClassroomDeleteSuccess": "Aula eliminada exitosamente",
+          "departmentDeleteSuccess": "Departamento eliminado exitosamente",
+          "groupDeleteSuccess": "Grupo eliminado exitosamente",
+          "buildingEditSuccess": "Edificio actualizada exitosamente",
+          "periodCreateSuccess": "Periodo creada exitosamente",
+          "periodEditSuccess": "Periodo actualizado exitosamente",
+          "departmentEditSuccess": "Departamento actualizado exitosamente"
         }
       }
+    },
+    "confirmation": {
+      "deleteTitle": "Confirmar eliminación",
+      "deleteMessage": "¿Estás seguro de eliminar el aula?",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "loading": {
+      "buildings": "Cargando edificios...",
+      "careers": "Cargando carreras..."
+    },
+    "error": {
+      "loadingBuildings": "Error cargando edificios"
     }
   },
   "module": {
@@ -217,6 +383,79 @@
         "dialog": {
           "add": {
             "header": "Ejemplo de header para el dialogo add"
+          }
+        }
+      }
+    },
+    "Group":{
+      "dashboard":{
+        "addGroup": "Agregar Grupo",
+        "dialog": {
+          "add": {
+            "header": "Crear Grupo"
+          },
+          "edit": {
+            "header": "Editar Grupo"
+          }
+        }
+      }
+    },
+    "Classroom": {
+      "dashboard": {
+        "addClassroom": "Agregar Aula",
+        "dialog": {
+          "add": {
+            "header": "Crear Aula"
+          },
+          "edit": {
+            "header": "Editar Aula"
+          }
+        }
+      }
+    },
+    "building": {
+      "dashboard": {
+        "addbuilding": "Agregar Edificio",
+        "dialog": {
+          "add": {
+            "header": "Crear Nuevo Edificio"
+          },
+          "edit": {
+            "header": "Editar Edificio"  
+          }
+        }
+      }
+    },
+    "periods": {
+      "dashboard": {
+        "dialog": {
+          "edit": {
+            "header": "Editar Período"
+          }
+        }
+      }
+    },
+    "period": {
+      "dashboard": {
+        "addPeriod": "Agregar Período",
+        "dialog": {
+          "add": {
+            "header": "Crear Nuevo Período"
+          }
+        }
+      }
+    },
+    "department": {
+      "showingDepartments": "Mostrando del {first} al {last} de {totalRecords} departamentos",
+      "deleteConfirmation": "¿Estás seguro de eliminar?",
+      "dashboard": {
+        "addDepartment": "Agregar Departamento",
+        "dialog": {
+          "add": {
+            "header": "Nuevo Departamento"
+          },
+          "edit": {
+            "header": "Editar Departamento"  
           }
         }
       }

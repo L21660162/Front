@@ -1,32 +1,36 @@
 mutation CreateSchedule($data: UpsertScheduleInput!) {
   createSchedule(data: $data) {
     _id
+    classGroup
+    classroom
     createdAt
     deletedAt
     finalTime
-    classGroup
     isDeleted
     period
-    teacher
     startTime
     subject
+    teacher
     updatedAt
+    weekday
   }
 }
 
 mutation UpdateSchedule($data: UpdateScheduleInput!) {
   updateSchedule(data: $data) {
     _id
+    classGroup
+    classroom
     createdAt
     deletedAt
     finalTime
-    classGroup
     isDeleted
     period
-    teacher
     startTime
     subject
+    teacher
     updatedAt
+    weekday
   }
 }
 
