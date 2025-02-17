@@ -6,7 +6,6 @@ import SignUpPage from '../pages/auth/signup';
 import Dashboard from '../pages/home/dashboard';
 import NotFoundPage from '../pages/notfound';
 import PasswordRecoveryPage from '../pages/auth/passwordrecovery';
-import Example from '../pages/example';
 import Career from '../pages/ maintenance';
 import UserDashboard from '../pages/user';
 import Justify from '../pages/justifies';

@@ -1,6 +1,5 @@
 import React from 'react';
 import PageHeading from '../../components/ui/schedule/scheduleHeding';
-import ScheduleCrud from '../../components/ui/user/CourseForm';
 
 function Dashboard() {
   return (
@@ -11,7 +10,6 @@ function Dashboard() {
         </div>
       </div>
       <div className="col-12">
-        <ScheduleCrud />
       </div>
     </div>
   );
