@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Dropdown } from 'primereact/dropdown';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
@@ -17,8 +19,6 @@ import {
   useGetAllCareersQuery,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
-import { ProgressSpinner } from 'primereact/progressspinner';
-import { Dropdown } from 'primereact/dropdown';
 
 type GroupFormProps = {
   headerTitle: string;
@@ -38,10 +38,10 @@ export default function EditGroupDialogForm({
   const toast = useRef<Toast>(null);
 
   // Query para obtener todas las carreras
-  const { data: careersData, isLoading: careersLoading, error: careersError } = useGetAllCareersQuery(GRAPHQL_CLIENT);
+  const { data: careersData, isLoading: careersLoading } = useGetAllCareersQuery(GRAPHQL_CLIENT);
 
   // Query para obtener todos los períodos
-  const { data: periodsData, isLoading: periodsLoading, error: periodsError } = useGetAllPeriodsQuery(GRAPHQL_CLIENT);
+  const { data: periodsData } = useGetAllPeriodsQuery(GRAPHQL_CLIENT);
 
   const { mutate } = useUpdateGroupMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -87,9 +87,9 @@ export default function EditGroupDialogForm({
   // Inicializar el formulario con los datos del grupo
   useEffect(() => {
     if (Group) {
-      setValue("career", Group.career || "");
-      setValue("identifier", Group.identifier || "");
-      setValue("semester", Group.semester || "");
+      setValue('career', Group.career || '');
+      setValue('identifier', Group.identifier || '');
+      setValue('semester', Group.semester || '');
     }
   }, [Group, setValue]);
 
@@ -130,16 +130,18 @@ export default function EditGroupDialogForm({
   );
 
   // Mapear las carreras para el Dropdown
-  const careerOptions = careersData?.getAllCareers?.docs?.map((career) => ({
-    label: career.name,
-    value: career._id,
-  })) || [];
+  const careerOptions =
+    careersData?.getAllCareers?.docs?.map((career) => ({
+      label: career.name,
+      value: career._id,
+    })) || [];
 
   // Mapear los períodos para el Dropdown
-  const periodOptions = periodsData?.getAllPeriods?.docs?.map((period) => ({
-    label: period.name,
-    value: period._id,
-  })) || [];
+  const periodOptions =
+    periodsData?.getAllPeriods?.docs?.map((period) => ({
+      label: period.name,
+      value: period._id,
+    })) || [];
 
   return (
     <Dialog
@@ -167,7 +169,7 @@ export default function EditGroupDialogForm({
               rules={{
                 required: t('global.forms.validation.groupName') as string,
               }}
-              render={({ field, fieldState }) => (
+              render={({ field, fieldState }) =>
                 careersLoading ? (
                   <div className="flex align-items-center">
                     <ProgressSpinner style={{ width: '30px', height: '30px' }} />
@@ -186,7 +188,7 @@ export default function EditGroupDialogForm({
                     className={classNames({ 'p-invalid': fieldState.invalid })}
                   />
                 )
-              )}
+              }
             />
             <label htmlFor="career" className={classNames({ 'p-error': !!errors.career })}>
               {t('global.dictionary.career')}*
@@ -228,7 +230,7 @@ export default function EditGroupDialogForm({
               control={control}
               rules={{
                 required: t('global.dictionary.semester') as string,
-                validate: (value) => !isNaN(Number(value)) || "El semestre debe ser un número",
+                validate: (value) => !isNaN(Number(value)) || 'El semestre debe ser un número',
               }}
               render={({ field, fieldState }) => (
                 <InputText

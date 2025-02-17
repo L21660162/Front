@@ -4,25 +4,20 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Demo } from '../../../../types/types';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
-  ICareer,
   IEvent,
   IGetAllEventsQuery,
   IGetGroupByIdQuery,
-  useDeletedCareerMutation,
   useDeleteEventMutation,
   useGetAllEventsQuery,
   useGetGroupByIdQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
-import { dialogStore } from '../../../store/global/dialogStore';
-import EditCareerDialogForm from '../../forms/career/dashboard/editcareer';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
 import EditEventDialogForm from '../../forms/event/dashbord/editEvent';
@@ -117,7 +112,10 @@ function EventCrud() {
   };
 
   const startDateBodyTemplate = (event: IEvent) => {
-    const startDate = new Date(event.startDate).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
+    const startDate = new Date(event.startDate).toLocaleString('es-MX', {
+      dateStyle: 'short',
+      timeStyle: 'short',
+    });
     return (
       <>
         <span className="p-column-title">StartDate</span>
@@ -127,7 +125,10 @@ function EventCrud() {
   };
 
   const finishDataBodyTemplate = (event: IEvent) => {
-    const finishDate = new Date(event.finishDate).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
+    const finishDate = new Date(event.finishDate).toLocaleString('es-MX', {
+      dateStyle: 'short',
+      timeStyle: 'short',
+    });
     return (
       <>
         <span className="p-column-title">finishData</span>
@@ -145,7 +146,7 @@ function EventCrud() {
       useGetGroupByIdQuery<IGetGroupByIdQuery>(GRAPHQL_CLIENT, { id: group })
     );
   
-    const groups = groupQueries.map(({ data }) => data?.getGroupById?.identifier || "").join(", ");
+    const groups = groupQueries.map(({ data }) => data?.getGroupById?.identifier || '').join(', ');
   
     return (
       <>

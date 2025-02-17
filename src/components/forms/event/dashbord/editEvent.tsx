@@ -7,14 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
 import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-  IUpdateCareerInput,
   IEvent,
   useUpdateEventMutation,
   IUpdateEventInput,

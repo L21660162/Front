@@ -38,10 +38,11 @@ export default function EditDepartmentDialogForm({
   const { data: usersData, isLoading: usersLoading } = useGetAllUsersQuery(GRAPHQL_CLIENT);
 
   // Formatear los usuarios para el Dropdown
-  const usersOptions = usersData?.getAllUsers.docs.map((user) => ({
-    label: `${user.firstName} ${user.lastName}`, // Nombre completo como label
-    value: user._id, // ID del usuario como value
-  })) || [];
+  const usersOptions =
+    usersData?.getAllUsers.docs.map((user) => ({
+      label: `${user.firstName} ${user.lastName}`, // Nombre completo como label
+      value: user._id, // ID del usuario como value
+    })) || [];
 
   // Mutación para actualizar el departamento
   const { mutate } = useUpdateDepartmentMutation<IApiError>(GRAPHQL_CLIENT, {
@@ -114,7 +115,7 @@ export default function EditDepartmentDialogForm({
 
   return (
     <Dialog
-    header={t('module.department.dashboard.dialog.edit.header')}
+      header={t('module.department.dashboard.dialog.edit.header')}
       visible={visible}
       style={{ width: '35rem' }}
       onHide={() => {
@@ -199,11 +200,16 @@ export default function EditDepartmentDialogForm({
                 />
               )}
             />
-            <label htmlFor="departmentBoss" className={classNames({ 'p-error': !!errors.departmentBoss })}>
+            <label
+              htmlFor="departmentBoss"
+              className={classNames({ 'p-error': !!errors.departmentBoss })}
+            >
               {t('global.dictionary.departmentBoss')}
             </label>
           </span>
-          {errors.departmentBoss && <small className="p-error">{errors.departmentBoss.message}</small>}
+          {errors.departmentBoss && (
+            <small className="p-error">{errors.departmentBoss.message}</small>
+          )}
         </div>
       </form>
     </Dialog>

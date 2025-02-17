@@ -156,21 +156,13 @@ function DashboardAttendancePanel() {
             </li>
             <li>
               <span className="text-500 no-underline line-height-3">
-                {t('sidebar.home.dashboard.label')}
+                {t('sidebar.home.dashboard')}
               </span>
-            </li>
-            <li className="px-2">
-              <i className="pi pi-angle-right text-500 line-height-3" />
-            </li>
-            <li>
-              <span className="text-900 line-height-3">{t('sidebar.home.dashboard.vacancy')}</span>
             </li>
           </ul>
           <div className="flex align-items-start flex-column lg:justify-content-between lg:flex-row">
             <div>
-              <div className="font-medium text-3xl text-900">
-                {t('sidebar.home.dashboard.vacancy')}
-              </div>
+              <div className="font-medium text-3xl text-900">{t('sidebar.home.dashboard')}</div>
             </div>
           </div>
           <div className="flex align-items-center justify-content-between mt-3">

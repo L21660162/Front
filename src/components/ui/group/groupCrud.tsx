@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 'use client';
 
 import { Button } from 'primereact/button';
@@ -10,7 +8,6 @@ import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
   IGroup,
@@ -20,7 +17,7 @@ import {
   useGetAllCareersQuery,
   IGetAllCareersQuery,
   useGetAllPeriodsQuery,
-  IGetAllPeriodsQuery
+  IGetAllPeriodsQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import EditGroupDialogForm from '../../forms/group/dashboard/editGroup';
@@ -35,13 +32,12 @@ function GroupCrud() {
     createdAt: undefined,
     isDeleted: false,
     updatedAt: undefined,
-    deletedAt: undefined
+    deletedAt: undefined,
   };
 
   const { t } = useTranslation('common');
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<any>>(null);
-  
   const [deleteGroupDialog, setDeleteGroupDialog] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<IGroup>(emptyGroup);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -67,13 +63,13 @@ function GroupCrud() {
 
   const getCareerNameById = (careerId: string): string => {
     if (!careersData) return t('global.loading');
-    const career = careersData.getAllCareers.docs.find(c => c._id === careerId);
+    const career = careersData.getAllCareers.docs.find((c) => c._id === careerId);
     return career ? career.name : t('global.dictionary.careerNotFound');
   };
 
   const getPeriodNameById = (periodId: string): string => {
     if (!periodsData) return t('global.loading');
-    const period = periodsData.getAllPeriods.docs.find(p => p._id === periodId);
+    const period = periodsData.getAllPeriods.docs.find((p) => p._id === periodId);
     return period ? period.name : t('global.dictionary.periodNotFound');
   };
 
@@ -185,12 +181,7 @@ function GroupCrud() {
         text
         onClick={hideDeleteGroupDialog}
       />
-      <Button
-        label={t('global.buttons.yes')}
-        icon="pi pi-check"
-        text
-        onClick={deleteGroup}
-      />
+      <Button label={t('global.buttons.yes')} icon="pi pi-check" text onClick={deleteGroup} />
     </>
   );
 
@@ -261,7 +252,6 @@ function GroupCrud() {
                 backgroundColor: '#2a497b',
                 color: 'white',
               }}
-              //style={{ textAlign: 'center' }}
             />
             <Column
               field="identifier"
@@ -274,7 +264,6 @@ function GroupCrud() {
                 backgroundColor: '#2a497b',
                 color: 'white',
               }}
-              //style={{ textAlign: 'center' }}
             />
             <Column
               body={actionBodyTemplate}
@@ -297,8 +286,8 @@ function GroupCrud() {
             onHide={hideDeleteGroupDialog}
           >
             <div className="flex align-items-center justify-content-center">
-              <i 
-                className="pi pi-exclamation-triangle mr-3" 
+              <i
+                className="pi pi-exclamation-triangle mr-3"
                 style={{ fontSize: '2rem', color: '#e57373' }}
               />
               {selectedGroup && (

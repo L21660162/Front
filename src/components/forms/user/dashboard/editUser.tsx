@@ -29,10 +29,10 @@ type UserFormProps = {
   headerTitle: string;
 };
 
-type prop = {
+type Prop = {
   id: string;
 };
-type UserFormPropsAndDialogStore = UserFormProps & DialogStore & prop;
+type UserFormPropsAndDialogStore = UserFormProps & DialogStore & Prop;
 
 export default function UserDialogForm({
   headerTitle,

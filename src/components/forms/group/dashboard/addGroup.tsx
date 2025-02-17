@@ -19,26 +19,34 @@ import {
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
-type groupFormProps = {
+type GroupFormProps = {
   headerTitle: string;
 };
 
-type groupFormPropsAndDialogStore = groupFormProps & DialogStore;
+type GroupFormPropsAndDialogStore = GroupFormProps & DialogStore;
 
 export default function groupDialogForm({
   headerTitle,
   visible,
   setVisible,
-}: PropsWithChildren<groupFormPropsAndDialogStore>) {
+}: PropsWithChildren<GroupFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/settings/group' });
   const toast = useRef<Toast>(null);
 
   // Query para obtener todos los períodos
-  const { data: periodsData, isLoading: periodsLoading, error: periodsError } = useGetAllPeriodsQuery(GRAPHQL_CLIENT);
+  const {
+    data: periodsData,
+    isLoading: periodsLoading,
+    error: periodsError,
+  } = useGetAllPeriodsQuery(GRAPHQL_CLIENT);
 
   // Query para obtener todas las carreras
-  const { data: careersData, isLoading: careersLoading, error: careersError } = useGetAllCareersQuery(GRAPHQL_CLIENT);
+  const {
+    data: careersData,
+    isLoading: careersLoading,
+    error: careersError,
+  } = useGetAllCareersQuery(GRAPHQL_CLIENT);
 
   const { mutate } = useCreateGroupMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -118,16 +126,18 @@ export default function groupDialogForm({
   );
 
   // Mapear los períodos para el Dropdown
-  const periodOptions = periodsData?.getAllPeriods?.docs?.map((period) => ({
-    label: period.name, // Nombre del período
-    value: period._id,  // Usa _id en lugar de id
-  })) || [];
+  const periodOptions =
+    periodsData?.getAllPeriods?.docs?.map((period) => ({
+      label: period.name, // Nombre del período
+      value: period._id, // Usa _id en lugar de id
+    })) || [];
 
   // Mapear las carreras para el Dropdown
-  const careerOptions = careersData?.getAllCareers?.docs?.map((career) => ({
-    label: career.name, // Nombre de la carrera
-    value: career._id,  // ID de la carrera
-  })) || [];
+  const careerOptions =
+    careersData?.getAllCareers?.docs?.map((career) => ({
+      label: career.name, // Nombre de la carrera
+      value: career._id, // ID de la carrera
+    })) || [];
 
   return (
     <Dialog
@@ -156,7 +166,7 @@ export default function groupDialogForm({
               rules={{
                 required: t('global.forms.validation.groupName') as string,
               }}
-              render={({ field, fieldState }) => (
+              render={({ field, fieldState }) =>
                 careersLoading ? (
                   <div className="flex align-items-center">
                     <ProgressSpinner style={{ width: '30px', height: '30px' }} />
@@ -175,7 +185,7 @@ export default function groupDialogForm({
                     className={classNames({ 'p-invalid': fieldState.invalid })}
                   />
                 )
-              )}
+              }
             />
             <label htmlFor="career" className={classNames({ 'p-error': !!errors.career })}>
               {t('global.dictionary.career')}*

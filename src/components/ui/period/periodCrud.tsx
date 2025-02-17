@@ -5,7 +5,6 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
@@ -99,14 +98,15 @@ function PeriodCrud() {
     );
   };
 
-  const identifierBodyTemplate = (field: 'largeIdentifier' | 'shortIdentifier') => (period: IPeriod) => {
-    return (
-      <>
-        <span className="p-column-title">{t(`global.dictionary.t${field}`)}</span>
-        {period[field]}
-      </>
-    );
-  };
+  const identifierBodyTemplate =
+    (field: 'largeIdentifier' | 'shortIdentifier') => (period: IPeriod) => {
+      return (
+        <>
+          <span className="p-column-title">{t(`global.dictionary.t${field}`)}</span>
+          {period[field]}
+        </>
+      );
+    };
 
   const dateBodyTemplate = (field: 'startDate' | 'finalDate') => (period: IPeriod) => {
     return (
@@ -157,18 +157,13 @@ function PeriodCrud() {
 
   const deletePeriodDialogFooter = (
     <>
-      <Button 
-        label={t('global.buttons.no')} 
-        icon="pi pi-times" 
-        text 
-        onClick={hideDeletePeriodDialog} 
+      <Button
+        label={t('global.buttons.no')}
+        icon="pi pi-times"
+        text
+        onClick={hideDeletePeriodDialog}
       />
-      <Button 
-        label={t('global.buttons.yes')} 
-        icon="pi pi-check" 
-        text 
-        onClick={deletePeriod} 
-      />
+      <Button label={t('global.buttons.yes')} icon="pi pi-check" text onClick={deletePeriod} />
     </>
   );
 
@@ -262,8 +257,8 @@ function PeriodCrud() {
             onHide={hideDeletePeriodDialog}
           >
             <div className="flex align-items-center justify-content-center">
-              <i 
-                className="pi pi-exclamation-triangle mr-3" 
+              <i
+                className="pi pi-exclamation-triangle mr-3"
                 style={{ fontSize: '2rem', color: '#e57373' }}
               />
               {selectedPeriod && (

@@ -36,16 +36,9 @@ mutation UpdateFile($data: UpdateFile!) {
   }
 }
 
-mutation UpdateFile($data: UpdateFile!) {
-  updateFile(data: $data) {
+mutation UploadFile($data: UploadFileInput!) {
+  uploadFile(data: $data) {
     _id
-    approvedBy
-    comments {
-      _id
-      comment
-      createdAt
-      createdBy
-    }
     createdAt
     deletedAt
     extension
@@ -57,19 +50,10 @@ mutation UpdateFile($data: UpdateFile!) {
     updatedAt
     uploadedBy {
       _id
-      createdAt
-      deletedAt
-      department
       email
       firstName
-      gender
-      isDeleted
       lastName
       middleName
-      password
-      rfc
-      roles
-      updatedAt
     }
   }
 }

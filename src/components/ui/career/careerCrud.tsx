@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 'use client';
 
 import { Button } from 'primereact/button';
@@ -9,7 +7,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Demo } from '../../../../types/types';
@@ -21,7 +19,6 @@ import {
   useGetAllCareersQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
-import { dialogStore } from '../../../store/global/dialogStore';
 import EditCareerDialogForm from '../../forms/career/dashboard/editcareer';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
@@ -292,7 +289,7 @@ function CareerCrud() {
               field="certificate"
               header={t('global.dictionary.tisCertified')}
               dataType="boolean"
-              style={{ minWidth: '8rem' }}
+              style={{ minWidth: '8rem', textAlign: 'center' }}
               body={certificateBodyTemplate}
               headerStyle={{
                 minWidth: '5rem',
@@ -300,7 +297,6 @@ function CareerCrud() {
                 backgroundColor: '#2a497b',
                 color: 'white',
               }}
-              style={{ textAlign: 'center' }}
             />
             <Column
               body={actionBodyTemplate}

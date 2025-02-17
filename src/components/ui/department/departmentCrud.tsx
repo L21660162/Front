@@ -139,6 +139,8 @@ function DepartmentCrud() {
     );
   };
 
+  console.log('departments', departments);
+
   const actionBodyTemplate = (rowData: IDepartment) => {
     return (
       <div className="flex align-items-center">
@@ -274,8 +276,8 @@ function DepartmentCrud() {
             onHide={hideDeleteDepartmentDialog}
           >
             <div className="flex align-items-center justify-content-center">
-              <i 
-                className="pi pi-exclamation-triangle mr-3" 
+              <i
+                className="pi pi-exclamation-triangle mr-3"
                 style={{ fontSize: '2rem', color: '#e57373' }}
               />
               {selectedDepartment && (

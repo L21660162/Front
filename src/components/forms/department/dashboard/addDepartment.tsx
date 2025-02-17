@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
+import { useNavigate } from '@tanstack/react-router';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
   ICreateDepartmentInput,
@@ -14,7 +15,6 @@ import {
 } from '../../../../graphql/graphql';
 import { IApiError } from '../../../../../types/apierror';
 import { DialogStore } from '../../../../store/global/types';
-import { useNavigate } from '@tanstack/react-router';
 
 type DepartmentFormProps = {
   headerTitle: string;
@@ -32,7 +32,7 @@ export default function DepartmentDialogForm({
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   // Consulta para obtener todos los usuarios
-  const { data: usersData, isLoading: isLoadingUsers, error: usersError } = useGetAllUsersQuery(GRAPHQL_CLIENT);
+  const { data: usersData } = useGetAllUsersQuery(GRAPHQL_CLIENT);
 
   const { mutate } = useCreateDepartmentMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -73,7 +73,8 @@ export default function DepartmentDialogForm({
   const onSubmit = (data: ICreateDepartmentInput) => {
     setIsButtonDisabled(true);
     mutate({
-      data: { // Usa 'data' en lugar de 'input'
+      data: {
+        // Usa 'data' en lugar de 'input'
         name: data.name,
         areaKey: data.areaKey,
         departmentBoss: data.departmentBoss, // Enviamos el ID del jefe de departamento
@@ -159,33 +160,33 @@ export default function DepartmentDialogForm({
 
         {/* Selector de jefe de departamento */}
         <div className="field">
-  <label htmlFor="departmentBoss">{t('global.dictionary.departmentBoss')}*</label>
-  <Controller
-    name="departmentBoss"
-    control={control}
-    rules={{ required: t('global.forms.validation.requiredField') as string }}
-    render={({ field, fieldState }) => (
-      <span className="p-float-label">
-        <select
-          id="departmentBoss"
-          {...field}
-          value={field.value || ""} // Convierte `null` o `undefined` a `""`
-          className={classNames({ 'p-invalid': fieldState.invalid })}
-        >
-          <option value="">{t('global.forms.placeholders.selectDepartmentBoss')}</option>
-          {usersData?.getAllUsers.docs.map((user) => (
-            <option key={user._id} value={user._id}>
-              {`${user.firstName} ${user.lastName}`}
-            </option>
-          ))}
-        </select>
-        {fieldState.invalid && (
-          <small className="p-error">{fieldState.error?.message}</small>
-        )}
-      </span>
-    )}
-  />
-</div>
+          <label htmlFor="departmentBoss">{t('global.dictionary.departmentBoss')}*</label>
+          <Controller
+            name="departmentBoss"
+            control={control}
+            rules={{ required: t('global.forms.validation.requiredField') as string }}
+            render={({ field, fieldState }) => (
+              <span className="p-float-label">
+                <select
+                  id="departmentBoss"
+                  {...field}
+                  value={field.value || ''} // Convierte `null` o `undefined` a `""`
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
+                >
+                  <option value="">{t('global.forms.placeholders.selectDepartmentBoss')}</option>
+                  {usersData?.getAllUsers.docs.map((user) => (
+                    <option key={user._id} value={user._id}>
+                      {`${user.firstName} ${user.lastName}`}
+                    </option>
+                  ))}
+                </select>
+                {fieldState.invalid && (
+                  <small className="p-error">{fieldState.error?.message}</small>
+                )}
+              </span>
+            )}
+          />
+        </div>
       </form>
     </Dialog>
   );

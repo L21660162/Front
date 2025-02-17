@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 'use client';
 
 import { useNavigate } from '@tanstack/react-router';
@@ -35,7 +33,6 @@ function CareerCrud() {
   const [aprovateDialog, setAprovateDialog] = useState(false);
   const [addCommentDialog, setAddCommentDialog] = useState(false);
   const [selectedAttendance, setSelectedAttendance] = useState(null);
-  //const [attendanceId, setAttendanceId] = useState<string | null>(null);
   const [globalFilter, setGlobalFilter] = useState('');
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<any>>(null);

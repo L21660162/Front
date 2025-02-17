@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 'use client';
 
 import { Button } from 'primereact/button';
@@ -16,27 +14,16 @@ import {
   IGetAllClassroomsQuery,
   useDeleteClassroomMutation,
   useGetAllClassroomsQuery,
-  useGetAllBuildingsQuery, 
-  IGetAllBuildingsQuery
+  useGetAllBuildingsQuery,
+  IGetAllBuildingsQuery,
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import EditClassroomDialogForm from '../../forms/classroom/dashboard/editClassroom';
 
 function ClassroomCrud() {
-  const emptyClassroom: IClassroom = {
-    building: '',
-    identifier: '',
-    _id: '',
-    createdAt: undefined,
-    isDeleted: false,
-    updatedAt: undefined,
-    deletedAt: undefined,
-  };
-
   const { t } = useTranslation('common');
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<IClassroom[]>>(null);
-  
   const [classrooms, setClassrooms] = useState<IClassroom[]>([]);
   const [deleteClassroomDialog, setDeleteClassroomDialog] = useState(false);
   const [selectedClassroom, setSelectedClassroom] = useState<IClassroom | null>(null);
@@ -49,14 +36,11 @@ function ClassroomCrud() {
     offset: 0,
   });
 
-  const { data: buildingsData } = useGetAllBuildingsQuery<IGetAllBuildingsQuery>(
-    GRAPHQL_CLIENT,
-    { 
-      limit: 500,
-      page: 1,
-      offset: 0 
-    }
-  );
+  const { data: buildingsData } = useGetAllBuildingsQuery<IGetAllBuildingsQuery>(GRAPHQL_CLIENT, {
+    limit: 500,
+    page: 1,
+    offset: 0,
+  });
 
   const { mutate } = useDeleteClassroomMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -79,9 +63,11 @@ function ClassroomCrud() {
 
   useEffect(() => {
     if (data?.getAllClassrooms.docs && buildingsData?.getAllBuildings.docs) {
-      const classroomsWithBuildingNames = data.getAllClassrooms.docs.map(classroom => ({
+      const classroomsWithBuildingNames = data.getAllClassrooms.docs.map((classroom) => ({
         ...classroom,
-        building: buildingsData.getAllBuildings.docs.find(b => b._id === classroom.building)?.name || t('global.dictionary.unknownBuilding')
+        building:
+          buildingsData.getAllBuildings.docs.find((b) => b._id === classroom.building)?.name ||
+          t('global.dictionary.unknownBuilding'),
       }));
       setClassrooms(classroomsWithBuildingNames);
     }
@@ -197,7 +183,6 @@ function ClassroomCrud() {
                 backgroundColor: '#2a497b',
                 color: 'white',
               }}
-              //style={{ textAlign: 'center' }}
             />
             <Column
               body={actionBodyTemplate}
@@ -216,39 +201,39 @@ function ClassroomCrud() {
             style={{ width: '450px' }}
             header={t('global.confirmation.deleteTitle')}
             modal
-            footer={(
+            footer={
               <>
-                <Button 
-                  label={t('global.buttons.no')} 
-                  icon="pi pi-times" 
-                  text 
-                  onClick={() => setDeleteClassroomDialog(false)} 
+                <Button
+                  label={t('global.buttons.no')}
+                  icon="pi pi-times"
+                  text
+                  onClick={() => setDeleteClassroomDialog(false)}
                 />
-                <Button 
-                  label={t('global.buttons.yes')} 
-                  icon="pi pi-check" 
-                  text 
+                <Button
+                  label={t('global.buttons.yes')}
+                  icon="pi pi-check"
+                  text
                   onClick={() => {
                     if (selectedClassroom?._id) {
-                      mutate({ data: { _id: selectedClassroom._id }});
+                      mutate({ data: { _id: selectedClassroom._id } });
                     }
                     setDeleteClassroomDialog(false);
-                  }} 
+                  }}
                 />
               </>
-            )}
+            }
             onHide={() => setDeleteClassroomDialog(false)}
           >
             <div className="flex align-items-center justify-content-center">
-              <i 
-                className="pi pi-exclamation-triangle mr-3" 
+              <i
+                className="pi pi-exclamation-triangle mr-3"
                 style={{ fontSize: '2rem', color: '#e57373' }}
               />
               {selectedClassroom && (
                 <span>
                   {t('global.confirmation.deleteTitle', {
                     identifier: <b>{selectedClassroom.identifier}</b>,
-                    building: <b>{selectedClassroom.building}</b>
+                    building: <b>{selectedClassroom.building}</b>,
                   })}
                 </span>
               )}

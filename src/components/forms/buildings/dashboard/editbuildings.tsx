@@ -1,39 +1,34 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { RadioButton } from 'primereact/radiobutton';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-  IGetBuildingByIdQuery,
   IUpdateBuildingInput,
-  useGetBuildingByIdQuery,
   useUpdateBuildingMutation,
   IBuilding,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
-type buildingFormProps = {
+type BuildingFormProps = {
   headerTitle: string;
   building: IBuilding;
 };
 
-type buildingFormPropsAndDialogStore = buildingFormProps & DialogStore;
+type BuildingFormPropsAndDialogStore = BuildingFormProps & DialogStore;
 
 export default function EditbuildingDialogForm({
   headerTitle,
   visible,
   setVisible,
   building,
-}: PropsWithChildren<buildingFormPropsAndDialogStore>) {
+}: PropsWithChildren<BuildingFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/settings/building' });
   const toast = useRef<Toast>(null);
@@ -85,10 +80,8 @@ export default function EditbuildingDialogForm({
   const onSubmit = (data: IUpdateBuildingInput) => {
     setIsButtonDisabld(true);
 
-    console.log("Datos enviados:", data);  // Debug
-
     if (!data._id) {
-      console.error("Error: _id está vacío");
+      console.error('Error: _id está vacío');
       toast.current?.show({
         severity: 'error',
         summary: 'Error',

@@ -1,83 +1,71 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
-import { Divider } from 'primereact/divider';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { RadioButton } from 'primereact/radiobutton';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { Query } from '@tanstack/react-query';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
-import {
-IBuilding,
-IUpsertBuildingInput,
-    IGetAllBuildingsQuery,
-useCreateBuildingMutation,
-} from '../../../../graphql/graphql';
+import { IUpsertBuildingInput, useCreateBuildingMutation } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
-type buildingFormProps = {
-headerTitle: string;
+type BuildingFormProps = {
+  headerTitle: string;
 };
-type buildingFormPropsAndDialogStore = buildingFormProps & DialogStore;
+type BuildingFormPropsAndDialogStore = BuildingFormProps & DialogStore;
 
 export default function buildingDialogForm({
-headerTitle,
-visible,
-setVisible,
-}: PropsWithChildren<buildingFormPropsAndDialogStore>) {
-const { t } = useTranslation('common');
-const navigate = useNavigate({ from: '/settings/building' });
-const toast = useRef<Toast>(null);
+  headerTitle,
+  visible,
+  setVisible,
+}: PropsWithChildren<BuildingFormPropsAndDialogStore>) {
+  const { t } = useTranslation('common');
+  const navigate = useNavigate({ from: '/settings/building' });
+  const toast = useRef<Toast>(null);
 
-const { mutate } = useCreateBuildingMutation<IApiError>(GRAPHQL_CLIENT, {
+  const { mutate } = useCreateBuildingMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
-    toast.current?.show({
+      toast.current?.show({
         severity: 'success',
         summary: t('global.toast.success.summary'),
         detail: t('global.toast.success.detail.buildingCreateSuccess'),
-    });
+      });
 
-    setTimeout(() => {
+      setTimeout(() => {
         navigate({ to: '/settings/building' });
         window.location.reload();
-    }, 200);
-    setIsButtonDisabld(false);
+      }, 200);
+      setIsButtonDisabld(false);
     },
     onError: (errorResponse: IApiError) => {
       // TODO manage server error response for translation or something
-    toast.current?.show({
+      toast.current?.show({
         severity: 'error',
         summary: t('global.toast.error.summary'),
         detail: errorResponse.response.errors[0].message,
         life: 5000,
-    });
+      });
 
-    setIsButtonDisabld(false);
+      setIsButtonDisabld(false);
     },
-});
+  });
 
-const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
+  const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
 
-
-
-const {
+  const {
     handleSubmit,
     control,
     formState: { errors },
     reset,
-} = useForm<IUpsertBuildingInput>({
+  } = useForm<IUpsertBuildingInput>({
     defaultValues: {
-    letter: '',
-    name: '',
-
+      letter: '',
+      name: '',
     },
-});
+  });
 
   const onSubmit = (data: IUpsertBuildingInput) => {
     setIsButtonDisabld(true);
@@ -89,92 +77,92 @@ const {
     });
   };
 
-const footerContent = (
+  const footerContent = (
     <div>
-    <Button
+      <Button
         className="p-button-text p-button-danger p-button-outlined p-button-rounded"
         label="Cancelar"
         icon="pi pi-times"
         onClick={() => {
-        setVisible(false);
-        reset();
+          setVisible(false);
+          reset();
         }}
-    />
-    <Button
+      />
+      <Button
         type="submit"
         label={t('global.forms.submit') as string}
         className="p-button-rounded p-button-raised mt-2"
         disabled={isButtonDisablesed}
         onClick={handleSubmit(onSubmit)}
-    />
+      />
     </div>
-);
+  );
 
-return (
+  return (
     <Dialog
-    header={headerTitle}
-    visible={visible}
-    style={{ width: '35rem' }}
-    onHide={() => setVisible(false)}
-    footer={footerContent}
+      header={headerTitle}
+      visible={visible}
+      style={{ width: '35rem' }}
+      onHide={() => setVisible(false)}
+      footer={footerContent}
     >
-    <Toast ref={toast} />
-    <form className="p-fluid">
+      <Toast ref={toast} />
+      <form className="p-fluid">
         <div className="label">
-        <label htmlFor="contact">
+          <label htmlFor="contact">
             <b>{t('global.dictionary.building')}</b> <br />
-        </label>
+          </label>
         </div>
         <hr />
         <div className="field">
-        <span className="p-float-label p-input-icon-right">
+          <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-            name="name"
-            control={control}
-            rules={{
+              name="name"
+              control={control}
+              rules={{
                 required: t('global.forms.validation.buildingName') as string,
-            }}
-            render={({ field, fieldState }) => (
+              }}
+              render={({ field, fieldState }) => (
                 <InputText
-                id={field.name}
-                {...field}
-                className={classNames({ 'p-invalid': fieldState.invalid })}
+                  id={field.name}
+                  {...field}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
                 />
-            )}
+              )}
             />
             <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-            {t('global.dictionary.buildingName')}*
+              {t('global.dictionary.buildingName')}*
             </label>
-        </span>
-        {errors.name && <small className="p-error">{errors.name?.message}</small>}
+          </span>
+          {errors.name && <small className="p-error">{errors.name?.message}</small>}
         </div>
 
         <div className="field">
-        <span className="p-float-label p-input-icon-right">
+          <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-            name="letter"
-            control={control}
-            rules={{
+              name="letter"
+              control={control}
+              rules={{
                 required: t('global.forms.validation.buildingAbbreviation') as string,
-            }}
-            render={({ field, fieldState }) => (
+              }}
+              render={({ field, fieldState }) => (
                 <InputText
-                id={field.name}
-                maxLength={1}
-                {...field}
-                className={classNames({ 'p-invalid': fieldState.invalid })}
+                  id={field.name}
+                  maxLength={1}
+                  {...field}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
                 />
-            )}
+              )}
             />
             <label htmlFor="name" className={classNames({ 'p-error': !!errors.name })}>
-            {t('global.dictionary.buildingAbbreviation')}*
+              {t('global.dictionary.buildingAbbreviation')}*
             </label>
-        </span>
-        {errors.name && <small className="p-error">{errors.name?.message}</small>}
+          </span>
+          {errors.name && <small className="p-error">{errors.name?.message}</small>}
         </div>
-    </form>
+      </form>
     </Dialog>
-);
+  );
 }

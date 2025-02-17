@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 'use client';
 
 import { Button } from 'primereact/button';
@@ -8,7 +6,6 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
@@ -21,8 +18,6 @@ import {
 } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import EditBuildingDialogForm from '../../forms/buildings/dashboard/editbuildings';
-import { useAccessTokenData } from '../../../store/auth/store';
-import { TokenData } from '../../../store/auth/type';
 
 function BuildingCrud() {
   const emptyBuilding: IBuilding = {
@@ -32,13 +27,12 @@ function BuildingCrud() {
     createdAt: undefined,
     isDeleted: false,
     updatedAt: undefined,
-    deletedAt: undefined
+    deletedAt: undefined,
   };
 
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/career/dashboard' });
   const toast = useRef<Toast>(null);
-  
   const [deleteBuildingDialog, setDeleteBuildingDialog] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState<IBuilding>(emptyBuilding);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -151,18 +145,13 @@ function BuildingCrud() {
 
   const deleteBuildingDialogFooter = (
     <>
-      <Button 
-        label={t('global.buttons.no')} 
-        icon="pi pi-times" 
-        text 
-        onClick={hideDeleteBuildingDialog} 
+      <Button
+        label={t('global.buttons.no')}
+        icon="pi pi-times"
+        text
+        onClick={hideDeleteBuildingDialog}
       />
-      <Button 
-        label={t('global.buttons.yes')} 
-        icon="pi pi-check" 
-        text 
-        onClick={deleteBuilding} 
-      />
+      <Button label={t('global.buttons.yes')} icon="pi pi-check" text onClick={deleteBuilding} />
     </>
   );
 
@@ -220,7 +209,6 @@ function BuildingCrud() {
                 backgroundColor: '#2a497b',
                 color: 'white',
               }}
-              //style={{ textAlign: 'center' }}
             />
             <Column
               body={actionBodyTemplate}
@@ -243,8 +231,8 @@ function BuildingCrud() {
             onHide={hideDeleteBuildingDialog}
           >
             <div className="flex align-items-center justify-content-center">
-              <i 
-                className="pi pi-exclamation-triangle mr-3" 
+              <i
+                className="pi pi-exclamation-triangle mr-3"
                 style={{ fontSize: '2rem', color: '#e57373' }}
               />
               {selectedBuilding && (

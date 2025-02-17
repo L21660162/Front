@@ -1,10 +1,9 @@
 /* eslint-disable no-else-return */
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import AppMenuitem from './AppMenuitem';
 import { MenuProvider } from './context/menucontext';
 import { AppMenuItem } from '../types/types';
-import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 import { TokenData } from '../src/store/auth/type';
 import { useAccessTokenData } from '../src/store/auth/store';
 
@@ -76,11 +75,6 @@ function AppMenu() {
               to: '/settings/schedule',
             },
             {
-              label: t('sidebar.settings.users'),
-              icon: 'pi pi-fw pi-users',
-              to: '/settings/users',
-            },
-            {
               label: t('sidebar.settings.subject'),
               icon: 'pi pi-fw pi-briefcase',
               to: '/settings/subject',
@@ -106,12 +100,12 @@ function AppMenu() {
               to: '/settings/career',
             },
             {
-              label: t('sidebar.settings.classroom'), // salon
+              label: t('sidebar.settings.classroom'),
               icon: 'pi pi-fw pi-building',
               to: '/settings/classroom',
             },
             {
-              label: t('sidebar.settings.group'), // grupo
+              label: t('sidebar.settings.group'),
               icon: 'pi pi-fw pi-users',
               to: '/settings/group',
             },
