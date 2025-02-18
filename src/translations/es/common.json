@@ -372,10 +372,14 @@
   "module": {
     "home": {
       "dashboard": {
-        "addExample": "Crear ejemplo",
-        "dialog": {
-          "add": {
-            "header": "Ejemplo de header para el dialogo add"
+        "dashboardPanel":{
+          "graph":{
+            "general": "Grafica de Asistencia por Día de la Semana",
+            "day": "Grafica de Asistencia del Día",
+            "month": "Grafica de Asistencia del Mes",
+            "semester": "Grafica de Asistencia del Semestre",
+            "year": "Grafica de Asistencia del Año"
+
           }
         }
       }

@@ -67,10 +67,6 @@ function DashboardAttendancePanel() {
   const { _id: studentSelectedId } = useAccessTokenData() as TokenData;
   const [file, setFile] = useState<IFile>();
 
-  const [visibleDISPO, setVisibleDISPO] = useState(false);
-  const [visibleINPGR, setVisibleINPGR] = useState(false);
-  const [visibleFINSH, setVisibleFINSH] = useState(false);
-
   const { data: department } = useGetAllDepartmentsQuery(GRAPHQL_CLIENT, {
     page: 1,
     offset: 0,
@@ -105,43 +101,194 @@ function DashboardAttendancePanel() {
     }, 250);
   };
 
-  const showDISPO = () => {
-    setVisibleDISPO(true);
-  };
-  const showINPGR = () => {
-    setVisibleINPGR(true);
-  };
-  const showFINSH = () => {
-    setVisibleFINSH(true);
-  };
 
-  const pieDataOrg: ChartData = {
-    labels: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-    datasets: [
-      {
-        data: [
-          attendanceStatistics?.getAttendanceStatistics.weekday1,
-          attendanceStatistics?.getAttendanceStatistics.weekday2,
-          attendanceStatistics?.getAttendanceStatistics.weekday3,
-          attendanceStatistics?.getAttendanceStatistics.weekday4,
-          attendanceStatistics?.getAttendanceStatistics.weekday5,
-          attendanceStatistics?.getAttendanceStatistics.weekday6,
-          attendanceStatistics?.getAttendanceStatistics.weekday7,
-        ],
-      },
-    ],
-  };
 
-  const pieOptions: ChartOptions = {
-    plugins: {
-      legend: {
-        labels: {
-          usePointStyle: true,
-          color: textColor,
+
+    const chartData: ChartData = {
+      labels: ["Días de la semana"],
+      datasets: [
+        {
+          label: 'Lunes',
+          backgroundColor: documentStyle.getPropertyValue('--blue-500'),
+          borderColor: documentStyle.getPropertyValue('--blue-700'),
+          data: [attendanceStatistics?.getAttendanceStatistics.weekday2],
+        },
+        {
+          label: 'Martes',
+          backgroundColor: documentStyle.getPropertyValue('--green-500'),
+          borderColor: documentStyle.getPropertyValue('--green-700'),
+          data: [attendanceStatistics?.getAttendanceStatistics.weekday3],
+        },
+        {
+          label: 'Miercoles',
+          backgroundColor: documentStyle.getPropertyValue('--yellow-500'),
+          borderColor: documentStyle.getPropertyValue('--yellow-700'),
+          data: [attendanceStatistics?.getAttendanceStatistics.weekday4],
+        },
+        {
+          label: 'Jueves',
+          backgroundColor: documentStyle.getPropertyValue('--cyan-500'),
+          borderColor: documentStyle.getPropertyValue('--cyan-700'),
+          data: [attendanceStatistics?.getAttendanceStatistics.weekday5],
+        },
+        {
+          label: 'Viernes',
+          backgroundColor: documentStyle.getPropertyValue('--red-500'),
+          borderColor: documentStyle.getPropertyValue('--red-700'),
+          data: [attendanceStatistics?.getAttendanceStatistics.weekday6],
+        },
+        {
+          label: 'Sabado',
+          backgroundColor: documentStyle.getPropertyValue('--indigo-500'),
+          borderColor: documentStyle.getPropertyValue('--indigo-700'),
+          data: [attendanceStatistics?.getAttendanceStatistics.weekday7],
+        },
+        {
+          label: 'Domingo',
+          backgroundColor: documentStyle.getPropertyValue('--teal-500'),
+          borderColor: documentStyle.getPropertyValue('--teal-700'),
+          data: [attendanceStatistics?.getAttendanceStatistics.weekday1],
+        },
+      ],
+    };
+
+    const pieDataDay: ChartData = {
+      labels: ["Ausentes", "Justificados", "Presentes"],
+      datasets: [
+        {
+          data: [
+            attendanceStatistics?.getAttendanceStatistics.classAbsentDay,
+            attendanceStatistics?.getAttendanceStatistics.classJustifyDay,
+            attendanceStatistics?.getAttendanceStatistics.classPresentDay,
+          ],
+          backgroundColor: [
+            documentStyle.getPropertyValue('--red-500'),
+            documentStyle.getPropertyValue('--blue-500'),
+            documentStyle.getPropertyValue('--green-500')
+          ],
+          borderColor: [
+            documentStyle.getPropertyValue('--red-700'),
+            documentStyle.getPropertyValue('--blue-700'),
+            documentStyle.getPropertyValue('--green-700')
+          ],
+        },
+      ],
+    };
+
+    const pieDataMonth: ChartData = {
+      labels: ["Ausentes", "Justificados", "Presentes"],
+      datasets: [
+        {
+          data: [
+            attendanceStatistics?.getAttendanceStatistics.classAbsentMonth,
+            attendanceStatistics?.getAttendanceStatistics.classJustifyMonth,
+            attendanceStatistics?.getAttendanceStatistics.classPresentMonth,
+          ],
+          backgroundColor: [
+            documentStyle.getPropertyValue('--pink-500'),
+            documentStyle.getPropertyValue('--cyan-500'),
+            documentStyle.getPropertyValue('--teal-500')
+          ],
+          borderColor: [
+            documentStyle.getPropertyValue('--pink-700'),
+            documentStyle.getPropertyValue('--cyan-700'),
+            documentStyle.getPropertyValue('--teal-700')
+          ],
+        },
+      ],
+    };
+
+    const pieDataSemester: ChartData = {
+      labels: ["Ausentes", "Justificados", "Presentes"],
+      datasets: [
+        {
+          data: [
+            attendanceStatistics?.getAttendanceStatistics.classAbsentPeriod,
+            attendanceStatistics?.getAttendanceStatistics.classJustifyPeriod,
+            attendanceStatistics?.getAttendanceStatistics.classPresentPeriod,
+          ],
+          backgroundColor: [
+            documentStyle.getPropertyValue('--red-500'),
+            documentStyle.getPropertyValue('--blue-500'),
+            documentStyle.getPropertyValue('--green-500')
+          ],
+          borderColor: [
+            documentStyle.getPropertyValue('--red-700'),
+            documentStyle.getPropertyValue('--blue-700'),
+            documentStyle.getPropertyValue('--green-700')
+          ],
+        },
+      ],
+    };
+
+    const pieDataYear: ChartData = {
+      labels: ["Ausentes", "Justificados", "Presentes"],
+      datasets: [
+        {
+          data: [
+            attendanceStatistics?.getAttendanceStatistics.classAbsentYear,
+            attendanceStatistics?.getAttendanceStatistics.classJustifyYear,
+            attendanceStatistics?.getAttendanceStatistics.classPresentYear,
+          ],
+          backgroundColor: [
+            documentStyle.getPropertyValue('--pink-500'),
+            documentStyle.getPropertyValue('--cyan-500'),
+            documentStyle.getPropertyValue('--teal-500')
+          ],
+          borderColor: [
+            documentStyle.getPropertyValue('--pink-700'),
+            documentStyle.getPropertyValue('--cyan-700'),
+            documentStyle.getPropertyValue('--teal-700')
+          ],
+        },
+      ],
+    };
+
+
+    const chartOptions: ChartOptions = {
+      indexAxis: 'x',
+      maintainAspectRatio: false,
+      aspectRatio: 1,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
+          },
         },
       },
-    },
-  };
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+            font: {
+              weight: 500,
+            },
+          },
+          grid: {
+            display: false,
+          },
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+          },
+        },
+      },
+    };
+
+    const pieOptions: ChartOptions = {
+      plugins: {
+      legend: {
+        labels: {
+        usePointStyle: true,
+        color: textColor,
+        },
+      },
+      },
+    };
 
   return (
     <div className="grid">
@@ -313,10 +460,10 @@ function DashboardAttendancePanel() {
               </div>
             </div>
             <div
-              className="flex align-items-center justify-content-center bg-yellow-100 text-yellow-500 text-xl border-round"
+              className="flex align-items-center justify-content-center bg-red-100 text-red-500 text-xl border-round"
               style={{ width: '2.5rem', height: '2.5rem' }}
             >
-              <i className="pi pi-map text-yellow-500 text-xl" />
+              <i className="pi pi-map text-red-500 text-xl" />
             </div>
           </div>
         </div>
@@ -339,10 +486,10 @@ function DashboardAttendancePanel() {
               </div>
             </div>
             <div
-              className="flex align-items-center justify-content-center bg-red-100 text-red-500 text-xl border-round"
+              className="flex align-items-center justify-content-center bg-blue-100 text-blue-500 text-xl border-round"
               style={{ width: '2.5rem', height: '2.5rem' }}
             >
-              <i className="pi pi-id-card text-red-500 text-xl" />
+              <i className="pi pi-id-card text-blue-500 text-xl" />
             </div>
           </div>
         </div>
@@ -365,24 +512,65 @@ function DashboardAttendancePanel() {
               </div>
             </div>
             <div
-              className="flex align-items-center justify-content-center bg-indigo-100 text-indigo-500 text-xl border-round"
+              className="flex align-items-center justify-content-center bg-green-100 text-green-500 text-xl border-round"
               style={{ width: '2.5rem', height: '2.5rem' }}
             >
-              <i className="pi pi-stopwatch text-indigo-500 text-xl" />
+              <i className="pi pi-stopwatch text-green-500 text-xl" />
             </div>
           </div>
         </div>
       </div>
-      <div className="col-12 xl:col-6">
+      <div className="col-12 xl:col-5">
         <div className="card">
           <div className="flex flex-column align-items-center">
             <h5 className="text-left w-full">
-              {t('module.home.dashboard.dashboardPanel.graph.topOrganizationProjects.title')}
+              {t('module.home.dashboard.dashboardPanel.graph.day')}
             </h5>
-            <Chart type="pie" data={pieDataOrg} options={pieOptions} />
+            <Chart type="pie" data={pieDataDay} options={pieOptions} />
           </div>
         </div>
       </div>
+      <div className="col-12 xl:col-7">
+        <div className="card">
+          <div className="flex flex-column align-items-center">
+            <h5 className="text-left w-full">
+              {t('module.home.dashboard.dashboardPanel.graph.general')}
+            </h5>
+            <Chart type="bar" data={chartData} options={chartOptions} />
+          </div>
+        </div>
+      </div>
+      <div className="col-12 xl:col-4">
+        <div className="card">
+          <div className="flex flex-column align-items-center">
+            <h5 className="text-left w-full">
+              {t('module.home.dashboard.dashboardPanel.graph.month')}
+            </h5>
+            <Chart type="pie" data={pieDataMonth} options={pieOptions} />
+          </div>
+        </div>
+      </div>
+      <div className="col-12 xl:col-4">
+        <div className="card">
+          <div className="flex flex-column align-items-center">
+            <h5 className="text-left w-full">
+              {t('module.home.dashboard.dashboardPanel.graph.semester')}
+            </h5>
+            <Chart type="pie" data={pieDataSemester} options={pieOptions} />
+          </div>
+        </div>
+      </div>
+      <div className="col-12 xl:col-4">
+        <div className="card">
+          <div className="flex flex-column align-items-center">
+            <h5 className="text-left w-full">
+              {t('module.home.dashboard.dashboardPanel.graph.year')}
+            </h5>
+            <Chart type="pie" data={pieDataYear} options={pieOptions} />
+          </div>
+        </div>
+      </div>
+      
     </div>
   );
 }
