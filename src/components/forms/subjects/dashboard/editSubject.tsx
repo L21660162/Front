@@ -53,10 +53,10 @@ export default function EditSubjectDialogForm({
   ];
 
   const Subjectype = [
-    { label: 'De base', value: '1' },
-    { label: 'Optativa', value: '2' },
-    { label: 'Especialidad', value: '3' },
-    { label: 'Extracurricular', value: '4' },
+    { label: 'De base', value: 1.0 },
+    { label: 'Optativa', value: 2.0 },
+    { label: 'Especialidad', value: 3.0 },
+    { label: 'Extracurricular', value: 4.0 },
   ];
 
   let departmentData: Array<IDepartment> = [];

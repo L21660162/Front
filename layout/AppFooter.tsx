@@ -2,7 +2,7 @@
 import React, { useContext } from 'react';
 import { LayoutContext } from './context/layoutcontext';
 import { useGlobalAppStore } from '../src/store/global/globalAppStore';
-import logo from '../layout/images/logo-sepret.png';
+import logo from "./images/logo-sepret.png";
 
 const AppFooter = () => {
   return (

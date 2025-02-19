@@ -15,6 +15,7 @@ import { IApiError } from '../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import { getActions, useRememberMe } from '../../../store/auth/store';
 import { useGlobalAppStore } from '../../../store/global/globalAppStore';
+import logo from '../../../../layout/images/logo-sepret.png';
 
 const { setAccessToken, setRefreshToken, setRememberMe } = getActions();
 
@@ -64,13 +65,7 @@ function SignInPage(): Page {
       <Toast ref={toast} />
 
       <div className="flex flex-column align-items-center justify-content-center">
-        <img
-          src={`${contextPath}/layout/images/logo-${
-            layoutConfig.colorScheme === 'light' ? 'dark' : 'white'
-          }.svg`}
-          alt="Sakai logo"
-          className="mb-5 w-6rem flex-shrink-0"
-        />
+        <img src={logo} alt="ITMH" className="mb-4 w-9rem flex-shrink-0" />
         <div
           style={{
             borderRadius: '56px',
