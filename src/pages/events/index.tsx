@@ -1,3 +1,4 @@
+import React from 'react';
 import EventCrud from '../../components/ui/event/eventCrud';
 import PageHeading from '../../components/ui/event/eventHeding';
 

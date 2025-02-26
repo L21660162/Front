@@ -1,3 +1,4 @@
+import React from 'react';
 import ReviewJustify from '../../components/ui/justify/justifeView';
 import JustifyCrud from '../../components/ui/justify/justifiesCrud';
 import PageHeading from '../../components/ui/justify/justifiesHeding';

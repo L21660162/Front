@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { ChildContainerProps, MenuContextProps } from '../../types/types';
 
 export const MenuContext = createContext({} as MenuContextProps);

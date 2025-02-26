@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import React from 'react';
 import logo from './images/logo-sepret.png';
 
 const AppFooter = () => {

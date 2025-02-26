@@ -1,3 +1,4 @@
+import React from 'react';
 import { Page } from '../types/types';
 import AppMenu from './AppMenu';
 

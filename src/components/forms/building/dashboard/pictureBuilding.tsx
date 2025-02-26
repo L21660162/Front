@@ -3,7 +3,7 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { IApiError } from '../../../../../types/apierror';

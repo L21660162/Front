@@ -1,3 +1,4 @@
+import React from 'react';
 import DashboardAttendancePanel from '../../../components/ui/home/crudHome';
 
 function Dashboard() {

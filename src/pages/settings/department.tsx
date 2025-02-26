@@ -1,3 +1,4 @@
+import React from 'react';
 import DepartmentCrud from '../../components/ui/department/departmentCrud';
 import PageHeadingDepartment from '../../components/ui/department/departmentHeading';
 

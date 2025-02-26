@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { useGlobalAppStore } from '../../src/store/global/globalAppStore';
 import { ChildContainerProps, LayoutContextProps, LayoutState } from '../../types/types';
 export const LayoutContext = createContext({} as LayoutContextProps);

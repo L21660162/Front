@@ -1,3 +1,4 @@
+import React from 'react';
 import ScheduleView from '../../components/ui/schedule/scheduleView';
 
 function Schedule() {

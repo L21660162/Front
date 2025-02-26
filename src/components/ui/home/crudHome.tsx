@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IDepartment, IFile, useGetAllDepartmentsQuery } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';

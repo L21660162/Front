@@ -1,3 +1,4 @@
+import React from 'react';
 import { Navigate } from '@tanstack/react-router';
 import { PropsWithOptionalChildren } from '../../../types/types';
 import { getAccessTokenData, useAccessTokenData } from '../../store/auth/store';

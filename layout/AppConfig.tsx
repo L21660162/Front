@@ -5,7 +5,7 @@ import { InputSwitch, InputSwitchChangeEvent } from 'primereact/inputswitch';
 import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import { Sidebar } from 'primereact/sidebar';
 import { classNames } from 'primereact/utils';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 import { AppConfigProps, LayoutState } from '../types/types';
 import { LayoutContext } from './context/layoutcontext';

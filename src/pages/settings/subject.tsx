@@ -1,3 +1,4 @@
+import React from 'react';
 import SubjectCrud from '../../components/ui/subject/subjectCrud';
 import PageHeading from '../../components/ui/subject/subjectHeding';
 

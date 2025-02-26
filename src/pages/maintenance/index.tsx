@@ -1,3 +1,4 @@
+import React from 'react';
 import PageBody from '../../components/ui/maintenance/maintenanceBody';
 import PageHeading from '../../components/ui/maintenance/maintenanceHeading';
 

@@ -1,5 +1,5 @@
 import { Button } from 'primereact/button';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import AppConfig from '../../../../layout/AppConfig';
 import type { Page } from '../../../../types/types';
 

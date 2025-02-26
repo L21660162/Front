@@ -1,3 +1,4 @@
+import React from 'react';
 import BodyProfile from '../../components/ui/user/profile/profileBody';
 import PageHeadingProfile from '../../components/ui/user/profile/profileHeading';
 
