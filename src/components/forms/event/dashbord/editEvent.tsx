@@ -39,7 +39,7 @@ export default function EditEventDialogForm({
   event,
 }: PropsWithChildren<EventFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/settings/event' });
   const toast = useRef<Toast>(null);
   const { _id } = useAccessTokenData() as TokenData;
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
@@ -95,7 +95,7 @@ export default function EditEventDialogForm({
       });
 
       setTimeout(() => {
-        navigate({ to: '/settings/career' });
+        navigate({ to: '/settings/event' });
         window.location.reload();
       }, 200);
       setIsButtonDisabld(false);
@@ -162,9 +162,11 @@ export default function EditEventDialogForm({
       />
       <Button
         type="submit"
-        label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
+        label={t('global.forms.edit') as string}
+        className="p-button-rounded p-button-warning p-button-raised mt-2"
+        icon="pi pi-pencil"
         onClick={handleSubmit(onSubmit)}
+        outlined
         disabled={isButtonDisablesed}
       />
     </div>
@@ -185,10 +187,12 @@ export default function EditEventDialogForm({
       <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.career')}</b> <br />
+            <b>Información del Evento</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
+
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />

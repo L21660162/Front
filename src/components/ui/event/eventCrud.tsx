@@ -34,7 +34,7 @@ function EventCrud() {
     uploadedBy: '',
   };
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/event/dashboard' });
   const { roles } = useAccessTokenData() as TokenData;
 
   const [events, setEvents] = useState(null);
@@ -62,7 +62,7 @@ function EventCrud() {
       });
 
       setTimeout(() => {
-        navigate({ to: '/settings/career' });
+        navigate({ to: '/event/dashboard' });
         window.location.reload();
       }, 200);
     },
@@ -141,13 +141,13 @@ function EventCrud() {
     if (!event.groupsIncluded || !Array.isArray(event.groupsIncluded)) {
       return <span className="p-column-title">groupsIncluded</span>;
     }
-  
+
     const groupQueries = event.groupsIncluded.map((group) =>
       useGetGroupByIdQuery<IGetGroupByIdQuery>(GRAPHQL_CLIENT, { id: group })
     );
-  
+
     const groups = groupQueries.map(({ data }) => data?.getGroupById?.identifier || '').join(', ');
-  
+
     return (
       <>
         <span className="p-column-title">groupsIncluded</span>
@@ -222,7 +222,7 @@ function EventCrud() {
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} eventos"
             globalFilter={globalFilter}
-            emptyMessage={t('global.dictionary.Nocareer')}
+            emptyMessage={t('global.dictionary.Noevent')}
             header={header}
             responsiveLayout="scroll"
           >

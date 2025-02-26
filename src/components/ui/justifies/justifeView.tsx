@@ -75,7 +75,6 @@ function CareerCrud() {
   //     }
   //   }, [status]);
 
-
   const { data: file } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
     page: 1,
     limit: 10,
@@ -99,7 +98,7 @@ function CareerCrud() {
   };
 
   const nameBodyTemplate = (atendans: IAttendance) => {
-    let img = 'http://localhost:4000/uploads/users/default_profile.jpg';
+    let img = 'http://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg';
     const { data } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
       schedule: atendans.schedule,
     });
@@ -109,7 +108,7 @@ function CareerCrud() {
     });
 
     if (user?.getUserById?.photo) {
-      img = `http://localhost:4000${user?.getUserById?.photo}`;
+      img = `http://ssb.matehuala.tecnm.mx/asis_be${user?.getUserById?.photo}`;
     }
     return (
       <div className="flex align-items-center gap-2">
@@ -260,7 +259,7 @@ function CareerCrud() {
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} registros"
             globalFilter={globalFilter}
-            emptyMessage={t('global.dictionary.Nocareer')}
+            emptyMessage={t('global.dictionary.Nojustifieds')}
             header={header}
             responsiveLayout="scroll"
           >
@@ -351,7 +350,7 @@ function CareerCrud() {
           >
             <div className="flex w-full h-full flex-grow-1">
               {/* <iframe
-                src={`http://localhost:4000${file?.getAllFiles.docs[0].path}#toolbar=0&navpanes=0&scrollbar=0`}
+                src={`http://ssb.matehuala.tecnm.mx/asis_be${file?.getAllFiles.docs[0].path}#toolbar=0&navpanes=0&scrollbar=0`}
                 title="PDFDoc"
                 style={{ width: '100%', height: '100%', border: 'none' }}
               /> */}

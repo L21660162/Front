@@ -29,7 +29,7 @@ export default function AddSubjectDialogForm({
   setVisible,
 }: PropsWithChildren<SubjectFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/settings/subject' });
   const toast = useRef<Toast>(null);
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
 
@@ -69,7 +69,7 @@ export default function AddSubjectDialogForm({
       });
 
       setTimeout(() => {
-        navigate({ to: '/settings/career' });
+        navigate({ to: '/settings/subject' });
         window.location.reload();
       }, 200);
       setIsButtonDisabld(false);
@@ -119,11 +119,14 @@ export default function AddSubjectDialogForm({
           reset();
         }}
       />
+
       <Button
         type="submit"
         label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
+        className="p-button-rounded p-button-success p-button-raised mt-2"
+        icon="pi pi-check"
         onClick={handleSubmit(onSubmit)}
+        outlined
         disabled={isButtonDisablesed}
       />
     </div>
@@ -141,10 +144,12 @@ export default function AddSubjectDialogForm({
       <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.subject')}</b> <br />
+            <b>Información de la Materia</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
+
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />

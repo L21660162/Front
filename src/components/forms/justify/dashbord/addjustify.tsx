@@ -214,7 +214,7 @@ export default function AddJustify({
       <div
         className={className}
         style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}
-      ></div>
+      />
     );
   };
 
@@ -236,7 +236,7 @@ export default function AddJustify({
       return (
         <div className="flex w-full h-full flex-grow-1">
           <iframe
-            src={`http://localhost:4000${viewFile}#toolbar=0&navpanes=0&scrollbar=0`}
+            src={`http://ssb.matehuala.tecnm.mx/asis_be${viewFile}#toolbar=0&navpanes=0&scrollbar=0`}
             title="PDFDoc"
             style={{ width: '100%', height: '100%', border: 'none' }}
           />
@@ -246,7 +246,7 @@ export default function AddJustify({
     if (selectedSchedule === null) {
       return (
         <div className="flex align-items-center flex-column">
-          <i className="pi pi-exclamation-circle p-3" style={{ fontSize: '2em' }}></i>
+          <i className="pi pi-exclamation-circle p-3" style={{ fontSize: '2em' }} />
           <span>No has seleccionado una asistencia que justificar</span>
         </div>
       );
@@ -314,7 +314,7 @@ export default function AddJustify({
 
             <FileUpload
               name="Document"
-              url="http://localhost:4000/graphql"
+              url="http://ssb.matehuala.tecnm.mx/asis_be/graphql"
               accept="application/pdf"
               customUpload
               uploadHandler={async ({ files }) => {

@@ -143,12 +143,14 @@ export default function AddUserDialogForm({
           reset();
         }}
       />
+
       <Button
         type="submit"
         label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
+        className="p-button-rounded p-button-success p-button-raised mt-2"
+        icon="pi pi-check"
         onClick={handleSubmit(onSubmit)}
-        // disabled={isSuccess}
+        outlined
       />
     </div>
   );
@@ -165,8 +167,10 @@ export default function AddUserDialogForm({
       <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('')}</b>
+            <b>Información del Usuario</b>
+            <br />
           </label>
+          <hr />
         </div>
 
         <div className="field">

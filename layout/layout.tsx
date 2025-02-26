@@ -11,11 +11,8 @@ import PrimeReact from 'primereact/api';
 import { ChildContainerProps, LayoutState, AppTopbarRef } from '../types/types';
 import { Outlet } from '@tanstack/react-router';
 import { useGlobalAppStore } from '../src/store/global/globalAppStore';
-
 const Layout = ({ children }: ChildContainerProps) => {
-  const { layoutState, setLayoutState } = useContext(LayoutContext);
-  const { layoutConfig } = useGlobalAppStore();
-
+  const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
   const topbarRef = useRef<AppTopbarRef>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] = useEventListener({
@@ -59,7 +56,6 @@ const Layout = ({ children }: ChildContainerProps) => {
       menuHoverActive: false,
     }));
     unbindMenuOutsideClickListener();
-    unblockBodyScroll();
   };
 
   const hideProfileMenu = () => {
@@ -69,41 +65,36 @@ const Layout = ({ children }: ChildContainerProps) => {
     }));
     unbindProfileMenuOutsideClickListener();
   };
-
+  /*
   const blockBodyScroll = (): void => {
     if (document.body.classList) {
-      document.body.classList.add('blocked-scroll');
+        document.body.classList.add('blocked-scroll');
     } else {
-      document.body.className += ' blocked-scroll';
+        document.body.className += ' blocked-scroll';
     }
   };
 
   const unblockBodyScroll = (): void => {
-    if (document.body.classList) {
-      document.body.classList.remove('blocked-scroll');
-    } else {
-      document.body.className = document.body.className.replace(
-        new RegExp('(^|\\b)' + 'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'),
-        ' '
-      );
-    }
+      if (document.body.classList) {
+          document.body.classList.remove('blocked-scroll');
+      } else {
+          document.body.className = document.body.className.replace(new RegExp('(^|\\b)' + 'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+      }
   };
 
   useEffect(() => {
     if (layoutState.overlayMenuActive || layoutState.staticMenuMobileActive) {
-      bindMenuOutsideClickListener();
+        bindMenuOutsideClickListener();
     }
 
     layoutState.staticMenuMobileActive && blockBodyScroll();
   }, [layoutState.overlayMenuActive, layoutState.staticMenuMobileActive]);
-
+*/
   useEffect(() => {
     if (layoutState.profileSidebarVisible) {
       bindProfileMenuOutsideClickListener();
     }
   }, [layoutState.profileSidebarVisible]);
-
-  PrimeReact.ripple = true;
 
   useUnmountEffect(() => {
     unbindMenuOutsideClickListener();
@@ -127,14 +118,18 @@ const Layout = ({ children }: ChildContainerProps) => {
     <React.Fragment>
       <div className={containerClass}>
         <AppTopbar ref={topbarRef} />
-        <div ref={sidebarRef} className="layout-sidebar">
+        <div
+          ref={sidebarRef}
+          className="layout-sidebar"
+          style={{ fontSize: '15px', background: 'fefefe' }}
+        >
           <AppSidebar />
         </div>
         <div className="layout-main-container">
           <div className="layout-main">{children}</div>
           <AppFooter />
         </div>
-        <AppConfig />
+        {/* <AppConfig /> */}
         <div className="layout-mask"></div>
       </div>
       <Outlet />

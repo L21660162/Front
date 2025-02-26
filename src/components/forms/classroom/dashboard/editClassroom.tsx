@@ -32,10 +32,16 @@ export default function EditClassroomDialogForm({
   Classroom,
 }: PropsWithChildren<ClassroomFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/settings/classroom' });
   const toast = useRef<Toast>(null);
 
-  const { data, isLoading, error } = useGetAllBuildingsQuery(GRAPHQL_CLIENT);
+  const { data: buildingData, isLoading, error } = useGetAllBuildingsQuery(GRAPHQL_CLIENT);
+
+  const buildingOptions =
+    buildingData?.getAllBuildings.docs.map((building) => ({
+      label: building.name, // Nombre completo como label
+      value: building._id, // ID del usuario como value
+    })) || [];
 
   const { mutate } = useUpdateClassroomMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -46,6 +52,7 @@ export default function EditClassroomDialogForm({
       });
 
       setTimeout(() => {
+        navigate({ to: '/settings/classroom' });
         window.location.reload();
       }, 50);
       setIsButtonDisabld(false);
@@ -75,7 +82,7 @@ export default function EditClassroomDialogForm({
   } = useForm<IUpdateClassroomInput>({
     defaultValues: {
       _id: Classroom._id,
-      building: Classroom.building || '',
+      building: Classroom.building || null,
       identifier: Classroom.identifier,
     },
   });
@@ -83,7 +90,7 @@ export default function EditClassroomDialogForm({
   const onSubmit = (data: IUpdateClassroomInput) => {
     setIsButtonDisabld(true);
     mutate({
-      data: { // Agrega la propiedad "data"
+      data: {
         _id: data._id,
         building: data.building,
         identifier: data.identifier,
@@ -102,12 +109,15 @@ export default function EditClassroomDialogForm({
           reset();
         }}
       />
+
       <Button
         type="submit"
-        label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
-        disabled={isButtonDisablesed}
+        label={t('global.forms.edit') as string}
+        className="p-button-rounded p-button-warning p-button-raised mt-2"
+        icon="pi pi-pencil"
         onClick={handleSubmit(onSubmit)}
+        outlined
+        disabled={isButtonDisablesed}
       />
     </div>
   );
@@ -132,14 +142,15 @@ export default function EditClassroomDialogForm({
       footer={footerContent}
     >
       <Toast ref={toast} />
-      <form className="p-fluid" onSubmit={handleSubmit(onSubmit)}>
+      <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.Classroom')}</b> <br />
+            <b>Información del Aula</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
-        {/* Campo para el Nombre del Classroom */}
+
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
@@ -177,16 +188,14 @@ export default function EditClassroomDialogForm({
               <Dropdown
                 id={field.name}
                 {...field}
-                value={field.value}
-                options={data?.getAllBuildings.docs.map((building) => ({
-                  label: building.name,
-                  value: building._id,
-                }))}
+                value={field.value || null}
+                options={buildingOptions}
+                optionLabel="label"
+                optionValue="value"
                 onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
                 placeholder={t('global.forms.placeholders.selectPlaceholder') ?? ''} // Coalescencia nula para garantizar que sea una cadena
                 className={classNames({ 'p-invalid': fieldState.invalid })}
               />
-
             )}
           />
           {errors.building && <small className="p-error">{errors.building.message}</small>}

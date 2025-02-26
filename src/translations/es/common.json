@@ -11,20 +11,20 @@
   },
   "sidebar": {
     "home": {
-      "label": "Inicio",
+      "label": "Panel de Control",
       "dashboard": "Panel principal"
     },
     "app": {
-      "label": "Gestión de Usuarios",
-      "users": "Usuarios"
+      "label": "Usuarios",
+      "users": "Panel de Usuarios"
     },
     "schedules": {
       "label": "Horarios",
       "dashboard": "Panel de Horarios"
     },
     "justifications": {
-      "label": "Justificaciones",
-      "dashboard": "Panel de Justificaciones"
+      "label": "Justificantes",
+      "dashboard": "Panel de Justificantes"
     },
     "events": {
       "label": "Eventos",
@@ -42,16 +42,20 @@
       "label": "Instituto",
       "dashboard": "Panel de Instituto"
     },
+    "justify": {
+      "label": "Justificante",
+      "dashboard": "Panel de Justificantes"
+    },
     "building": {
-      "label": "Edificios",
+      "label": "Edificio",
       "dashboard": "Panel de Edificios"
     },
     "period": {
-      "label": "Períodos",
+      "label": "Período",
       "dashboard": "Panel de Períodos"
     },
     "department": {
-      "label": "Departamentos",
+      "label": "Departamento",
       "dashboard": "Panel de Departamentos"
     },
     "career": {
@@ -85,20 +89,26 @@
       "departments": "Departamentos",
       "periods": "Periodos",
       "careers": "Carreras",
-      "classroom": "Salones",
-      "group": "Grupo"
+      "classroom": "Aulas",
+      "group": "Grupos"
     },
     "Classroom": {
-      "label": "Aulas",
+      "label": "Aula",
       "dashboard": "Panel de Aulas"
     },
     "Group": {
-    "label": "Grupos",
-    "dashboard": "Panel de Grupos"
-  }
+      "label": "Grupo",
+      "dashboard": "Panel de Grupos"
+    }
+  },
+  "passwordRecovery": {
+    "message": "Ingresa tu correo electrónico institucional para recuperar tu contraseña"
+  },
+  "passwordConfirm": {
+    "message": "Ingresa la nueva contraseña a crear"
   },
   "signUp": {
-    "message": "Inicia sesión para continuar"
+    "message": "Ingresa tus datos para crear tu cuenta"
   },
   "signIn": {
     "signIn": "Iniciar sesión",
@@ -167,7 +177,7 @@
         "departmentName": "El nombre del departamento es obligatorio",
         "abbreviationDepartment": "La abreviatura es obligatoria",
         "requiredField": "Este campo es obligatorio",
-        "areaKeyField":"Clave de Área Obligatoria",
+        "areaKeyField": "Clave de Área Obligatoria",
         "errors": {
           "missingId": "No se pudo actualizar, falta el ID del edificio"
         },
@@ -197,7 +207,7 @@
       "tClassroomBuilding": "Edificio",
       "tClassroomIdentifier": "Identificador",
       "classrooms": "Aulas",
-      "building": "Edificio",
+      "building": "Información del Edificio",
       "identifier": "Identificador",
       "Classroom": "Aula",
       "ClassroomIdentifier": "Identificador del Aula",
@@ -235,7 +245,7 @@
       "buildingDirectory": "Directorio de Edificios",
       "departmentBoss": "Jefe de Departamento",
       "noDepartments": "No se encontraron departamentos",
-      "selectCareer":"Seleccionar carrera",
+      "selectCareer": "Seleccionar carrera",
       "selectPeriod": "Seleccionar período",
       "departmentName": "Nombre del Departamento",
       "boss": "Jefe",
@@ -264,6 +274,10 @@
       "isCertified": "La carrera cuenta con certificado",
       "instituteId": "Instituto al que pertenece",
       "Nocareer": "No existen carreras registradas",
+      "Noevent": "No existen eventos registrados",
+      "Nojustifieds": "No existen eventos registrados",
+      "Noschedule": "No existen horarios registrados",
+      "Nosubject": "No existen materias registradas",
       "careerdirectory": "Lista de carreras vigentes",
       "justifilist": "Lista de justificaciones",
       "eventlist": "Lista de eventos",
@@ -372,20 +386,19 @@
   "module": {
     "home": {
       "dashboard": {
-        "dashboardPanel":{
-          "graph":{
+        "dashboardPanel": {
+          "graph": {
             "general": "Grafica de Asistencia por Día de la Semana",
             "day": "Grafica de Asistencia del Día",
             "month": "Grafica de Asistencia del Mes",
             "semester": "Grafica de Asistencia del Semestre",
             "year": "Grafica de Asistencia del Año"
-
           }
         }
       }
     },
-    "Group":{
-      "dashboard":{
+    "Group": {
+      "dashboard": {
         "addGroup": "Agregar Grupo",
         "dialog": {
           "add": {
@@ -415,10 +428,10 @@
         "addbuilding": "Agregar Edificio",
         "dialog": {
           "add": {
-            "header": "Crear Nuevo Edificio"
+            "header": "Crear Edificio"
           },
           "edit": {
-            "header": "Editar Edificio"  
+            "header": "Editar Edificio"
           }
         }
       }
@@ -437,7 +450,7 @@
         "addPeriod": "Agregar Período",
         "dialog": {
           "add": {
-            "header": "Crear Nuevo Período"
+            "header": "Crear Período"
           }
         }
       }
@@ -452,7 +465,20 @@
             "header": "Nuevo Departamento"
           },
           "edit": {
-            "header": "Editar Departamento"  
+            "header": "Editar Departamento"
+          }
+        }
+      }
+    },
+    "schedule": {
+      "dashboard": {
+        "addschedule": "Agregar Horario",
+        "dialog": {
+          "add": {
+            "header": "Crear Horario"
+          },
+          "edit": {
+            "header": "Editar Horario"
           }
         }
       }
@@ -489,7 +515,7 @@
         "addSubject": "Agregar Materia",
         "dialog": {
           "add": {
-            "header": "Agregar Nueva Materia"
+            "header": "Agregar Materia"
           },
           "edit": {
             "header": "Editar Materia"
@@ -502,7 +528,7 @@
         "addEvent": "Agregar Evento",
         "dialog": {
           "add": {
-            "header": "Agregar Nuevo Evento"
+            "header": "Agregar Evento"
           },
           "edit": {
             "header": "Editar Evento"

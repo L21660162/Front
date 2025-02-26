@@ -35,7 +35,7 @@ function SubjectCrud() {
     updatedAt: undefined,
   };
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/settings/subject' });
   const { roles } = useAccessTokenData() as TokenData;
 
   const [subjects, setSubjects] = useState(null);
@@ -63,7 +63,7 @@ function SubjectCrud() {
       });
 
       setTimeout(() => {
-        navigate({ to: '/settings/career' });
+        navigate({ to: '/settings/subject' });
         window.location.reload();
       }, 200);
     },
@@ -227,7 +227,7 @@ function SubjectCrud() {
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Materias"
             globalFilter={globalFilter}
-            emptyMessage={t('global.dictionary.Nocareer')}
+            emptyMessage={t('global.dictionary.Nosubject')}
             header={header}
             responsiveLayout="scroll"
           >

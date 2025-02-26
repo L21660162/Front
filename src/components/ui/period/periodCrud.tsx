@@ -98,8 +98,8 @@ function PeriodCrud() {
     );
   };
 
-  const identifierBodyTemplate =
-    (field: 'largeIdentifier' | 'shortIdentifier') => (period: IPeriod) => {
+  const identifierBodyTemplate = (field: 'largeIdentifier' | 'shortIdentifier') =>
+    function (period: IPeriod) {
       return (
         <>
           <span className="p-column-title">{t(`global.dictionary.t${field}`)}</span>
@@ -108,14 +108,15 @@ function PeriodCrud() {
       );
     };
 
-  const dateBodyTemplate = (field: 'startDate' | 'finalDate') => (period: IPeriod) => {
-    return (
-      <>
-        <span className="p-column-title">{t(`global.dictionary.t${field}`)}</span>
-        {new Date(period[field]).toLocaleDateString()}
-      </>
-    );
-  };
+  const dateBodyTemplate = (field: 'startDate' | 'finalDate') =>
+    function (period: IPeriod) {
+      return (
+        <>
+          <span className="p-column-title">{t(`global.dictionary.t${field}`)}</span>
+          {new Date(period[field]).toLocaleDateString()}
+        </>
+      );
+    };
 
   const actionBodyTemplate = (rowData: IPeriod) => {
     return (

@@ -36,7 +36,7 @@ export default function PageHeading() {
           <Button
             label={t('module.Classroom.dashboard.addClassroom') as string}
             className="p-button-rounded p-button-raised mr-2"
-            icon="pi pi-briefcase"
+            icon="pi pi-building"
             onClick={() => setVisible(true)}
           />
         </div>

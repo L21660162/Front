@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
@@ -27,10 +29,16 @@ export default function ClassroomDialogForm({
   setVisible,
 }: PropsWithChildren<ClassroomFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/settings/classroom' });
   const toast = useRef<Toast>(null);
 
-  const { data, isLoading, error } = useGetAllBuildingsQuery(GRAPHQL_CLIENT);
+  const { data: buildingData, isLoading, error } = useGetAllBuildingsQuery(GRAPHQL_CLIENT);
+
+  const buildingOptions =
+    buildingData?.getAllBuildings.docs.map((building) => ({
+      label: building.name, // Nombre completo como label
+      value: building._id, // ID del usuario como value
+    })) || [];
 
   const { mutate } = useCreateClassroomMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -40,6 +48,7 @@ export default function ClassroomDialogForm({
         detail: t('global.toast.success.detail.ClassroomCreateSuccess'),
       });
       setTimeout(() => {
+        navigate({ to: '/settings/classroom' });
         window.location.reload();
       }, 50);
       setIsButtonDisabled(false);
@@ -92,12 +101,14 @@ export default function ClassroomDialogForm({
           reset();
         }}
       />
+
       <Button
         type="submit"
         label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
-        disabled={isButtonDisabled}
+        className="p-button-rounded p-button-success p-button-raised mt-2"
+        icon="pi pi-check"
         onClick={handleSubmit(onSubmit)}
+        outlined
       />
     </div>
   );
@@ -115,61 +126,70 @@ export default function ClassroomDialogForm({
       header={headerTitle}
       visible={visible}
       style={{ width: '35rem' }}
-      onHide={() => setVisible(false)}
+      onHide={() => {
+        setVisible(false);
+        reset();
+      }}
       footer={footerContent}
     >
       <Toast ref={toast} />
-      <form className="p-fluid" onSubmit={handleSubmit(onSubmit)}>
-        {/* Selector de edificios */}
+      <form className="p-fluid">
+        <div className="label">
+          <label htmlFor="contact">
+            <b>Información del Aula</b>
+            <br />
+          </label>
+          <hr />
+        </div>
+
         <div className="field">
-          <label htmlFor="building">{t('global.dictionary.building')}*</label>
+          <span className="p-float-label p-input-icon-right">
+            <i className="pi pi-book" />
+            <Controller
+              name="identifier"
+              control={control}
+              rules={{
+                required: t('global.forms.validation.ClassroomIdentifier') as string,
+              }}
+              render={({ field, fieldState }) => (
+                <InputText
+                  id={field.name}
+                  {...field}
+                  className={classNames({ 'p-invalid': fieldState.invalid })}
+                />
+              )}
+            />
+            <label htmlFor="identifier" className={classNames({ 'p-error': !!errors.identifier })}>
+              {t('global.dictionary.ClassroomIdentifier')}*
+            </label>
+          </span>
+          {errors.identifier && <small className="p-error">{errors.identifier?.message}</small>}
+        </div>
+
+        {/* Dropdown para seleccionar un edificio */}
+        <div className="field">
+          <label htmlFor="building">{t('global.dictionary.Building')}</label>
           <Controller
             name="building"
             control={control}
-            rules={{ required: t('global.forms.validation.requiredField') as string }}
+            rules={{
+              required: t('global.forms.validation.Building') as string,
+            }}
             render={({ field, fieldState }) => (
-              <span className="p-float-label">
-                <select
-                  id="building"
-                  {...field}
-                  className={classNames({ 'p-invalid': fieldState.invalid })}
-                >
-                  <option value="">{t('global.forms.placeholders.selectPlaceholder')}</option>
-                  {data?.getAllBuildings.docs.map((building: IBuilding) => (
-                    <option key={building._id} value={building._id}>
-                      {building.name}
-                    </option>
-                  ))}
-                </select>
-                {fieldState.invalid && (
-                  <small className="p-error">{fieldState.error?.message}</small>
-                )}
-              </span>
+              <Dropdown
+                id={field.name}
+                {...field}
+                value={field.value || null}
+                options={buildingOptions}
+                optionLabel="label"
+                optionValue="value"
+                onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
+                placeholder={t('global.forms.placeholders.selectPlaceholder') ?? ''} // Coalescencia nula para garantizar que sea una cadena
+                className={classNames({ 'p-invalid': fieldState.invalid })}
+              />
             )}
           />
-        </div>
-
-        {/* Campo de identificador */}
-        <div className="field">
-          <label htmlFor="identifier">{t('global.dictionary.identifier')}*</label>
-          <Controller
-            name="identifier"
-            control={control}
-            rules={{ required: t('global.forms.validation.requiredField') as string }}
-            render={({ field, fieldState }) => (
-              <span className="p-float-label">
-                <input
-                  id="identifier"
-                  {...field}
-                  maxLength={5}
-                  className={classNames({ 'p-invalid': fieldState.invalid })}
-                />
-                {fieldState.invalid && (
-                  <small className="p-error">{fieldState.error?.message}</small>
-                )}
-              </span>
-            )}
-          />
+          {errors.building && <small className="p-error">{errors.building.message}</small>}
         </div>
       </form>
     </Dialog>

@@ -63,7 +63,6 @@ export default function groupDialogForm({
       setIsButtonDisabld(false);
     },
     onError: (errorResponse: IApiError) => {
-      console.error('Error creating group:', errorResponse);
       toast.current?.show({
         severity: 'error',
         summary: t('global.toast.error.summary'),
@@ -115,12 +114,15 @@ export default function groupDialogForm({
           reset();
         }}
       />
+
       <Button
         type="submit"
         label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
-        disabled={isButtonDisablesed}
+        className="p-button-rounded p-button-success p-button-raised mt-2"
+        icon="pi pi-check"
         onClick={handleSubmit(onSubmit)}
+        outlined
+        disabled={isButtonDisablesed}
       />
     </div>
   );
@@ -151,13 +153,15 @@ export default function groupDialogForm({
       footer={footerContent}
     >
       <Toast ref={toast} />
-      <form className="p-fluid" onSubmit={handleSubmit(onSubmit)}>
+      <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.group')}</b> <br />
+            <b>Información del Grupo</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
+
         <div className="field">
           <span className="p-float-label">
             <Controller

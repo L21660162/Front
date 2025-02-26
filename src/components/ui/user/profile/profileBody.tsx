@@ -43,7 +43,6 @@ function BodyProfile() {
 
       return file;
     } catch (error) {
-      console.error('Error al convertir la URL en archivo:', error);
       return null;
     }
   };
@@ -79,7 +78,7 @@ function BodyProfile() {
   useEffect(() => {
     if (userData && userData.getUserById && userData.getUserById.photo) {
       const fileName = userData.getUserById.photo;
-      const newLogoUrl = `http://localhost:4000${fileName}`;
+      const newLogoUrl = `http://ssb.matehuala.tecnm.mx/asis_be${fileName}`;
 
       setLogo(newLogoUrl);
       setInitialImageUrl(newLogoUrl); // Establecer la URL inicial aquí
@@ -93,8 +92,8 @@ function BodyProfile() {
         }
       });
     }
-    if (userData && userData.getUserById && !userData.getUserById.photo ) {
-      setLogo(`http://localhost:4000/uploads/users/default_profile.jpg`);
+    if (userData && userData.getUserById && !userData.getUserById.photo) {
+      setLogo(`http://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg`);
     }
   }, [userData]);
 
@@ -161,7 +160,7 @@ function BodyProfile() {
                 )}
                 <FileUpload
                   name="image"
-                  url="http://localhost:4000/graphql"
+                  url="http://ssb.matehuala.tecnm.mx/asis_be/graphql"
                   mode="basic"
                   accept="image/*"
                   className="flex align-items-center justify-content-center"
@@ -406,8 +405,10 @@ function BodyProfile() {
             <Button
               type="submit"
               label={t('global.forms.submit') as string}
-              className="p-button-rounded p-button-raised mt-2"
+              className="p-button-rounded p-button-success p-button-raised mt-2"
+              icon="pi pi-check"
               onClick={handleSubmit(onSubmit)}
+              outlined
               disabled={buttonDisabled}
             />
           </div>

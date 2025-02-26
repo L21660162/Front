@@ -27,7 +27,7 @@ export default function AddCommentDialogForm({
   file,
 }: PropsWithChildren<CommentFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/justify/dashboard' });
   const toast = useRef<Toast>(null);
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
   const { _id } = useAccessTokenData() as TokenData;
@@ -40,7 +40,7 @@ export default function AddCommentDialogForm({
         detail: t('global.messages.successMessage'),
       });
       setTimeout(() => {
-        navigate({ to: '/settings/career' });
+        navigate({ to: '/justify/dashboard' });
         window.location.reload();
       }, 200);
       setIsButtonDisabld(false);
@@ -86,11 +86,14 @@ export default function AddCommentDialogForm({
           reset();
         }}
       />
+
       <Button
         type="submit"
         label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
+        className="p-button-rounded p-button-success p-button-raised mt-2"
+        icon="pi pi-check"
         onClick={handleSubmit(onSubmit)}
+        outlined
         disabled={isButtonDisablesed}
       />
     </div>
@@ -108,10 +111,12 @@ export default function AddCommentDialogForm({
       <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.career')}</b> <br />
+            <b>Información del Comentario</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
+
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />

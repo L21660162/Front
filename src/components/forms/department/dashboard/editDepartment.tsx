@@ -87,7 +87,6 @@ export default function EditDepartmentDialogForm({
   });
 
   const onSubmit: SubmitHandler<IUpdateDepartmentInput> = (data) => {
-    console.log('Datos enviados:', data); // Depuración
     setIsButtonDisabled(true);
     mutate({ data }); // Envuelve los datos en un objeto con propiedad 'data'
   };
@@ -103,12 +102,14 @@ export default function EditDepartmentDialogForm({
           reset();
         }}
       />
+
       <Button
-        type="button" // Cambiado a type="button"
-        label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
-        disabled={isButtonDisabled}
-        onClick={() => formRef.current?.requestSubmit()} // Enviar el formulario manualmente
+        type="submit"
+        label={t('global.forms.edit') as string}
+        className="p-button-rounded p-button-warning p-button-raised mt-2"
+        icon="pi pi-pencil"
+        onClick={handleSubmit(onSubmit)}
+        outlined
       />
     </div>
   );
@@ -125,12 +126,15 @@ export default function EditDepartmentDialogForm({
       footer={footerContent}
     >
       <Toast ref={toast} />
-      <form
-        ref={formRef} // Asignar la referencia al formulario
-        className="p-fluid"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {/* Campo Name */}
+      <form className="p-fluid">
+        <div className="label">
+          <label htmlFor="contact">
+            <b>Información del Departamento</b>
+            <br />
+          </label>
+          <hr />
+        </div>
+
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />

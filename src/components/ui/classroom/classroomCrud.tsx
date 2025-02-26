@@ -24,7 +24,6 @@ function ClassroomCrud() {
   const { t } = useTranslation('common');
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<IClassroom[]>>(null);
-  const [classrooms, setClassrooms] = useState<IClassroom[]>([]);
   const [deleteClassroomDialog, setDeleteClassroomDialog] = useState(false);
   const [selectedClassroom, setSelectedClassroom] = useState<IClassroom | null>(null);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -41,6 +40,12 @@ function ClassroomCrud() {
     page: 1,
     offset: 0,
   });
+
+  const getBuildingNameById = (buildingId: string): string => {
+    if (!buildingsData) return t('global.loading');
+    const building = buildingsData.getAllBuildings.docs.find((c) => c._id === buildingId);
+    return building ? building.name : t('global.dictionary.buildingNotFound');
+  };
 
   const { mutate } = useDeleteClassroomMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
@@ -61,22 +66,10 @@ function ClassroomCrud() {
     },
   });
 
-  useEffect(() => {
-    if (data?.getAllClassrooms.docs && buildingsData?.getAllBuildings.docs) {
-      const classroomsWithBuildingNames = data.getAllClassrooms.docs.map((classroom) => ({
-        ...classroom,
-        building:
-          buildingsData.getAllBuildings.docs.find((b) => b._id === classroom.building)?.name ||
-          t('global.dictionary.unknownBuilding'),
-      }));
-      setClassrooms(classroomsWithBuildingNames);
-    }
-  }, [data, buildingsData, t]);
-
   const buildingBodyTemplate = (classroom: IClassroom) => (
     <>
-      <span className="p-column-title">{t('global.dictionary.building')}</span>
-      {classroom.building}
+      <span className="p-column-title">{t('global.dictionary.Building')}</span>
+      {getBuildingNameById(classroom.building)}
     </>
   );
 
@@ -146,7 +139,7 @@ function ClassroomCrud() {
 
           <DataTable
             ref={dt}
-            value={classrooms}
+            value={data?.getAllClassrooms.docs}
             dataKey="_id"
             paginator
             rows={10}

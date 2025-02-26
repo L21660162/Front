@@ -51,4 +51,3 @@ query GetAllAttendances($filter: AttendanceArgs, $limit: Int, $offset: Int, $pag
     totalPages
   }
 }
-

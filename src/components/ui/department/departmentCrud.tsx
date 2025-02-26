@@ -121,7 +121,7 @@ function DepartmentCrud() {
   };
 
   const bossBodyTemplate = (department: IDepartment) => {
-    const bossUser = users.find(user => user._id === department.departmentBoss);
+    const bossUser = users.find((user) => user._id === department.departmentBoss);
     return (
       <>
         <span className="p-column-title">Boss</span>
@@ -138,8 +138,6 @@ function DepartmentCrud() {
       </>
     );
   };
-
-  console.log('departments', departments);
 
   const actionBodyTemplate = (rowData: IDepartment) => {
     return (

@@ -9,7 +9,6 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { Toast } from 'primereact/toast';
 import { Checkbox } from 'primereact/checkbox';
 import { Page } from '../../../../types/types';
-import AppConfig from '../../../../layout/AppConfig';
 import { ISignInInput, ISignInMutation, useSignInMutation } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
@@ -65,7 +64,10 @@ function SignInPage(): Page {
       <Toast ref={toast} />
 
       <div className="flex flex-column align-items-center justify-content-center">
-        <img src={logo} alt="ITMH" className="mb-4 w-9rem flex-shrink-0" />
+        <span className="fount-conalep-large mb-4">
+          Tecnológico Nacional de México, Campus Matehuala
+        </span>
+        <img src={logo} alt="ITMH logo" className=" w-9rem flex-shrink-0" />
         <div
           style={{
             borderRadius: '56px',
@@ -170,7 +172,7 @@ SignInPage.getLayout = function getLayout(page: ReactNode) {
   return (
     <>
       {page}
-      <AppConfig simple />
+      {/* <AppConfig simple /> */}
     </>
   );
 };

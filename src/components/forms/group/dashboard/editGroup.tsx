@@ -121,10 +121,12 @@ export default function EditGroupDialogForm({
       />
       <Button
         type="submit"
-        label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
-        disabled={isButtonDisablesed}
+        label={t('global.forms.edit') as string}
+        className="p-button-rounded p-button-warning p-button-raised mt-2"
+        icon="pi pi-pencil"
         onClick={handleSubmit(onSubmit)}
+        outlined
+        disabled={isButtonDisablesed}
       />
     </div>
   );
@@ -154,13 +156,15 @@ export default function EditGroupDialogForm({
       footer={footerContent}
     >
       <Toast ref={toast} />
-      <form className="p-fluid" onSubmit={handleSubmit(onSubmit)}>
+      <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.Group')}</b> <br />
+            <b>Información del Grupo</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
+
         <div className="field">
           <span className="p-float-label">
             <Controller

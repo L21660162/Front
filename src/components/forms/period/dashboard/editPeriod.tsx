@@ -10,11 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar'; // Importar Calendar para manejar fechas
 import { IApiError } from '../../../../../types/apierror';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
-import {
-  IUpdatePeriodInput,
-  useUpdatePeriodMutation,
-  IPeriod,
-} from '../../../../graphql/graphql';
+import { IUpdatePeriodInput, useUpdatePeriodMutation, IPeriod } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
 
 type PeriodFormProps = {
@@ -105,10 +101,11 @@ export default function EditPeriodDialogForm({
       />
       <Button
         type="submit"
-        label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
-        disabled={isButtonDisabled}
+        label={t('global.forms.edit') as string}
+        className="p-button-rounded p-button-warning p-button-raised mt-2"
+        icon="pi pi-pencil"
         onClick={handleSubmit(onSubmit)}
+        outlined
       />
     </div>
   );
@@ -125,15 +122,15 @@ export default function EditPeriodDialogForm({
       footer={footerContent}
     >
       <Toast ref={toast} />
-      <form className="p-fluid" onSubmit={handleSubmit(onSubmit)}>
+      <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.period')}</b> <br />
+            <b>Información del Periodo</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
 
-        {/* Campo para el nombre del período */}
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
@@ -176,11 +173,16 @@ export default function EditPeriodDialogForm({
                 />
               )}
             />
-            <label htmlFor="largeIdentifier" className={classNames({ 'p-error': !!errors.largeIdentifier })}>
+            <label
+              htmlFor="largeIdentifier"
+              className={classNames({ 'p-error': !!errors.largeIdentifier })}
+            >
               {t('global.dictionary.largeIdentifier')}*
             </label>
           </span>
-          {errors.largeIdentifier && <small className="p-error">{errors.largeIdentifier?.message}</small>}
+          {errors.largeIdentifier && (
+            <small className="p-error">{errors.largeIdentifier?.message}</small>
+          )}
         </div>
 
         {/* Campo para el identificador corto */}
@@ -201,11 +203,16 @@ export default function EditPeriodDialogForm({
                 />
               )}
             />
-            <label htmlFor="shortIdentifier" className={classNames({ 'p-error': !!errors.shortIdentifier })}>
+            <label
+              htmlFor="shortIdentifier"
+              className={classNames({ 'p-error': !!errors.shortIdentifier })}
+            >
               {t('global.dictionary.shortIdentifier')}*
             </label>
           </span>
-          {errors.shortIdentifier && <small className="p-error">{errors.shortIdentifier?.message}</small>}
+          {errors.shortIdentifier && (
+            <small className="p-error">{errors.shortIdentifier?.message}</small>
+          )}
         </div>
 
         {/* Campo para la fecha de inicio */}
@@ -233,10 +240,10 @@ export default function EditPeriodDialogForm({
             </label>
           </span>
           {errors.startDate && (
-  <small className="p-error">
-    {errors.startDate.message?.toString()} {/* Convertir a string */}
-  </small>
-      )}
+            <small className="p-error">
+              {errors.startDate.message?.toString()} {/* Convertir a string */}
+            </small>
+          )}
         </div>
 
         {/* Campo para la fecha final */}
@@ -264,10 +271,10 @@ export default function EditPeriodDialogForm({
             </label>
           </span>
           {errors.startDate && (
-  <small className="p-error">
-    {errors.startDate.message?.toString()} {/* Convertir a string */}
-  </small>
-)}
+            <small className="p-error">
+              {errors.startDate.message?.toString()} {/* Convertir a string */}
+            </small>
+          )}
         </div>
       </form>
     </Dialog>

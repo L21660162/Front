@@ -6,6 +6,7 @@ import SignUpPage from '../pages/auth/signup';
 import Dashboard from '../pages/home/dashboard';
 import NotFoundPage from '../pages/notfound';
 import PasswordRecoveryPage from '../pages/auth/passwordrecovery';
+import PasswordConfirmPage from '../pages/auth/passwordconfirm';
 import Career from '../pages/ maintenance';
 import UserDashboard from '../pages/user';
 import Justify from '../pages/justifies';
@@ -129,6 +130,12 @@ const passwordRecoveryRoute = new Route({
   component: () => <App Component={PasswordRecoveryPage} />,
 });
 
+const passwordConfirmRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/auth/confirm',
+  component: () => <App Component={PasswordConfirmPage} />,
+});
+
 const maintenanceRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/maintenance/dashboard',
@@ -210,7 +217,7 @@ const buildingSettings = new Route({
 
 const departamntSettings = new Route({
   getParentRoute: () => rootRoute,
-  path: '/settings/departamnt',
+  path: '/settings/department',
   component: () => {
     const { roles } = useAccessTokenData() as TokenData;
     const allowedroles = ['SUPER_ADMINISTRATOR'];
@@ -258,6 +265,7 @@ const routeConfig = rootRoute.addChildren([
   signUpRoute,
   notFoundRoute,
   passwordRecoveryRoute,
+  passwordConfirmRoute,
   userProfile,
   maintenanceRoute,
   userDashboard,

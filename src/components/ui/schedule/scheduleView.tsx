@@ -249,7 +249,9 @@ function ScheduleView() {
         <div className="card">
           <ul className="list-none p-0 m-0 flex align-items-center font-medium mb-3">
             <li>
-              <span className="text-500 no-underline line-height-3">{t('sidebar.schedule.label')}</span>
+              <span className="text-500 no-underline line-height-3">
+                {t('sidebar.schedule.label')}
+              </span>
             </li>
             <li className="px-2">
               <i className="pi pi-angle-right text-500 line-height-3" />

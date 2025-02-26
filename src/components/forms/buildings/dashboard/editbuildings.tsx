@@ -71,7 +71,7 @@ export default function EditbuildingDialogForm({
     setValue,
   } = useForm<IUpdateBuildingInput>({
     defaultValues: {
-      _id: building._id || "",
+      _id: building._id || '',
       name: building.name || '', // Usa un valor predeterminado si es null
       letter: building.letter || '', // Similar aquí
     },
@@ -81,7 +81,6 @@ export default function EditbuildingDialogForm({
     setIsButtonDisabld(true);
 
     if (!data._id) {
-      console.error('Error: _id está vacío');
       toast.current?.show({
         severity: 'error',
         summary: 'Error',
@@ -112,12 +111,15 @@ export default function EditbuildingDialogForm({
           reset();
         }}
       />
+
       <Button
         type="submit"
-        label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
-        disabled={isButtonDisablesed}
+        label={t('global.forms.edit') as string}
+        className="p-button-rounded p-button-warning p-button-raised mt-2"
+        icon="pi pi-pencil"
         onClick={handleSubmit(onSubmit)}
+        outlined
+        disabled={isButtonDisablesed}
       />
     </div>
   );
@@ -137,10 +139,12 @@ export default function EditbuildingDialogForm({
       <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.building')}</b> <br />
+            <b>Información del Edificio</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
+
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
@@ -157,7 +161,7 @@ export default function EditbuildingDialogForm({
                   id={field.name}
                   {...field}
                   className={classNames({ 'p-invalid': fieldState.invalid })}
-                // defaultValue={buildingData?.getbuildingById.name}
+                  // defaultValue={buildingData?.getbuildingById.name}
                 />
               )}
             />

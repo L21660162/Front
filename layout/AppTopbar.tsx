@@ -163,19 +163,21 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
       StudentServiceStatusData.getUserById &&
       StudentServiceStatusData.getUserById.photo
     ) {
-      setProfileImage(`http://localhost:4000${StudentServiceStatusData.getUserById.photo}`);
+      setProfileImage(
+        `http://ssb.matehuala.tecnm.mx/asis_be${StudentServiceStatusData.getUserById.photo}`
+      );
     }
     if (
       StudentServiceStatusData &&
       StudentServiceStatusData.getUserById &&
       !StudentServiceStatusData.getUserById.photo
-    ){
-      setProfileImage(`http://localhost:4000/uploads/users/default_profile.jpg`)
+    ) {
+      setProfileImage(`http://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg`);
     }
   }, [StudentServiceStatusData]);
 
   return (
-    <div className="layout-topbar">
+    <div className="layout-topbar bg-primary">
       <Toast ref={toast}></Toast>
 
       <button
@@ -188,12 +190,18 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
           onMenuToggle();
         }}
       >
-        <i className={menuToggle ? 'pi pi-list' : 'pi pi-bars'} />
+        <i
+          className={menuToggle ? 'pi pi-list' : 'pi pi-bars'}
+          style={{ color: !darkMode ? 'white' : 'black' }}
+        />
       </button>
 
       <a href="" className="layout-topbar-logo">
         <img src={logo} width="auto" height={'35px'} alt="logo" />
-        <span className="fount-conalep-large" style={{ fontSize: '15px' }}>
+        <span
+          className="fount-conalep-large"
+          style={{ fontSize: '15px', color: !darkMode ? 'white' : 'black' }}
+        >
           Tecnológico Nacional de México, Sede Matehuala
         </span>
       </a>
@@ -234,7 +242,10 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             className="p-link layout-topbar-button"
             onClick={() => changeTheme(!darkMode)}
           >
-            <i className={darkMode ? 'pi pi-sun' : 'pi pi-moon'}></i>
+            <i
+              className={darkMode ? 'pi pi-sun' : 'pi pi-moon'}
+              style={{ color: !darkMode ? 'white' : 'black' }}
+            ></i>
             <span>{t('topbar.darkMode')}</span>
           </button>
         }

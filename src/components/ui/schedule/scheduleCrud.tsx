@@ -26,6 +26,7 @@ import { IApiError } from '../../../../types/apierror';
 import EditSubjectDialogForm from '../../forms/subjects/dashboard/editSubject';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
+import EditScheduleDialogForm from '../../forms/Schedule/dashboard/editSchedule';
 
 function ScheduleCrud() {
   const emptySchedule: ISchedule = {
@@ -43,7 +44,7 @@ function ScheduleCrud() {
     updatedAt: undefined,
   };
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/settings/schedule' });
   const { roles } = useAccessTokenData() as TokenData;
 
   const [schedules, setSchedules] = useState(null);
@@ -71,7 +72,7 @@ function ScheduleCrud() {
       });
 
       setTimeout(() => {
-        navigate({ to: '/settings/career' });
+        navigate({ to: '/settings/schedule' });
         window.location.reload();
       }, 200);
     },
@@ -185,15 +186,6 @@ function ScheduleCrud() {
   const actionBodyTemplate = (rowData: Demo.career) => {
     return (
       <div className="flex align-items-center">
-        <Button
-          icon="pi pi-pencil"
-          className="mb-2"
-          rounded
-          outlined
-          severity="warning"
-          onClick={() => editSchedule(rowData)}
-          style={{ marginRight: '10px' }}
-        />
         {roles.includes('SUPER_ADMINISTRATOR') && (
           <Button
             icon="pi pi-trash"
@@ -234,16 +226,6 @@ function ScheduleCrud() {
       <div className="col-12">
         <div className="card">
           <Toast ref={toast} />
-
-          {selectedSchedule && visibleEditSchedule && (
-            <EditSubjectDialogForm
-              headerTitle={t('module.subject.dashboard.dialog.edit.header')}
-              visible={visibleEditSchedule}
-              setVisible={setVisibleEditSchedule}
-              subject={selectedSchedule}
-            />
-          )}
-
           <DataTable
             ref={dt}
             value={data?.getAllSchedules.docs}
@@ -257,7 +239,7 @@ function ScheduleCrud() {
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} Materias"
             globalFilter={globalFilter}
-            emptyMessage={t('global.dictionary.Nocareer')}
+            emptyMessage={t('global.dictionary.Noschedule')}
             header={header}
             responsiveLayout="scroll"
           >
@@ -341,7 +323,7 @@ function ScheduleCrud() {
             />
             <Column
               body={actionBodyTemplate}
-              header="Editar / Borrar"
+              header="Borrar"
               headerStyle={{
                 minWidth: '10rem',
                 border: '1px solid #2a497b',

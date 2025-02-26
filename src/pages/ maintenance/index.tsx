@@ -9,8 +9,7 @@ function Dashboard() {
           <PageHeading />
         </div>
       </div>
-      <div className="col-12">
-      </div>
+      <div className="col-12" />
     </div>
   );
 }

@@ -27,7 +27,7 @@ export default function DepartmentDialogForm({
   setVisible,
 }: PropsWithChildren<DepartmentFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/settings/department' });
   const toast = useRef<Toast>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
@@ -42,6 +42,7 @@ export default function DepartmentDialogForm({
         detail: t('global.toast.success.detail.departmentCreateSuccess'),
       });
       setTimeout(() => {
+        navigate({ to: '/settings/department' });
         window.location.reload();
       }, 50);
       setIsButtonDisabled(false);
@@ -93,12 +94,14 @@ export default function DepartmentDialogForm({
           reset();
         }}
       />
+
       <Button
         type="submit"
         label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
-        disabled={isButtonDisabled}
+        className="p-button-rounded p-button-success p-button-raised mt-2"
+        icon="pi pi-check"
         onClick={handleSubmit(onSubmit)}
+        outlined
       />
     </div>
   );
@@ -112,8 +115,15 @@ export default function DepartmentDialogForm({
       footer={footerContent}
     >
       <Toast ref={toast} />
-      <form className="p-fluid" onSubmit={handleSubmit(onSubmit)}>
-        {/* Campo para el nombre del departamento */}
+      <form className="p-fluid">
+        <div className="label">
+          <label htmlFor="contact">
+            <b>Información del Departamento</b>
+            <br />
+          </label>
+          <hr />
+        </div>
+
         <div className="field">
           <label htmlFor="name">{t('global.dictionary.departmentName')}*</label>
           <Controller

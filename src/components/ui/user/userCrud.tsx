@@ -85,7 +85,6 @@ function UserCrud() {
   const [visibleEditUser, setVisibleEditUser] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
 
-
   const { data } = useGetAllUsersQuery<IGetAllUsersQuery>(GRAPHQL_CLIENT, {
     limit: 99999,
     page: 1,

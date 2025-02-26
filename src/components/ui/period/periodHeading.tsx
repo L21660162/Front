@@ -34,7 +34,7 @@ export default function PageHeading() {
           <Button
             label={t('module.period.dashboard.addPeriod') as string}
             className="p-button-rounded p-button-raised mr-2"
-            icon="pi pi-briefcase"
+            icon="pi pi-calendar-plus"
             onClick={() => setVisible(true)}
           />
         </div>

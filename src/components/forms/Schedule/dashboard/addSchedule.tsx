@@ -39,7 +39,7 @@ export default function AddScheduleDialogForm({
   setVisible,
 }: PropsWithChildren<ScheduleFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/settings/schedule' });
   const toast = useRef<Toast>(null);
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
   let classroomData: Array<IClassroom> = [];
@@ -120,7 +120,7 @@ export default function AddScheduleDialogForm({
       });
 
       setTimeout(() => {
-        navigate({ to: '/settings/career' });
+        navigate({ to: '/settings/schedule' });
         window.location.reload();
       }, 200);
       setIsButtonDisabld(false);
@@ -173,11 +173,14 @@ export default function AddScheduleDialogForm({
           reset();
         }}
       />
+
       <Button
         type="submit"
         label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
+        className="p-button-rounded p-button-success p-button-raised mt-2"
+        icon="pi pi-check"
         onClick={handleSubmit(onSubmit)}
+        outlined
         disabled={isButtonDisablesed}
       />
     </div>
@@ -195,10 +198,12 @@ export default function AddScheduleDialogForm({
       <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.subject')}</b> <br />
+            <b>Información del Horario</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
+
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
@@ -261,7 +266,7 @@ export default function AddScheduleDialogForm({
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />
             <Controller
-              name="group"
+              name="classGroup"
               control={control}
               rules={{
                 required: t('global.forms.validation.group') as string,
@@ -330,7 +335,11 @@ export default function AddScheduleDialogForm({
                   value={field.value}
                   onChange={(e: DropdownChangeEvent) => field.onChange(e.value)}
                   options={teacherData}
-                  optionLabel={'firstName' + ' ' + 'lastName'}
+                  optionLabel={(option: IUser) =>
+                    `${option.firstName} ${option.lastName} ${
+                      option.middleName ? `${option.middleName} ` : ''
+                    }`
+                  }
                   optionValue="_id"
                 />
               )}

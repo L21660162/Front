@@ -27,7 +27,7 @@ function AppMenu() {
       items: [
         {
           label: t('sidebar.app.users'),
-          icon: 'pi pi-fw pi-list',
+          icon: 'pi pi-fw pi-user',
           to: '/user/dashboard',
         },
       ],
@@ -87,7 +87,7 @@ function AppMenu() {
             {
               label: t('sidebar.settings.departments'),
               icon: 'pi pi-fw pi-briefcase',
-              to: '/settings/departamnt',
+              to: '/settings/department',
             },
             {
               label: t('sidebar.settings.periods'),

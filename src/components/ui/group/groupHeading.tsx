@@ -34,7 +34,7 @@ export default function PageHeading() {
           <Button
             label={t('module.Group.dashboard.addGroup') as string}
             className="p-button-rounded p-button-raised mr-2"
-            icon="pi pi-briefcase"
+            icon="pi pi-users"
             onClick={() => setVisible(true)}
           />
         </div>

@@ -44,7 +44,7 @@ export default function EditScheduleViewDialogForm({
   schedule,
 }: PropsWithChildren<ScheduleFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/career' });
+  const navigate = useNavigate({ from: '/schedule/dashboard' });
   const toast = useRef<Toast>(null);
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
   let classroomData: Array<IClassroom> = [];
@@ -133,7 +133,7 @@ export default function EditScheduleViewDialogForm({
       });
 
       setTimeout(() => {
-        navigate({ to: '/settings/career' });
+        navigate({ to: '/schedule/dashboard' });
         window.location.reload();
       }, 200);
       setIsButtonDisabld(false);
@@ -214,9 +214,11 @@ export default function EditScheduleViewDialogForm({
       />
       <Button
         type="submit"
-        label={t('global.forms.submit') as string}
-        className="p-button-rounded p-button-raised mt-2"
+        label={t('global.forms.edit') as string}
+        className="p-button-rounded p-button-warning p-button-raised mt-2"
+        icon="pi pi-pencil"
         onClick={handleSubmit(onSubmit)}
+        outlined
         disabled={isButtonDisablesed}
       />
     </div>
@@ -237,10 +239,12 @@ export default function EditScheduleViewDialogForm({
       <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>{t('global.dictionary.subject')}</b> <br />
+            <b>Información del Horario</b>
+            <br />
           </label>
+          <hr />
         </div>
-        <hr />
+
         <div className="field">
           <span className="p-float-label p-input-icon-right">
             <i className="pi pi-book" />

@@ -34,7 +34,7 @@ export default function PageHeading() {
           <Button
             label={t('module.career.dashboard.addcareer') as string}
             className="p-button-rounded p-button-raised mr-2"
-            icon="pi pi-briefcase"
+            icon="pi pi-book"
             onClick={() => setVisible(true)}
           />
         </div>
