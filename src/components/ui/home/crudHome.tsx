@@ -278,7 +278,7 @@ function DashboardAttendancePanel() {
                   value={selectedCareer}
                   onChange={(e: DropdownChangeEvent) => setSelectedCareer(e.value)}
                   options={careerOptionsData?.getUniqueOptionsCareer.careers}
-                  placeholder={t('global.dictionary.Career')}
+                  placeholder={t('global.dictionary.filterCareer')}
                   optionLabel="label"
                   optionValue="value"
                   className="w-14rem"
@@ -306,7 +306,7 @@ function DashboardAttendancePanel() {
                 value={selectedSemester}
                 onChange={(e: DropdownChangeEvent) => setSelectedSemester(e.value)}
                 options={careerOptionsData?.getUniqueOptionsCareer.semesters}
-                placeholder={t('global.dictionary.Career')}
+                placeholder={t('global.dictionary.filterSemester')}
                 className="w-14rem"
               />
               <div className="align-content-center pl-1">
@@ -341,7 +341,7 @@ function DashboardAttendancePanel() {
                 suggestions={filteredDepartment}
                 completeMethod={searchDepartments}
                 field="name"
-                placeholder={t('global.dictionary.Department')}
+                placeholder={t('global.dictionary.filterDeparment')}
               />
               <div className="align-content-center pl-1">
                 <Button
@@ -367,7 +367,7 @@ function DashboardAttendancePanel() {
                 suggestions={filteredTeacher}
                 completeMethod={searchTeachers}
                 field="fullname"
-                placeholder={t('global.dictionary.Teacher')}
+                placeholder={t('global.dictionary.filterTeacher')}
               />
               <div className="align-content-center pl-1">
                 <Button

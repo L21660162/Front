@@ -55,8 +55,8 @@
       "dashboard": "Panel de Departamentos"
     },
     "career": {
-      "label": "Carrera",
-      "dashboard": "Panel de Carrera"
+      "label": "Carreras",
+      "dashboard": "Panel de Carreras"
     },
     "user": {
       "label": "Usuario",
@@ -192,6 +192,10 @@
       "email": "Correo electrónico",
       "edita": "Editar / Borrar",
       "password": "Contraseña",
+      "filterCareer": "Carrera",
+      "filterSemester": "Semestre",
+      "filterDeparment": "Departamento",
+      "filterTeacher": "Docente",
       "classroomDirectory": "Directorio de Aulas",
       "noClassroomsFound": "No se encontraron aulas",
       "tClassroomBuilding": "Edificio",
