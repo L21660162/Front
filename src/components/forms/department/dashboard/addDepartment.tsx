@@ -1,20 +1,20 @@
-import React, { PropsWithChildren, useRef, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
+import { PropsWithChildren, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Toast } from 'primereact/toast';
-import { Dialog } from 'primereact/dialog';
-import { useNavigate } from '@tanstack/react-router';
-import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
+import { IApiError } from '../../../../../types/apierror';
 import {
   ICreateDepartmentInput,
   useCreateDepartmentMutation,
   useGetAllUsersQuery, // Nueva consulta para obtener usuarios
 } from '../../../../graphql/graphql';
-import { IApiError } from '../../../../../types/apierror';
 import { DialogStore } from '../../../../store/global/types';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
 type DepartmentFormProps = {
   headerTitle: string;

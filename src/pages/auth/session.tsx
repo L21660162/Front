@@ -1,7 +1,6 @@
-import React from 'react';
 import { Navigate } from '@tanstack/react-router';
-import { getAccessTokenData, useAccessTokenData } from '../../store/auth/store';
 import { PropsWithOptionalChildren } from '../../../types/types';
+import { getAccessTokenData, useAccessTokenData } from '../../store/auth/store';
 import { TokenData } from '../../store/auth/type';
 
 function Session({ children }: PropsWithOptionalChildren) {

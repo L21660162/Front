@@ -1,7 +1,6 @@
-import React from 'react';
 import { Navigate } from '@tanstack/react-router';
-import { useAccessTokenData, useRememberMe } from '../../store/auth/store';
 import { PropsWithOptionalChildren } from '../../../types/types';
+import { useAccessTokenData, useRememberMe } from '../../store/auth/store';
 
 function Auth({ children }: PropsWithOptionalChildren) {
   const accessTokenData = useAccessTokenData();

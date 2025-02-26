@@ -1,0 +1,81 @@
+mutation ImportGroups {
+  importGroups {
+    _id
+    career
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    period
+    semester
+    updatedAt
+  }
+}
+
+mutation ImportPeriods {
+  importPeriods {
+    _id
+    createdAt
+    deletedAt
+    finalDate
+    isDeleted
+    largeIdentifier
+    name
+    shortIdentifier
+    startDate
+    updatedAt
+  }
+}
+
+mutation ImportSchedules {
+  importSchedules {
+    _id
+    classGroup
+    classroom
+    createdAt
+    deletedAt
+    finalTime
+    isDeleted
+    period
+    startTime
+    subject
+    teacher
+    updatedAt
+    weekday
+  }
+}
+
+mutation ImportSubjects {
+  importSubjects {
+    _id
+    areaKey
+    createdAt
+    deletedAt
+    isDeleted
+    largeName
+    schoolarLevel
+    shortName
+    subjectType
+    updatedAt
+  }
+}
+
+mutation ImportTeachers {
+  importTeachers {
+    _id
+    createdAt
+    deletedAt
+    department
+    email
+    firstName
+    gender
+    isDeleted
+    lastName
+    middleName
+    password
+    photo
+    rfc
+    roles
+    updatedAt
+  }
+}

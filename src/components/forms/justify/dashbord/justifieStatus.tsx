@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
+import { Button } from 'primereact/button';
+import { useState } from 'react';
 import { IAttendanceStatus, useGetAllAttendancesQuery } from '../../../../graphql/graphql';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 

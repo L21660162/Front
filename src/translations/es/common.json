@@ -127,6 +127,7 @@
         "selectDepartmentBoss": "Seleccione jefe de departamento"
       },
       "edit": "Editar",
+      "upload": "Subir",
       "validation": {
         "firstName": "El nombre es obligatiorio",
         "lastName": "El apellido paterno es obligatorio",
@@ -250,7 +251,10 @@
       "departmentName": "Nombre del Departamento",
       "boss": "Jefe",
       "abbreviationDepartment": "Abreviatura del Departamento",
-      "actions": "Editar/Borrar",
+      "actions": "Editar / Borrar",
+      "extra": {
+        "actions": "Subir Foto / Editar / Borrar"
+      },
       "passwordRecovery": "Recuperar Contraseña",
       "welcome": "Bienvenido",
       "gender": "Sexo:",
@@ -275,7 +279,7 @@
       "instituteId": "Instituto al que pertenece",
       "Nocareer": "No existen carreras registradas",
       "Noevent": "No existen eventos registrados",
-      "Nojustifieds": "No existen eventos registrados",
+      "Nojustifieds": "No existen justificaciones registradas",
       "Noschedule": "No existen horarios registrados",
       "Nosubject": "No existen materias registradas",
       "careerdirectory": "Lista de carreras vigentes",
@@ -363,6 +367,7 @@
           "departmentDeleteSuccess": "Departamento eliminado exitosamente",
           "groupDeleteSuccess": "Grupo eliminado exitosamente",
           "buildingEditSuccess": "Edificio actualizada exitosamente",
+          "buildingPictureSuccess": "Foto del Edificio subida exitosamente",
           "periodCreateSuccess": "Periodo creada exitosamente",
           "periodEditSuccess": "Periodo actualizado exitosamente",
           "departmentEditSuccess": "Departamento actualizado exitosamente"
@@ -410,6 +415,17 @@
         }
       }
     },
+    "maintenance": {
+      "dashboard": {
+        "dialog": {
+          "periods": "Importar Periodos",
+          "groups": "Importar Grupos",
+          "schedules": "Importar Horarios",
+          "teachers": "Importar Docentes",
+          "subjects": "Importar Materias"
+        }
+      }
+    },
     "Classroom": {
       "dashboard": {
         "addClassroom": "Agregar Aula",
@@ -429,6 +445,9 @@
         "dialog": {
           "add": {
             "header": "Crear Edificio"
+          },
+          "picture": {
+            "header": "Subir Foto de Edificio"
           },
           "edit": {
             "header": "Editar Edificio"

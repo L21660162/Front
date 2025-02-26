@@ -1,23 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Toast } from 'primereact/toast';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { InputText } from 'primereact/inputtext';
-import { classNames } from 'primereact/utils';
-import { RadioButton } from 'primereact/radiobutton';
-import { FileUpload } from 'primereact/fileupload';
 import { Button } from 'primereact/button';
-import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
-import { useAccessTokenData } from '../../../../store/auth/store';
-import { TokenData } from '../../../../store/auth/type';
+import { FileUpload } from 'primereact/fileupload';
+import { InputText } from 'primereact/inputtext';
+import { RadioButton } from 'primereact/radiobutton';
+import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
+import { useEffect, useRef, useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { IApiError } from '../../../../../types/apierror';
 import {
   IGetUserByIdQuery,
   IUpdateUserInput,
   useGetUserByIdQuery,
   useUpdateUserMutation,
 } from '../../../../graphql/graphql';
-import { IApiError } from '../../../../../types/apierror';
+import { useAccessTokenData } from '../../../../store/auth/store';
+import { TokenData } from '../../../../store/auth/type';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
 function BodyProfile() {
   const { t } = useTranslation('common');

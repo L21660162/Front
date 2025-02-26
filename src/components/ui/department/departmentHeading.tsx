@@ -1,8 +1,7 @@
-import React from 'react';
 import { Button } from 'primereact/button';
 import { useTranslation } from 'react-i18next';
-import AdddepartmentDialogForm from '../../forms/department/dashboard/addDepartment';
 import { dialogStore } from '../../../store/global/dialogStore';
+import AdddepartmentDialogForm from '../../forms/department/dashboard/addDepartment';
 
 export default function PageHeading() {
   const { t } = useTranslation('common');

@@ -1,21 +1,21 @@
-import React, { PropsWithChildren, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { classNames } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
+import { PropsWithChildren, useRef, useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { IApiError } from '../../../../../types/apierror';
-import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-  IUpdateDepartmentInput,
-  useUpdateDepartmentMutation,
   IDepartment,
+  IUpdateDepartmentInput,
   useGetAllUsersQuery,
+  useUpdateDepartmentMutation,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
 type DepartmentFormProps = {
   headerTitle: string;

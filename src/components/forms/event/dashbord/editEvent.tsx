@@ -1,29 +1,29 @@
-import React, { PropsWithChildren, useRef, useState, useEffect } from 'react';
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { classNames } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
-import { Toast } from 'primereact/toast';
+import { Button } from 'primereact/button';
+import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
-import { Calendar, CalendarChangeEvent } from 'primereact/calendar';
+import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { IApiError } from '../../../../../types/apierror';
-import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
   IEvent,
-  useUpdateEventMutation,
-  IUpdateEventInput,
   IGroup,
   IPeriod,
-  useGetAllPeriodsQuery,
+  IUpdateEventInput,
   useGetAllGroupsQuery,
+  useGetAllPeriodsQuery,
+  useUpdateEventMutation,
 } from '../../../../graphql/graphql';
-import { DialogStore } from '../../../../store/global/types';
 import { useAccessTokenData } from '../../../../store/auth/store';
 import { TokenData } from '../../../../store/auth/type';
+import { DialogStore } from '../../../../store/global/types';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
 type EventsFormProps = {
   headerTitle: string;

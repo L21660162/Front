@@ -1,16 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Outlet } from '@tanstack/react-router';
 import { useEventListener, useUnmountEffect } from 'primereact/hooks';
 import { classNames } from 'primereact/utils';
 import React, { useContext, useEffect, useRef } from 'react';
+import { AppTopbarRef, ChildContainerProps, LayoutState } from '../types/types';
 import AppFooter from './AppFooter';
 import AppSidebar from './AppSidebar';
 import AppTopbar from './AppTopbar';
-import AppConfig from './AppConfig';
 import { LayoutContext } from './context/layoutcontext';
-import PrimeReact from 'primereact/api';
-import { ChildContainerProps, LayoutState, AppTopbarRef } from '../types/types';
-import { Outlet } from '@tanstack/react-router';
-import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 const Layout = ({ children }: ChildContainerProps) => {
   const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
   const topbarRef = useRef<AppTopbarRef>(null);

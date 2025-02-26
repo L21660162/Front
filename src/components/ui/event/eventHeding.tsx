@@ -1,8 +1,7 @@
-import React from 'react';
 import { Button } from 'primereact/button';
 import { useTranslation } from 'react-i18next';
-import AddEventDialogFrom from '../../forms/event/dashbord/addEvent';
 import { dialogStore } from '../../../store/global/dialogStore';
+import AddEventDialogFrom from '../../forms/event/dashbord/addEvent';
 
 export default function PageHeading() {
   const { t } = useTranslation('common');

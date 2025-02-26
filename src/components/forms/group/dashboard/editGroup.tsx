@@ -1,24 +1,24 @@
-import React, { PropsWithChildren, useRef, useState, useEffect } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
-import { Toast } from 'primereact/toast';
-import { Dialog } from 'primereact/dialog';
-import { ProgressSpinner } from 'primereact/progressspinner';
-import { Dropdown } from 'primereact/dropdown';
 import { IApiError } from '../../../../../types/apierror';
-import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-  IUpdateGroupInput,
-  useUpdateGroupMutation,
   IGroup,
-  useGetAllPeriodsQuery,
+  IUpdateGroupInput,
   useGetAllCareersQuery,
+  useGetAllPeriodsQuery,
+  useUpdateGroupMutation,
 } from '../../../../graphql/graphql';
 import { DialogStore } from '../../../../store/global/types';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
 type GroupFormProps = {
   headerTitle: string;

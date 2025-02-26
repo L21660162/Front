@@ -1,23 +1,24 @@
 'use client';
 
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import { IApiError } from '../../../../types/apierror';
 import {
   IBuilding,
   IGetAllBuildingsQuery,
   useDeleteBuildingMutation,
   useGetAllBuildingsQuery,
 } from '../../../graphql/graphql';
-import { IApiError } from '../../../../types/apierror';
-import EditBuildingDialogForm from '../../forms/buildings/dashboard/editbuildings';
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import EditBuildingDialogForm from '../../forms/building/dashboard/editbuildings';
+import PictureBuildingDialog from '../../forms/building/dashboard/pictureBuilding';
 
 function BuildingCrud() {
   const emptyBuilding: IBuilding = {
@@ -31,13 +32,14 @@ function BuildingCrud() {
   };
 
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/career/dashboard' });
+  const navigate = useNavigate({ from: '/settings/building' });
   const toast = useRef<Toast>(null);
   const [deleteBuildingDialog, setDeleteBuildingDialog] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState<IBuilding>(emptyBuilding);
   const [globalFilter, setGlobalFilter] = useState('');
   const dt = useRef<DataTable<any>>(null);
   const [visibleEditBuilding, setVisibleEditBuilding] = useState(false);
+  const [visiblePictureBuilding, setVisiblePictureBuilding] = useState(false);
 
   const { data, refetch } = useGetAllBuildingsQuery<IGetAllBuildingsQuery>(GRAPHQL_CLIENT, {
     limit: 500,
@@ -66,6 +68,11 @@ function BuildingCrud() {
 
   const hideDeleteBuildingDialog = () => {
     setDeleteBuildingDialog(false);
+  };
+
+  const pictureBuilding = (building: IBuilding) => {
+    setSelectedBuilding(building);
+    setVisiblePictureBuilding(true);
   };
 
   const editBuilding = (building: IBuilding) => {
@@ -108,6 +115,15 @@ function BuildingCrud() {
   const actionBodyTemplate = (rowData: IBuilding) => {
     return (
       <div className="flex align-items-center">
+        <Button
+          icon="pi pi-camera"
+          className="mb-2"
+          rounded
+          outlined
+          severity="success"
+          onClick={() => pictureBuilding(rowData)}
+          style={{ marginRight: '10px' }}
+        />
         <Button
           icon="pi pi-pencil"
           className="mb-2"
@@ -170,6 +186,15 @@ function BuildingCrud() {
             />
           )}
 
+          {selectedBuilding && visiblePictureBuilding && (
+            <PictureBuildingDialog
+              headerTitle={t('module.buildings.dashboard.dialog.picture.header')}
+              visible={visiblePictureBuilding}
+              setVisible={setVisiblePictureBuilding}
+              building={selectedBuilding}
+            />
+          )}
+
           <DataTable
             ref={dt}
             value={data?.getAllBuildings.docs}
@@ -212,7 +237,7 @@ function BuildingCrud() {
             />
             <Column
               body={actionBodyTemplate}
-              header={t('global.dictionary.actions')}
+              header={t('global.dictionary.extra.actions')}
               headerStyle={{
                 minWidth: '10rem',
                 border: '1px solid #2a497b',

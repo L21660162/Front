@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { DataView } from 'primereact/dataview';
-import { Button } from 'primereact/button';
-import { useTranslation } from 'react-i18next';
-import { Controller, useForm } from 'react-hook-form';
 import { AutoComplete } from 'primereact/autocomplete';
+import { Button } from 'primereact/button';
+import { DataView } from 'primereact/dataview';
 import { classNames } from 'primereact/utils';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   IRoles,
   ISchedule,
@@ -12,10 +12,10 @@ import {
   useGetSchedulesFormattedQuery,
 } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import { TokenData } from '../../../store/auth/type';
 import { dialogStore } from '../../../store/global/dialogStore';
-import EditScheduleViewDialogForm from '../../forms/Schedule/dashboard/editScheduleView';
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import EditScheduleViewDialogForm from '../../forms/schedule/dashboard/editScheduleView';
 
 interface ITeacherSearchResult {
   _id?: string | null | undefined;

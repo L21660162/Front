@@ -1,4 +1,3 @@
-import React from 'react';
 import BuildingCrud from '../../components/ui/building/buildingCrud';
 import PageHeadingbuilding from '../../components/ui/building/buildingHeading';
 

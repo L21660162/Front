@@ -1,4 +1,3 @@
-import React from 'react';
 import GroupCrud from '../../components/ui/group/groupCrud';
 import PageHeadingGroup from '../../components/ui/group/groupHeading';
 

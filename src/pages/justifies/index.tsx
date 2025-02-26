@@ -1,10 +1,9 @@
-import React from 'react';
-import PageHeading from '../../components/ui/justifies/justifiesHeding';
-import JustifyCrud from '../../components/ui/justifies/justifiesCrud';
-import ReviewJustify from '../../components/ui/justifies/justifeView';
-import { TokenData } from '../../store/auth/type';
-import { useAccessTokenData } from '../../store/auth/store';
+import ReviewJustify from '../../components/ui/justify/justifeView';
+import JustifyCrud from '../../components/ui/justify/justifiesCrud';
+import PageHeading from '../../components/ui/justify/justifiesHeding';
 import { IRoles } from '../../graphql/graphql';
+import { useAccessTokenData } from '../../store/auth/store';
+import { TokenData } from '../../store/auth/type';
 
 function Justify() {
   const { roles } = useAccessTokenData() as TokenData;

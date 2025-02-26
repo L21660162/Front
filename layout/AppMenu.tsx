@@ -1,11 +1,10 @@
 /* eslint-disable no-else-return */
-import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAccessTokenData } from '../src/store/auth/store';
+import { TokenData } from '../src/store/auth/type';
+import { AppMenuItem } from '../types/types';
 import AppMenuitem from './AppMenuitem';
 import { MenuProvider } from './context/menucontext';
-import { AppMenuItem } from '../types/types';
-import { TokenData } from '../src/store/auth/type';
-import { useAccessTokenData } from '../src/store/auth/store';
 
 function AppMenu() {
   const { t } = useTranslation('common');
@@ -17,7 +16,7 @@ function AppMenu() {
       items: [
         {
           label: t('sidebar.home.dashboard'),
-          icon: 'pi pi-fw pi-home',
+          icon: 'pi pi-fw pi-chart-bar',
           to: '/home/dashboard',
         },
       ],
@@ -59,6 +58,16 @@ function AppMenu() {
           label: t('sidebar.events.dashboard'),
           icon: 'pi pi-fw pi-calendar-plus',
           to: '/event/dashboard',
+        },
+      ],
+    },
+    {
+      label: t('sidebar.maintenance.label'),
+      items: [
+        {
+          label: t('sidebar.maintenance.dashboard'),
+          icon: 'pi pi-fw pi-wrench',
+          to: '/maintenance/dashboard',
         },
       ],
     },

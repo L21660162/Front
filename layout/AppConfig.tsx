@@ -5,10 +5,10 @@ import { InputSwitch, InputSwitchChangeEvent } from 'primereact/inputswitch';
 import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import { Sidebar } from 'primereact/sidebar';
 import { classNames } from 'primereact/utils';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 import { AppConfigProps, LayoutState } from '../types/types';
 import { LayoutContext } from './context/layoutcontext';
-import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 
 const AppConfig = (props: AppConfigProps) => {
   const [scales] = useState([12, 13, 14, 15, 16]);

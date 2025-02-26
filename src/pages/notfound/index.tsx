@@ -1,5 +1,5 @@
-import React from 'react';
 import { Link } from '@tanstack/react-router';
+import React from 'react';
 import AppConfig from '../../../layout/AppConfig';
 import { Page } from '../../../types/types';
 

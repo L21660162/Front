@@ -1,6 +1,5 @@
-import React from 'react';
-import PageHeading from '../../components/ui/schedule/scheduleHeding';
 import ScheduleCrud from '../../components/ui/schedule/scheduleCrud';
+import PageHeading from '../../components/ui/schedule/scheduleHeding';
 
 function ScheduleSettings() {
   return (

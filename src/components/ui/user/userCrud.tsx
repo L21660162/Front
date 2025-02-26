@@ -1,3 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
+import { FilterMatchMode } from 'primereact/api';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -6,22 +8,19 @@ import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
-import { FilterMatchMode } from 'primereact/api';
+import { IApiError } from '../../../../types/apierror';
 import { Demo } from '../../../../types/types';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
-  IUser,
   IGetAllUsersQuery,
+  IRoles,
+  IUser,
   useDeleteUserMutation,
   useGetAllUsersQuery,
-  IRoles,
 } from '../../../graphql/graphql';
-import { IApiError } from '../../../../types/apierror';
-import { dialogStore } from '../../../store/global/dialogStore';
-import UserDialogFormEdit from '../../forms/user/dashboard/editUser';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import UserDialogFormEdit from '../../forms/user/dashboard/editUser';
 
 function UserCrud() {
   const emptyUser: IUser = {

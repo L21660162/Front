@@ -1,0 +1,43 @@
+mutation CreateBuilding($data: UpsertBuildingInput!) {
+  createBuilding(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    isDeleted
+    letter
+    name
+    picturePath
+    updatedAt
+  }
+}
+
+mutation UpdateBuilding($data: UpdateBuildingInput!) {
+  updateBuilding(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    isDeleted
+    letter
+    name
+    updatedAt
+  }
+}
+
+mutation UploadBuildingPicture($data: UploadPictureBuildingInput!) {
+  uploadBuildingPicture(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    isDeleted
+    letter
+    name
+    picturePath
+    updatedAt
+  }
+}
+
+mutation DeleteBuilding($data: BuildingIdArgs!) {
+  deleteBuilding(data: $data) {
+    deleted
+  }
+}

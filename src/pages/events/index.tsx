@@ -1,6 +1,5 @@
-import React from 'react';
-import PageHeading from '../../components/ui/event/eventHeding';
 import EventCrud from '../../components/ui/event/eventCrud';
+import PageHeading from '../../components/ui/event/eventHeding';
 
 function Events() {
   return (

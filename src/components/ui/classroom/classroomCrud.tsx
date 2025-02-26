@@ -6,19 +6,20 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import React, { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import { IApiError } from '../../../../types/apierror';
 import {
   IClassroom,
+  IGetAllBuildingsQuery,
   IGetAllClassroomsQuery,
   useDeleteClassroomMutation,
-  useGetAllClassroomsQuery,
   useGetAllBuildingsQuery,
-  IGetAllBuildingsQuery,
+  useGetAllClassroomsQuery,
 } from '../../../graphql/graphql';
-import { IApiError } from '../../../../types/apierror';
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import EditClassroomDialogForm from '../../forms/classroom/dashboard/editClassroom';
+import PictureClassroomDialog from '../../forms/classroom/dashboard/pictureClassroom';
 
 function ClassroomCrud() {
   const { t } = useTranslation('common');
@@ -28,6 +29,7 @@ function ClassroomCrud() {
   const [selectedClassroom, setSelectedClassroom] = useState<IClassroom | null>(null);
   const [globalFilter, setGlobalFilter] = useState('');
   const [visibleEditClassroom, setVisibleEditClassroom] = useState(false);
+  const [visiblePictureClassroom, setVisiblePictureClassroom] = useState(false);
 
   const { data, refetch } = useGetAllClassroomsQuery<IGetAllClassroomsQuery>(GRAPHQL_CLIENT, {
     limit: 500,
@@ -83,6 +85,18 @@ function ClassroomCrud() {
   const actionBodyTemplate = (rowData: IClassroom) => (
     <div className="flex align-items-center">
       <Button
+        icon="pi pi-camera"
+        className="mb-2"
+        rounded
+        outlined
+        severity="success"
+        onClick={() => {
+          setSelectedClassroom(rowData);
+          setVisiblePictureClassroom(true);
+        }}
+        style={{ marginRight: '10px' }}
+      />
+      <Button
         icon="pi pi-pencil"
         className="mb-2"
         rounded
@@ -137,6 +151,15 @@ function ClassroomCrud() {
             />
           )}
 
+          {selectedClassroom && visiblePictureClassroom && (
+            <PictureClassroomDialog
+              headerTitle={t('module.buildings.dashboard.dialog.picture.header')}
+              visible={visiblePictureClassroom}
+              setVisible={setVisiblePictureClassroom}
+              classroom={selectedClassroom}
+            />
+          )}
+
           <DataTable
             ref={dt}
             value={data?.getAllClassrooms.docs}
@@ -179,7 +202,7 @@ function ClassroomCrud() {
             />
             <Column
               body={actionBodyTemplate}
-              header={t('global.dictionary.actions')}
+              header={t('global.dictionary.extra.actions')}
               headerStyle={{
                 minWidth: '10rem',
                 border: '1px solid #2a497b',

@@ -1,14 +1,14 @@
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
+import { IApiError } from '../../../../types/apierror';
 import { Demo } from '../../../../types/types';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import {
   IEvent,
   IGetAllEventsQuery,
@@ -17,9 +17,9 @@ import {
   useGetAllEventsQuery,
   useGetGroupByIdQuery,
 } from '../../../graphql/graphql';
-import { IApiError } from '../../../../types/apierror';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import EditEventDialogForm from '../../forms/event/dashbord/editEvent';
 
 function EventCrud() {

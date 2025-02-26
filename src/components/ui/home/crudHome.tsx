@@ -1,16 +1,16 @@
-import { Chart } from 'primereact/chart';
-import React, { useRef, useState } from 'react';
 import { ChartData, ChartOptions } from 'chart.js';
-import { useTranslation } from 'react-i18next';
-import { Toast } from 'primereact/toast';
-import { Button } from 'primereact/button';
 import { AutoComplete, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
+import { Button } from 'primereact/button';
+import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import { Toast } from 'primereact/toast';
+import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { IDepartment, IFile, useGetAllDepartmentsQuery } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
-import { StadisticServices } from './service/StadisticService'; // Importa el hook personalizado
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
+import { StadisticServices } from './service/StadisticService'; // Importa el hook personalizado
 
 interface Userdata {
   id: string;
@@ -271,7 +271,7 @@ function DashboardAttendancePanel() {
           <div className="flex align-items-center justify-content-between mt-3">
             <div className="flex">
               <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Filtr de Carera: </span>
+                <span className="block font-semibold ">Carera: </span>
               </div>
               <div className="flex justify-content-center">
                 <Dropdown
@@ -300,7 +300,7 @@ function DashboardAttendancePanel() {
             </div>
             <div className="flex">
               <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Filtr de semestre: </span>
+                <span className="block font-semibold ">Semestre: </span>
               </div>
               <Dropdown
                 value={selectedSemester}
@@ -333,7 +333,7 @@ function DashboardAttendancePanel() {
               /> */}
             <div className="flex">
               <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Filtr de Departamento: </span>
+                <span className="block font-semibold ">Departamento: </span>
               </div>
               <AutoComplete
                 value={selectedDepartment}
@@ -359,7 +359,7 @@ function DashboardAttendancePanel() {
             </div>
             <div className="flex">
               <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Filtr de Docente: </span>
+                <span className="block font-semibold ">Docente: </span>
               </div>
               <AutoComplete
                 value={selectedTeacher}

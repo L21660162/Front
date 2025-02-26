@@ -1,19 +1,19 @@
-import React, { ReactNode, useRef } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
-import { classNames } from 'primereact/utils';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
+import { ReactNode, useRef } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
-import type { Page } from '../../../../types/types';
 import AppConfig from '../../../../layout/AppConfig';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
-import { ISignUpInput, useSignUpMutation } from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
+import type { Page } from '../../../../types/types';
+import { ISignUpInput, useSignUpMutation } from '../../../graphql/graphql';
 import { useGlobalAppStore } from '../../../store/global/globalAppStore';
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 
 function SignUpPage(): Page {
   const toast = useRef<Toast>(null);

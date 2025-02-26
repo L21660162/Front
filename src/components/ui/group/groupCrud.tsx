@@ -6,20 +6,20 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
-import {
-  IGroup,
-  IGetAllGroupsQuery,
-  useDeleteGroupMutation,
-  useGetAllGroupsQuery,
-  useGetAllCareersQuery,
-  IGetAllCareersQuery,
-  useGetAllPeriodsQuery,
-  IGetAllPeriodsQuery,
-} from '../../../graphql/graphql';
 import { IApiError } from '../../../../types/apierror';
+import {
+  IGetAllCareersQuery,
+  IGetAllGroupsQuery,
+  IGetAllPeriodsQuery,
+  IGroup,
+  useDeleteGroupMutation,
+  useGetAllCareersQuery,
+  useGetAllGroupsQuery,
+  useGetAllPeriodsQuery,
+} from '../../../graphql/graphql';
+import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import EditGroupDialogForm from '../../forms/group/dashboard/editGroup';
 
 function GroupCrud() {

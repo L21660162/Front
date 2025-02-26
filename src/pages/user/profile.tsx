@@ -1,6 +1,5 @@
-import React from 'react';
-import PageHeadingProfile from '../../components/ui/user/profile/profileHeading';
 import BodyProfile from '../../components/ui/user/profile/profileBody';
+import PageHeadingProfile from '../../components/ui/user/profile/profileHeading';
 
 function UserProfile() {
   return (

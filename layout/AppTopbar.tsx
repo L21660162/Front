@@ -1,28 +1,20 @@
-import { classNames } from 'primereact/utils';
-import React, {
-  forwardRef,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { MenuItem } from 'primereact/menuitem';
-import { Menu } from 'primereact/menu';
-import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
 import { Avatar } from 'primereact/avatar';
-import { AppTopbarRef } from '../types/types';
-import { LayoutContext } from './context/layoutcontext';
-import { useGlobalAppStore } from '../src/store/global/globalAppStore';
+import { Menu } from 'primereact/menu';
+import { MenuItem } from 'primereact/menuitem';
+import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
+import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useGetUserByIdQuery, useSignOutMutation } from '../src/graphql/graphql';
+import { getActions, useAccessTokenData, useRefreshToken } from '../src/store/auth/store';
+import { TokenData } from '../src/store/auth/type';
+import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 import { GRAPHQL_CLIENT } from '../src/utils/graphqlClient';
 import { IApiError } from '../types/apierror';
-import { getActions, useAccessTokenData, useRefreshToken } from '../src/store/auth/store';
+import { AppTopbarRef } from '../types/types';
+import { LayoutContext } from './context/layoutcontext';
 import logo from './images/logo-sepret.png';
-import { TokenData } from '../src/store/auth/type';
 
 const { setAccessToken, setRefreshToken } = getActions();
 

@@ -1,13 +1,10 @@
 import {
-  useGetUniqueOptionsCareerQuery,
-  useGetAttendanceStatisticsQuery,
-  IGetAttendanceStatisticsQuery,
-  IGetUniqueOptionsCareerQuery,
-  useGetAllUsersQuery,
   IRoles,
   IUser,
+  useGetAllUsersQuery,
+  useGetAttendanceStatisticsQuery,
+  useGetUniqueOptionsCareerQuery,
 } from '../../../../graphql/graphql';
-import Justify from '../../../../pages/justifies';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
 // eslint-disable-next-line import/prefer-default-export

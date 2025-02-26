@@ -1,4 +1,3 @@
-import React from 'react';
 import CareerCrud from '../../components/ui/career/careerCrud';
 import PageHeadingCareer from '../../components/ui/career/careerHeading';
 

@@ -1,6 +1,5 @@
-import React from 'react';
-import PageHeading from '../../components/ui/subjects/subjectHeding';
-import SubjectCrud from '../../components/ui/subjects/subjectCrud';
+import SubjectCrud from '../../components/ui/subject/subjectCrud';
+import PageHeading from '../../components/ui/subject/subjectHeding';
 
 function SubjectSettings() {
   return (

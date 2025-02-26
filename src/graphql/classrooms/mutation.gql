@@ -1,0 +1,43 @@
+mutation CreateClassroom($data: UpsertClassroomInput!) {
+  createClassroom(data: $data) {
+    _id
+    building
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    picturePath
+    updatedAt
+  }
+}
+
+mutation UpdateClassroom($data: UpdateClassroomInput!) {
+  updateClassroom(data: $data) {
+    _id
+    building
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    updatedAt
+  }
+}
+
+mutation UploadClassroomPicture($data: UploadPictureClassroomInput!) {
+  uploadClassroomPicture(data: $data) {
+    _id
+    building
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    picturePath
+    updatedAt
+  }
+}
+
+mutation DeleteClassroom($data: ClassroomIdArgs!) {
+  deleteClassroom(data: $data) {
+    deleted
+  }
+}

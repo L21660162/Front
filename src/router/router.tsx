@@ -7,10 +7,10 @@ import Dashboard from '../pages/home/dashboard';
 import NotFoundPage from '../pages/notfound';
 import PasswordRecoveryPage from '../pages/auth/passwordrecovery';
 import PasswordConfirmPage from '../pages/auth/passwordconfirm';
-import Career from '../pages/ maintenance';
+import MaintenanceDashboard from '../pages/maintenance';
 import UserDashboard from '../pages/user';
 import Justify from '../pages/justifies';
-import Schedule from '../pages/ schedule';
+import Schedule from '../pages/schedule';
 import { useAccessTokenData } from '../store/auth/store';
 import { TokenData } from '../store/auth/type';
 import Events from '../pages/events';
@@ -139,7 +139,15 @@ const passwordConfirmRoute = new Route({
 const maintenanceRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/maintenance/dashboard',
-  component: () => <App Component={Career} />,
+  component: () => {
+    const { roles } = useAccessTokenData() as TokenData;
+    const allowedroles = ['SUPER_ADMINISTRATOR'];
+
+    if (allowedroles.some((role) => roles.includes(role))) {
+      return <App Component={MaintenanceDashboard} />;
+    }
+    return <App Component={NotFoundPage} />;
+  },
 });
 
 const eventRoute = new Route({

@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
 import { Button } from 'primereact/button';
-import { useTranslation } from 'react-i18next';
 import { Toast } from 'primereact/toast';
-import AddUserDialogForm from '../../forms/user/dashboard/addUser';
+import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { dialogStore } from '../../../store/global/dialogStore';
+import AddUserDialogForm from '../../forms/user/dashboard/addUser';
 
 export default function PageHeadingUser() {
   const { t } = useTranslation('common');

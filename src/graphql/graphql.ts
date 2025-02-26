@@ -1573,50 +1573,6 @@ export interface ICreateDepartmentInput {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
-export type IGetUniqueOptionsCareerQueryVariables = Exact<{ [key: string]: never }>;
-
-export type IGetUniqueOptionsCareerQuery = {
-  getUniqueOptionsCareer: {
-    semesters: Array<string>;
-    careers: Array<{ label: string; value: string }>;
-  };
-};
-
-export type IGetAttendanceStatisticsQueryVariables = Exact<{
-  career?: InputMaybe<Scalars['ID']['input']>;
-  department?: InputMaybe<Scalars['ID']['input']>;
-  period?: InputMaybe<Scalars['ID']['input']>;
-  semester?: InputMaybe<Scalars['String']['input']>;
-  teacher?: InputMaybe<Scalars['ID']['input']>;
-}>;
-
-export type IGetAttendanceStatisticsQuery = {
-  getAttendanceStatistics: {
-    classAbsentDay: number;
-    classAbsentMonth: number;
-    classAbsentPeriod: number;
-    classAbsentSemester: number;
-    classAbsentYear: number;
-    classJustifyDay: number;
-    classJustifyMonth: number;
-    classJustifyPeriod: number;
-    classJustifySemester: number;
-    classJustifyYear: number;
-    classPresentDay: number;
-    classPresentMonth: number;
-    classPresentPeriod: number;
-    classPresentSemester: number;
-    classPresentYear: number;
-    weekday1: number;
-    weekday2: number;
-    weekday3: number;
-    weekday4: number;
-    weekday5: number;
-    weekday6: number;
-    weekday7: number;
-  };
-};
-
 export type IGetAllAttendancesQueryVariables = Exact<{
   filter?: InputMaybe<IAttendanceArgs>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1764,6 +1720,23 @@ export type IUpdateBuildingMutation = {
   };
 };
 
+export type IUploadBuildingPictureMutationVariables = Exact<{
+  data: IUploadPictureBuildingInput;
+}>;
+
+export type IUploadBuildingPictureMutation = {
+  uploadBuildingPicture: {
+    _id: string;
+    createdAt?: any | null;
+    deletedAt?: any | null;
+    isDeleted: boolean;
+    letter?: string | null;
+    name: string;
+    picturePath?: string | null;
+    updatedAt?: any | null;
+  };
+};
+
 export type IDeleteBuildingMutationVariables = Exact<{
   data: IBuildingIdArgs;
 }>;
@@ -1797,6 +1770,7 @@ export type IGetAllBuildingsQuery = {
       letter?: string | null;
       name: string;
       updatedAt?: any | null;
+      picturePath?: string | null;
     }>;
   };
 };
@@ -1814,6 +1788,7 @@ export type IGetBuildingByIdQuery = {
     letter?: string | null;
     name: string;
     updatedAt?: any | null;
+    picturePath?: string | null;
   };
 };
 
@@ -1951,6 +1926,23 @@ export type IUpdateClassroomMutation = {
   };
 };
 
+export type IUploadClassroomPictureMutationVariables = Exact<{
+  data: IUploadPictureClassroomInput;
+}>;
+
+export type IUploadClassroomPictureMutation = {
+  uploadClassroomPicture: {
+    _id: string;
+    building: string;
+    createdAt?: any | null;
+    deletedAt?: any | null;
+    identifier: string;
+    isDeleted: boolean;
+    picturePath?: string | null;
+    updatedAt?: any | null;
+  };
+};
+
 export type IDeleteClassroomMutationVariables = Exact<{
   data: IClassroomIdArgs;
 }>;
@@ -1984,6 +1976,7 @@ export type IGetAllClassroomsQuery = {
       identifier: string;
       isDeleted: boolean;
       updatedAt?: any | null;
+      picturePath?: string | null;
     }>;
   };
 };
@@ -2001,6 +1994,7 @@ export type IGetClassroomByIdQuery = {
     identifier: string;
     isDeleted: boolean;
     updatedAt?: any | null;
+    picturePath?: string | null;
   };
 };
 
@@ -2538,6 +2532,98 @@ export type IGetGroupByIdQuery = {
   };
 };
 
+export type IImportGroupsMutationVariables = Exact<{ [key: string]: never }>;
+
+export type IImportGroupsMutation = {
+  importGroups: Array<{
+    _id: string;
+    career: string;
+    createdAt?: any | null;
+    deletedAt?: any | null;
+    identifier: string;
+    isDeleted: boolean;
+    period: string;
+    semester: string;
+    updatedAt?: any | null;
+  }>;
+};
+
+export type IImportPeriodsMutationVariables = Exact<{ [key: string]: never }>;
+
+export type IImportPeriodsMutation = {
+  importPeriods: Array<{
+    _id: string;
+    createdAt?: any | null;
+    deletedAt?: any | null;
+    finalDate: any;
+    isDeleted: boolean;
+    largeIdentifier: string;
+    name: string;
+    shortIdentifier: string;
+    startDate: any;
+    updatedAt?: any | null;
+  }>;
+};
+
+export type IImportSchedulesMutationVariables = Exact<{ [key: string]: never }>;
+
+export type IImportSchedulesMutation = {
+  importSchedules: Array<{
+    _id: string;
+    classGroup: string;
+    classroom: string;
+    createdAt?: any | null;
+    deletedAt?: any | null;
+    finalTime: any;
+    isDeleted: boolean;
+    period: string;
+    startTime: any;
+    subject: string;
+    teacher: string;
+    updatedAt?: any | null;
+    weekday: number;
+  }>;
+};
+
+export type IImportSubjectsMutationVariables = Exact<{ [key: string]: never }>;
+
+export type IImportSubjectsMutation = {
+  importSubjects: Array<{
+    _id?: string | null;
+    areaKey: string;
+    createdAt?: any | null;
+    deletedAt?: any | null;
+    isDeleted: boolean;
+    largeName: string;
+    schoolarLevel: string;
+    shortName: string;
+    subjectType: number;
+    updatedAt?: any | null;
+  }>;
+};
+
+export type IImportTeachersMutationVariables = Exact<{ [key: string]: never }>;
+
+export type IImportTeachersMutation = {
+  importTeachers: Array<{
+    _id?: string | null;
+    createdAt?: any | null;
+    deletedAt?: any | null;
+    department: string;
+    email: string;
+    firstName: string;
+    gender: string;
+    isDeleted: boolean;
+    lastName: string;
+    middleName?: string | null;
+    password: string;
+    photo?: string | null;
+    rfc: string;
+    roles: Array<IRoles>;
+    updatedAt?: any | null;
+  }>;
+};
+
 export type ICreatePeriodMutationVariables = Exact<{
   data: IUpsertPeriodInput;
 }>;
@@ -2756,6 +2842,50 @@ export type IGetSchedulesFormattedQuery = {
     teacherRfc: string;
     weekday: number;
   }>;
+};
+
+export type IGetUniqueOptionsCareerQueryVariables = Exact<{ [key: string]: never }>;
+
+export type IGetUniqueOptionsCareerQuery = {
+  getUniqueOptionsCareer: {
+    semesters: Array<string>;
+    careers: Array<{ label: string; value: string }>;
+  };
+};
+
+export type IGetAttendanceStatisticsQueryVariables = Exact<{
+  career?: InputMaybe<Scalars['ID']['input']>;
+  department?: InputMaybe<Scalars['ID']['input']>;
+  period?: InputMaybe<Scalars['ID']['input']>;
+  semester?: InputMaybe<Scalars['String']['input']>;
+  teacher?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+export type IGetAttendanceStatisticsQuery = {
+  getAttendanceStatistics: {
+    classAbsentDay: number;
+    classAbsentMonth: number;
+    classAbsentPeriod: number;
+    classAbsentSemester: number;
+    classAbsentYear: number;
+    classJustifyDay: number;
+    classJustifyMonth: number;
+    classJustifyPeriod: number;
+    classJustifySemester: number;
+    classJustifyYear: number;
+    classPresentDay: number;
+    classPresentMonth: number;
+    classPresentPeriod: number;
+    classPresentSemester: number;
+    classPresentYear: number;
+    weekday1: number;
+    weekday2: number;
+    weekday3: number;
+    weekday4: number;
+    weekday5: number;
+    weekday6: number;
+    weekday7: number;
+  };
 };
 
 export type ICreateSubjectMutationVariables = Exact<{
@@ -3015,117 +3145,6 @@ export type IUserAddedSubscription = {
   };
 };
 
-export const GetUniqueOptionsCareerDocument = /*#__PURE__*/ `
-    query GetUniqueOptionsCareer {
-  getUniqueOptionsCareer {
-    careers {
-      label
-      value
-    }
-    semesters
-  }
-}
-    `;
-export const useGetUniqueOptionsCareerQuery = <
-  TData = IGetUniqueOptionsCareerQuery,
-  TError = unknown
->(
-  client: GraphQLClient,
-  variables?: IGetUniqueOptionsCareerQueryVariables,
-  options?: UseQueryOptions<IGetUniqueOptionsCareerQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetUniqueOptionsCareerQuery, TError, TData>(
-    variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables],
-    fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(
-      client,
-      GetUniqueOptionsCareerDocument,
-      variables,
-      headers
-    ),
-    options
-  );
-
-useGetUniqueOptionsCareerQuery.getKey = (variables?: IGetUniqueOptionsCareerQueryVariables) =>
-  variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables];
-useGetUniqueOptionsCareerQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetUniqueOptionsCareerQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(
-    client,
-    GetUniqueOptionsCareerDocument,
-    variables,
-    headers
-  );
-export const GetAttendanceStatisticsDocument = /*#__PURE__*/ `
-    query GetAttendanceStatistics($career: ID, $department: ID, $period: ID, $semester: String, $teacher: ID) {
-  getAttendanceStatistics(
-    career: $career
-    department: $department
-    period: $period
-    semester: $semester
-    teacher: $teacher
-  ) {
-    classAbsentDay
-    classAbsentMonth
-    classAbsentPeriod
-    classAbsentSemester
-    classAbsentYear
-    classJustifyDay
-    classJustifyMonth
-    classJustifyPeriod
-    classJustifySemester
-    classJustifyYear
-    classPresentDay
-    classPresentMonth
-    classPresentPeriod
-    classPresentSemester
-    classPresentYear
-    weekday1
-    weekday2
-    weekday3
-    weekday4
-    weekday5
-    weekday6
-    weekday7
-  }
-}
-    `;
-export const useGetAttendanceStatisticsQuery = <
-  TData = IGetAttendanceStatisticsQuery,
-  TError = unknown
->(
-  client: GraphQLClient,
-  variables?: IGetAttendanceStatisticsQueryVariables,
-  options?: UseQueryOptions<IGetAttendanceStatisticsQuery, TError, TData>,
-  headers?: RequestInit['headers']
-) =>
-  useQuery<IGetAttendanceStatisticsQuery, TError, TData>(
-    variables === undefined ? ['GetAttendanceStatistics'] : ['GetAttendanceStatistics', variables],
-    fetcher<IGetAttendanceStatisticsQuery, IGetAttendanceStatisticsQueryVariables>(
-      client,
-      GetAttendanceStatisticsDocument,
-      variables,
-      headers
-    ),
-    options
-  );
-
-useGetAttendanceStatisticsQuery.getKey = (variables?: IGetAttendanceStatisticsQueryVariables) =>
-  variables === undefined ? ['GetAttendanceStatistics'] : ['GetAttendanceStatistics', variables];
-useGetAttendanceStatisticsQuery.fetcher = (
-  client: GraphQLClient,
-  variables?: IGetAttendanceStatisticsQueryVariables,
-  headers?: RequestInit['headers']
-) =>
-  fetcher<IGetAttendanceStatisticsQuery, IGetAttendanceStatisticsQueryVariables>(
-    client,
-    GetAttendanceStatisticsDocument,
-    variables,
-    headers
-  );
 export const GetAllAttendancesDocument = /*#__PURE__*/ `
     query GetAllAttendances($filter: AttendanceArgs, $limit: Int, $offset: Int, $page: Int) {
   getAllAttendances(filter: $filter, limit: $limit, offset: $offset, page: $page) {
@@ -3534,6 +3553,57 @@ useUpdateBuildingMutation.fetcher = (
     variables,
     headers
   );
+export const UploadBuildingPictureDocument = /*#__PURE__*/ `
+    mutation UploadBuildingPicture($data: UploadPictureBuildingInput!) {
+  uploadBuildingPicture(data: $data) {
+    _id
+    createdAt
+    deletedAt
+    isDeleted
+    letter
+    name
+    picturePath
+    updatedAt
+  }
+}
+    `;
+export const useUploadBuildingPictureMutation = <TError = unknown, TContext = unknown>(
+  client: GraphQLClient,
+  options?: UseMutationOptions<
+    IUploadBuildingPictureMutation,
+    TError,
+    IUploadBuildingPictureMutationVariables,
+    TContext
+  >,
+  headers?: RequestInit['headers']
+) =>
+  useMutation<
+    IUploadBuildingPictureMutation,
+    TError,
+    IUploadBuildingPictureMutationVariables,
+    TContext
+  >(
+    ['UploadBuildingPicture'],
+    (variables?: IUploadBuildingPictureMutationVariables) =>
+      fetcher<IUploadBuildingPictureMutation, IUploadBuildingPictureMutationVariables>(
+        client,
+        UploadBuildingPictureDocument,
+        variables,
+        headers
+      )(),
+    options
+  );
+useUploadBuildingPictureMutation.fetcher = (
+  client: GraphQLClient,
+  variables: IUploadBuildingPictureMutationVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IUploadBuildingPictureMutation, IUploadBuildingPictureMutationVariables>(
+    client,
+    UploadBuildingPictureDocument,
+    variables,
+    headers
+  );
 export const DeleteBuildingDocument = /*#__PURE__*/ `
     mutation DeleteBuilding($data: BuildingIdArgs!) {
   deleteBuilding(data: $data) {
@@ -3584,6 +3654,7 @@ export const GetAllBuildingsDocument = /*#__PURE__*/ `
       letter
       name
       updatedAt
+      picturePath
     }
     hasNextPage
     hasPrevPage
@@ -3638,6 +3709,7 @@ export const GetBuildingByIdDocument = /*#__PURE__*/ `
     letter
     name
     updatedAt
+    picturePath
   }
 }
     `;
@@ -4005,6 +4077,57 @@ useUpdateClassroomMutation.fetcher = (
     variables,
     headers
   );
+export const UploadClassroomPictureDocument = /*#__PURE__*/ `
+    mutation UploadClassroomPicture($data: UploadPictureClassroomInput!) {
+  uploadClassroomPicture(data: $data) {
+    _id
+    building
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    picturePath
+    updatedAt
+  }
+}
+    `;
+export const useUploadClassroomPictureMutation = <TError = unknown, TContext = unknown>(
+  client: GraphQLClient,
+  options?: UseMutationOptions<
+    IUploadClassroomPictureMutation,
+    TError,
+    IUploadClassroomPictureMutationVariables,
+    TContext
+  >,
+  headers?: RequestInit['headers']
+) =>
+  useMutation<
+    IUploadClassroomPictureMutation,
+    TError,
+    IUploadClassroomPictureMutationVariables,
+    TContext
+  >(
+    ['UploadClassroomPicture'],
+    (variables?: IUploadClassroomPictureMutationVariables) =>
+      fetcher<IUploadClassroomPictureMutation, IUploadClassroomPictureMutationVariables>(
+        client,
+        UploadClassroomPictureDocument,
+        variables,
+        headers
+      )(),
+    options
+  );
+useUploadClassroomPictureMutation.fetcher = (
+  client: GraphQLClient,
+  variables: IUploadClassroomPictureMutationVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IUploadClassroomPictureMutation, IUploadClassroomPictureMutationVariables>(
+    client,
+    UploadClassroomPictureDocument,
+    variables,
+    headers
+  );
 export const DeleteClassroomDocument = /*#__PURE__*/ `
     mutation DeleteClassroom($data: ClassroomIdArgs!) {
   deleteClassroom(data: $data) {
@@ -4055,6 +4178,7 @@ export const GetAllClassroomsDocument = /*#__PURE__*/ `
       identifier
       isDeleted
       updatedAt
+      picturePath
     }
     hasNextPage
     hasPrevPage
@@ -4109,6 +4233,7 @@ export const GetClassroomByIdDocument = /*#__PURE__*/ `
     identifier
     isDeleted
     updatedAt
+    picturePath
   }
 }
     `;
@@ -5261,6 +5386,253 @@ useGetGroupByIdQuery.fetcher = (
     variables,
     headers
   );
+export const ImportGroupsDocument = /*#__PURE__*/ `
+    mutation ImportGroups {
+  importGroups {
+    _id
+    career
+    createdAt
+    deletedAt
+    identifier
+    isDeleted
+    period
+    semester
+    updatedAt
+  }
+}
+    `;
+export const useImportGroupsMutation = <TError = unknown, TContext = unknown>(
+  client: GraphQLClient,
+  options?: UseMutationOptions<
+    IImportGroupsMutation,
+    TError,
+    IImportGroupsMutationVariables,
+    TContext
+  >,
+  headers?: RequestInit['headers']
+) =>
+  useMutation<IImportGroupsMutation, TError, IImportGroupsMutationVariables, TContext>(
+    ['ImportGroups'],
+    (variables?: IImportGroupsMutationVariables) =>
+      fetcher<IImportGroupsMutation, IImportGroupsMutationVariables>(
+        client,
+        ImportGroupsDocument,
+        variables,
+        headers
+      )(),
+    options
+  );
+useImportGroupsMutation.fetcher = (
+  client: GraphQLClient,
+  variables?: IImportGroupsMutationVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IImportGroupsMutation, IImportGroupsMutationVariables>(
+    client,
+    ImportGroupsDocument,
+    variables,
+    headers
+  );
+export const ImportPeriodsDocument = /*#__PURE__*/ `
+    mutation ImportPeriods {
+  importPeriods {
+    _id
+    createdAt
+    deletedAt
+    finalDate
+    isDeleted
+    largeIdentifier
+    name
+    shortIdentifier
+    startDate
+    updatedAt
+  }
+}
+    `;
+export const useImportPeriodsMutation = <TError = unknown, TContext = unknown>(
+  client: GraphQLClient,
+  options?: UseMutationOptions<
+    IImportPeriodsMutation,
+    TError,
+    IImportPeriodsMutationVariables,
+    TContext
+  >,
+  headers?: RequestInit['headers']
+) =>
+  useMutation<IImportPeriodsMutation, TError, IImportPeriodsMutationVariables, TContext>(
+    ['ImportPeriods'],
+    (variables?: IImportPeriodsMutationVariables) =>
+      fetcher<IImportPeriodsMutation, IImportPeriodsMutationVariables>(
+        client,
+        ImportPeriodsDocument,
+        variables,
+        headers
+      )(),
+    options
+  );
+useImportPeriodsMutation.fetcher = (
+  client: GraphQLClient,
+  variables?: IImportPeriodsMutationVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IImportPeriodsMutation, IImportPeriodsMutationVariables>(
+    client,
+    ImportPeriodsDocument,
+    variables,
+    headers
+  );
+export const ImportSchedulesDocument = /*#__PURE__*/ `
+    mutation ImportSchedules {
+  importSchedules {
+    _id
+    classGroup
+    classroom
+    createdAt
+    deletedAt
+    finalTime
+    isDeleted
+    period
+    startTime
+    subject
+    teacher
+    updatedAt
+    weekday
+  }
+}
+    `;
+export const useImportSchedulesMutation = <TError = unknown, TContext = unknown>(
+  client: GraphQLClient,
+  options?: UseMutationOptions<
+    IImportSchedulesMutation,
+    TError,
+    IImportSchedulesMutationVariables,
+    TContext
+  >,
+  headers?: RequestInit['headers']
+) =>
+  useMutation<IImportSchedulesMutation, TError, IImportSchedulesMutationVariables, TContext>(
+    ['ImportSchedules'],
+    (variables?: IImportSchedulesMutationVariables) =>
+      fetcher<IImportSchedulesMutation, IImportSchedulesMutationVariables>(
+        client,
+        ImportSchedulesDocument,
+        variables,
+        headers
+      )(),
+    options
+  );
+useImportSchedulesMutation.fetcher = (
+  client: GraphQLClient,
+  variables?: IImportSchedulesMutationVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IImportSchedulesMutation, IImportSchedulesMutationVariables>(
+    client,
+    ImportSchedulesDocument,
+    variables,
+    headers
+  );
+export const ImportSubjectsDocument = /*#__PURE__*/ `
+    mutation ImportSubjects {
+  importSubjects {
+    _id
+    areaKey
+    createdAt
+    deletedAt
+    isDeleted
+    largeName
+    schoolarLevel
+    shortName
+    subjectType
+    updatedAt
+  }
+}
+    `;
+export const useImportSubjectsMutation = <TError = unknown, TContext = unknown>(
+  client: GraphQLClient,
+  options?: UseMutationOptions<
+    IImportSubjectsMutation,
+    TError,
+    IImportSubjectsMutationVariables,
+    TContext
+  >,
+  headers?: RequestInit['headers']
+) =>
+  useMutation<IImportSubjectsMutation, TError, IImportSubjectsMutationVariables, TContext>(
+    ['ImportSubjects'],
+    (variables?: IImportSubjectsMutationVariables) =>
+      fetcher<IImportSubjectsMutation, IImportSubjectsMutationVariables>(
+        client,
+        ImportSubjectsDocument,
+        variables,
+        headers
+      )(),
+    options
+  );
+useImportSubjectsMutation.fetcher = (
+  client: GraphQLClient,
+  variables?: IImportSubjectsMutationVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IImportSubjectsMutation, IImportSubjectsMutationVariables>(
+    client,
+    ImportSubjectsDocument,
+    variables,
+    headers
+  );
+export const ImportTeachersDocument = /*#__PURE__*/ `
+    mutation ImportTeachers {
+  importTeachers {
+    _id
+    createdAt
+    deletedAt
+    department
+    email
+    firstName
+    gender
+    isDeleted
+    lastName
+    middleName
+    password
+    photo
+    rfc
+    roles
+    updatedAt
+  }
+}
+    `;
+export const useImportTeachersMutation = <TError = unknown, TContext = unknown>(
+  client: GraphQLClient,
+  options?: UseMutationOptions<
+    IImportTeachersMutation,
+    TError,
+    IImportTeachersMutationVariables,
+    TContext
+  >,
+  headers?: RequestInit['headers']
+) =>
+  useMutation<IImportTeachersMutation, TError, IImportTeachersMutationVariables, TContext>(
+    ['ImportTeachers'],
+    (variables?: IImportTeachersMutationVariables) =>
+      fetcher<IImportTeachersMutation, IImportTeachersMutationVariables>(
+        client,
+        ImportTeachersDocument,
+        variables,
+        headers
+      )(),
+    options
+  );
+useImportTeachersMutation.fetcher = (
+  client: GraphQLClient,
+  variables?: IImportTeachersMutationVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IImportTeachersMutation, IImportTeachersMutationVariables>(
+    client,
+    ImportTeachersDocument,
+    variables,
+    headers
+  );
 export const CreatePeriodDocument = /*#__PURE__*/ `
     mutation CreatePeriod($data: UpsertPeriodInput!) {
   createPeriod(data: $data) {
@@ -5797,6 +6169,117 @@ useGetSchedulesFormattedQuery.fetcher = (
   fetcher<IGetSchedulesFormattedQuery, IGetSchedulesFormattedQueryVariables>(
     client,
     GetSchedulesFormattedDocument,
+    variables,
+    headers
+  );
+export const GetUniqueOptionsCareerDocument = /*#__PURE__*/ `
+    query GetUniqueOptionsCareer {
+  getUniqueOptionsCareer {
+    careers {
+      label
+      value
+    }
+    semesters
+  }
+}
+    `;
+export const useGetUniqueOptionsCareerQuery = <
+  TData = IGetUniqueOptionsCareerQuery,
+  TError = unknown
+>(
+  client: GraphQLClient,
+  variables?: IGetUniqueOptionsCareerQueryVariables,
+  options?: UseQueryOptions<IGetUniqueOptionsCareerQuery, TError, TData>,
+  headers?: RequestInit['headers']
+) =>
+  useQuery<IGetUniqueOptionsCareerQuery, TError, TData>(
+    variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables],
+    fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(
+      client,
+      GetUniqueOptionsCareerDocument,
+      variables,
+      headers
+    ),
+    options
+  );
+
+useGetUniqueOptionsCareerQuery.getKey = (variables?: IGetUniqueOptionsCareerQueryVariables) =>
+  variables === undefined ? ['GetUniqueOptionsCareer'] : ['GetUniqueOptionsCareer', variables];
+useGetUniqueOptionsCareerQuery.fetcher = (
+  client: GraphQLClient,
+  variables?: IGetUniqueOptionsCareerQueryVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IGetUniqueOptionsCareerQuery, IGetUniqueOptionsCareerQueryVariables>(
+    client,
+    GetUniqueOptionsCareerDocument,
+    variables,
+    headers
+  );
+export const GetAttendanceStatisticsDocument = /*#__PURE__*/ `
+    query GetAttendanceStatistics($career: ID, $department: ID, $period: ID, $semester: String, $teacher: ID) {
+  getAttendanceStatistics(
+    career: $career
+    department: $department
+    period: $period
+    semester: $semester
+    teacher: $teacher
+  ) {
+    classAbsentDay
+    classAbsentMonth
+    classAbsentPeriod
+    classAbsentSemester
+    classAbsentYear
+    classJustifyDay
+    classJustifyMonth
+    classJustifyPeriod
+    classJustifySemester
+    classJustifyYear
+    classPresentDay
+    classPresentMonth
+    classPresentPeriod
+    classPresentSemester
+    classPresentYear
+    weekday1
+    weekday2
+    weekday3
+    weekday4
+    weekday5
+    weekday6
+    weekday7
+  }
+}
+    `;
+export const useGetAttendanceStatisticsQuery = <
+  TData = IGetAttendanceStatisticsQuery,
+  TError = unknown
+>(
+  client: GraphQLClient,
+  variables?: IGetAttendanceStatisticsQueryVariables,
+  options?: UseQueryOptions<IGetAttendanceStatisticsQuery, TError, TData>,
+  headers?: RequestInit['headers']
+) =>
+  useQuery<IGetAttendanceStatisticsQuery, TError, TData>(
+    variables === undefined ? ['GetAttendanceStatistics'] : ['GetAttendanceStatistics', variables],
+    fetcher<IGetAttendanceStatisticsQuery, IGetAttendanceStatisticsQueryVariables>(
+      client,
+      GetAttendanceStatisticsDocument,
+      variables,
+      headers
+    ),
+    options
+  );
+
+useGetAttendanceStatisticsQuery.getKey = (variables?: IGetAttendanceStatisticsQueryVariables) =>
+  variables === undefined ? ['GetAttendanceStatistics'] : ['GetAttendanceStatistics', variables];
+useGetAttendanceStatisticsQuery.fetcher = (
+  client: GraphQLClient,
+  variables?: IGetAttendanceStatisticsQueryVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IGetAttendanceStatisticsQuery, IGetAttendanceStatisticsQueryVariables>(
+    client,
+    GetAttendanceStatisticsDocument,
     variables,
     headers
   );

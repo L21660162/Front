@@ -1,27 +1,27 @@
-import React, { PropsWithChildren, useRef } from 'react';
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { classNames } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
-import { Toast } from 'primereact/toast';
+import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import { RadioButton } from 'primereact/radiobutton';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
+import React, { PropsWithChildren, useRef } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { IApiError } from '../../../../../types/apierror';
-import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 import {
-  IUser,
-  useUpsertUserMutation,
-  IRoles,
-  useGetAllDepartmentsQuery,
   IDepartment,
+  IRoles,
+  IUser,
+  useGetAllDepartmentsQuery,
+  useUpsertUserMutation,
 } from '../../../../graphql/graphql';
-import { DialogStore } from '../../../../store/global/types';
 import { useAccessTokenData } from '../../../../store/auth/store';
 import { TokenData } from '../../../../store/auth/type';
+import { DialogStore } from '../../../../store/global/types';
+import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
 type AddUserDialogFormProps = {
   headerTitle: string;
@@ -303,7 +303,7 @@ export default function AddUserDialogForm({
               }}
               render={({ field, fieldState }) => (
                 <div>
-                  <label htmlFor={field.name}>{t('global.dictionary.gener')}</label>
+                  <label htmlFor={field.name}>{t('global.dictionary.gender')}</label>
                   <br />
                   <div className="flex gap-3">
                     <div className="flex align-items-center gap-2">

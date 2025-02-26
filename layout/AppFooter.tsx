@@ -1,7 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useContext } from 'react';
-import { LayoutContext } from './context/layoutcontext';
-import { useGlobalAppStore } from '../src/store/global/globalAppStore';
 import logo from './images/logo-sepret.png';
 
 const AppFooter = () => {

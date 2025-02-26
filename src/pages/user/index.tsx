@@ -1,6 +1,5 @@
-import React from 'react';
-import PageHeadingUser from '../../components/ui/user/userHeding';
 import UserCrud from '../../components/ui/user/userCrud';
+import PageHeadingUser from '../../components/ui/user/userHeding';
 
 function UserDashboard() {
   return (

@@ -1,8 +1,7 @@
-import React from 'react';
 import { Button } from 'primereact/button';
 import { useTranslation } from 'react-i18next';
 import { dialogStore } from '../../../store/global/dialogStore';
-import AddScheduleDialogForm from '../../forms/Schedule/dashboard/addSchedule';
+import AddScheduleDialogForm from '../../forms/schedule/dashboard/addSchedule';
 
 export default function PageHeading() {
   const { t } = useTranslation('common');
