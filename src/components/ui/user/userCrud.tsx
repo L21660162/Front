@@ -21,6 +21,7 @@ import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
 import { GRAPHQL_CLIENT } from '../../../utils/graphqlClient';
 import UserDialogFormEdit from '../../forms/user/dashboard/editUser';
+import UserDialogFormPicture from '../../forms/user/dashboard/pictureUser';
 
 function UserCrud() {
   const emptyUser: IUser = {
@@ -82,7 +83,7 @@ function UserCrud() {
   const dt = useRef<DataTable<any>>(null);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [visibleEditUser, setVisibleEditUser] = useState(false);
-  const [selectedRole, setSelectedRole] = useState(null);
+  const [visiblePictureUser, setVisiblePictureUser] = useState(false);
 
   const { data } = useGetAllUsersQuery<IGetAllUsersQuery>(GRAPHQL_CLIENT, {
     limit: 99999,
@@ -230,6 +231,18 @@ function UserCrud() {
     return (
       <div className="flex align-items-center">
         <Button
+          icon="pi pi-camera"
+          className="mb-2"
+          rounded
+          outlined
+          severity="success"
+          onClick={() => {
+            setSelectedUser(rowData);
+            setVisiblePictureUser(true);
+          }}
+          style={{ marginRight: '10px' }}
+        />
+        <Button
           icon="pi pi-pencil"
           className="mb-2"
           rounded
@@ -300,6 +313,15 @@ function UserCrud() {
               visible={visibleEditUser}
               setVisible={setVisibleEditUser}
               id={selectedUser._id}
+            />
+          )}
+
+          {selectedUser && visiblePictureUser && (
+            <UserDialogFormPicture
+              headerTitle={t('module.user.dashboard.dialog.picture.header')}
+              visible={visiblePictureUser}
+              setVisible={setVisiblePictureUser}
+              user={selectedUser}
             />
           )}
 

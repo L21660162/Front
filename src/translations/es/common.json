@@ -351,7 +351,8 @@
       "error": {
         "summary": "Error",
         "detail": {
-          "profileEditError": "Hubo un error al actualizar tu perfil. Por favor, intenta de nuevo."
+          "profileEditError": "Hubo un error al actualizar tu perfil. Por favor, intenta de nuevo.",
+          "profilePictureError": "Hubo un error al subir la foto de perfil. Por favor, intenta de nuevo."
         }
       },
       "success": {
@@ -359,8 +360,10 @@
         "detail": {
           "signUpSuccess": "Tu cuenta ha sido creada con éxito. \nRedireccionando al inicio de sesión...",
           "profileEditSuccess": "Tu perfil ha sido actualizado con éxito.",
+          "userPictureSuccess": "Foto del Docente subida exitosamente",
           "ClassroomCreateSuccess": "Aula creada exitosamente",
           "ClassroomEditSuccess": "Aula actualizada exitosamente",
+          "classroomPictureSuccess": "Foto del Aula subida exitosamente",
           "groupCreateSuccess": "Grupo creado exitosamente",
           "GroupEditSuccess": "Grupo actualizado exitosamente",
           "buildingDeleteSuccess": "Edificio eliminado exitosamente",
@@ -525,6 +528,9 @@
         "dialog": {
           "add": {
             "header": "Agregar Nuevo Usuario"
+          },
+          "picture": {
+            "header": "Subir Foto de Usuario"
           },
           "edit": {
             "header": "Editar Usuario"

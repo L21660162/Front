@@ -4,41 +4,45 @@ import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { IApiError } from '../../../../../types/apierror';
 import {
-  IClassroom,
-  IUploadPictureClassroomInput,
-  useUploadClassroomPictureMutation,
+  IBuilding,
+  IGetUserByIdQuery,
+  IUpdateUserInput,
+  IUploadPictureBuildingInput,
+  IUser,
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+  useUploadBuildingPictureMutation,
 } from '../../../../graphql/graphql';
 import { useAccessTokenData } from '../../../../store/auth/store';
 import { TokenData } from '../../../../store/auth/type';
 import { DialogStore } from '../../../../store/global/types';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
 
-type ClassroomFormProps = {
+type UserFormProps = {
   headerTitle: string;
-  classroom: IClassroom;
+  user: IUser;
 };
 
-type ClassroomFormPropsAndDialogStore = ClassroomFormProps & DialogStore;
+type UserFormPropsAndDialogStore = UserFormProps & DialogStore;
 
-export default function PictureClassroomDialogForm({
+export default function PicturebuildingDialogForm({
   headerTitle,
   visible,
   setVisible,
-  classroom,
-}: PropsWithChildren<ClassroomFormPropsAndDialogStore>) {
+  user,
+}: PropsWithChildren<UserFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/classroom' });
+  const navigate = useNavigate({ from: '/user/dashboard' });
   const toast = useRef<Toast>(null);
-  const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const [initialImageUrl, setInitialImageUrl] = useState<string | null>(null);
   const [logo, setLogo] = useState<string | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const { _id: userId, roles } = useAccessTokenData() as TokenData;
 
   const convertUrlToImageFile = async (url: string): Promise<File | null> => {
     try {
@@ -57,49 +61,57 @@ export default function PictureClassroomDialogForm({
     }
   };
 
-  const { mutate } = useUploadClassroomPictureMutation<IApiError>(GRAPHQL_CLIENT, {
+  const { mutate } = useUpdateUserMutation<IApiError>(GRAPHQL_CLIENT, {
     onSuccess: () => {
       toast.current?.show({
         severity: 'success',
         summary: t('global.toast.success.summary'),
-        detail: t('global.toast.success.detail.classroomPictureSuccess'),
+        detail: t('global.toast.success.detail.userPictureSuccess'),
       });
 
       setTimeout(() => {
-        navigate({ to: '/settings/classroom' });
+        navigate({ to: '/user/dashboard' });
         window.location.reload();
       }, 200);
-      setIsButtonDisabld(false);
+      setButtonDisabled(false);
     },
     onError: (errorResponse: IApiError) => {
       // TODO manage server error response for translation or something
       toast.current?.show({
         severity: 'error',
         summary: t('global.toast.error.summary'),
-        detail: errorResponse.response.errors[0].message,
+        detail: t('global.toast.success.detail.profilePictureError'),
         life: 5000,
       });
-
-      setIsButtonDisabld(false);
+      setButtonDisabled(false);
     },
   });
 
+  const { data: userData } = useGetUserByIdQuery<IGetUserByIdQuery>(GRAPHQL_CLIENT, {
+    id: user._id,
+  });
+
   useEffect(() => {
-    if (classroom.picturePath) {
-      const fileName = classroom.picturePath;
+    if (userData && userData.getUserById && userData.getUserById.photo) {
+      const fileName = userData.getUserById.photo;
       const newLogoUrl = `http://ssb.matehuala.tecnm.mx/asis_be${fileName}`;
 
       setLogo(newLogoUrl);
-      setInitialImageUrl(newLogoUrl);
+      setInitialImageUrl(newLogoUrl); // Establecer la URL inicial aquí
 
       convertUrlToImageFile(newLogoUrl).then((imageFile) => {
         if (imageFile) {
-          setImage(imageFile);
+          setImage(imageFile); // Asignar el archivo de imagen a la variable image
+
+          // Seleccionar el archivo obtenido para cargarlo en el FileUpload
           setSelectedFile(imageFile);
         }
       });
     }
-  }, [classroom.picturePath]);
+    if (userData && userData.getUserById && !userData.getUserById.photo) {
+      setLogo(`http://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg`);
+    }
+  }, [userData]);
 
   const {
     handleSubmit,
@@ -108,26 +120,37 @@ export default function PictureClassroomDialogForm({
     reset,
     watch,
     setValue,
-  } = useForm<IUploadPictureClassroomInput>({
+  } = useForm<IUpdateUserInput>({
     defaultValues: {
-      _id: classroom._id || '',
-      picture: logo,
-      updatedBy: userId,
+      _id: userData?.getUserById?._id,
+      firstName: userData?.getUserById?.firstName,
+      lastName: userData?.getUserById?.lastName,
+      middleName: userData?.getUserById?.middleName,
+      rfc: userData?.getUserById?.rfc,
+      email: userData?.getUserById?.email,
+      gender: userData?.getUserById?.gender,
+      photo: logo,
     },
   });
 
   useEffect(() => {
-    if (classroom) {
-      setValue('_id', classroom._id);
-      setValue('picture', logo);
-      setValue('updatedBy', userId);
+    if (userData?.getUserById) {
+      setValue('_id', userData.getUserById._id);
+      setValue('firstName', userData.getUserById.firstName);
+      setValue('lastName', userData.getUserById.lastName);
+      setValue('middleName', userData.getUserById.middleName);
+      setValue('rfc', userData.getUserById.rfc);
+      setValue('email', userData.getUserById.email);
+      setValue('gender', userData.getUserById.gender);
+      setValue('photo', logo);
     }
-  }, [classroom, setValue]);
+  }, [userData, setValue]);
 
-  const onSubmit = (data: IUploadPictureClassroomInput) => {
-    setIsButtonDisabld(true);
-    data.picture = image;
+  const onSubmit: SubmitHandler<IUpdateUserInput> = (data: IUpdateUserInput) => {
+    setButtonDisabled(true);
+    data.photo = image;
     mutate({ data });
+    reset();
   };
 
   const footerContent = (
@@ -141,7 +164,6 @@ export default function PictureClassroomDialogForm({
           reset();
         }}
       />
-
       <Button
         type="submit"
         label={t('global.forms.upload') as string}
@@ -149,14 +171,14 @@ export default function PictureClassroomDialogForm({
         icon="pi pi-camera"
         onClick={handleSubmit(onSubmit)}
         outlined
-        disabled={isButtonDisablesed}
+        disabled={buttonDisabled}
       />
     </div>
   );
 
   return (
     <Dialog
-      header={headerTitle}
+      header={t('module.user.dashboard.dialog.edit.header')}
       visible={visible}
       style={{ width: '35rem' }}
       onHide={() => {
@@ -169,7 +191,7 @@ export default function PictureClassroomDialogForm({
       <form className="p-fluid">
         <div className="label">
           <label htmlFor="contact">
-            <b>Información del Aula</b>
+            <b>Información del Usuario</b>
             <br />
           </label>
           <hr />
@@ -216,7 +238,7 @@ export default function PictureClassroomDialogForm({
                 }}
               />
             </span>
-            {errors.picture && <small className="p-error">{errors.picture?.message}</small>}
+            {errors.photo && <small className="p-error">{errors.photo?.message}</small>}
           </div>
         </div>
       </form>
