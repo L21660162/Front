@@ -58,7 +58,7 @@ function EventCrud() {
       toast.current?.show({
         severity: 'success',
         summary: t('global.toast.success.summary'),
-        detail: t('global.toast.success.detail.careerDeleteSuccess'),
+        detail: t('global.toast.success.detail.eventDeleteSuccess'),
       });
 
       setTimeout(() => {

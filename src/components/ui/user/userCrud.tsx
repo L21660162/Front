@@ -422,7 +422,7 @@ function UserCrud() {
             />
             <Column
               field="edita"
-              header={t('global.dictionary.edita')}
+              header="Subir Foto / Editar / Borrar"
               body={actionBodyTemplate}
               headerStyle={{
                 minWidth: '10rem',

@@ -39,7 +39,7 @@ export default function EditEventDialogForm({
   event,
 }: PropsWithChildren<EventFormPropsAndDialogStore>) {
   const { t } = useTranslation('common');
-  const navigate = useNavigate({ from: '/settings/event' });
+  const navigate = useNavigate({ from: '/event/dashboard' });
   const toast = useRef<Toast>(null);
   const { _id } = useAccessTokenData() as TokenData;
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
@@ -91,11 +91,11 @@ export default function EditEventDialogForm({
       toast.current?.show({
         severity: 'success',
         summary: t('global.toast.success.summary'),
-        detail: t('global.toast.success.detail.careerEditSuccess'),
+        detail: t('global.toast.success.detail.eventEditSuccess'),
       });
 
       setTimeout(() => {
-        navigate({ to: '/settings/event' });
+        navigate({ to: '/event/dashboard' });
         window.location.reload();
       }, 200);
       setIsButtonDisabld(false);

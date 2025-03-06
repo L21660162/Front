@@ -364,6 +364,8 @@
           "ClassroomCreateSuccess": "Aula creada exitosamente",
           "ClassroomEditSuccess": "Aula actualizada exitosamente",
           "classroomPictureSuccess": "Foto del Aula subida exitosamente",
+          "eventCreateSuccess": "Evento creado exitosamente. \nJustificando asistencias en el periodo de tiempo marcado...",
+          "eventDeleteSuccess": "Evento eliminado exitosamente",
           "groupCreateSuccess": "Grupo creado exitosamente",
           "GroupEditSuccess": "Grupo actualizado exitosamente",
           "buildingDeleteSuccess": "Edificio eliminado exitosamente",
