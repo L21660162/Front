@@ -1,7 +1,7 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: 'http://ssb.matehuala.tecnm.mx/asis_be/graphql',
+  schema: 'https://ssb.matehuala.tecnm.mx/asis_be/graphql',
   documents: './src/graphql/**/!(*.generated).{graphql,gql,ts}',
   require: ['ts-node/register'],
   ignoreNoDocuments: true,

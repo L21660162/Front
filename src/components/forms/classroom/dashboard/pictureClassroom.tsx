@@ -87,7 +87,7 @@ export default function PictureClassroomDialogForm({
   useEffect(() => {
     if (classroom.picturePath) {
       const fileName = classroom.picturePath;
-      const newLogoUrl = `http://ssb.matehuala.tecnm.mx/asis_be${fileName}`;
+      const newLogoUrl = `https://ssb.matehuala.tecnm.mx/asis_be${fileName}`;
 
       setLogo(newLogoUrl);
       setInitialImageUrl(newLogoUrl);
@@ -192,7 +192,7 @@ export default function PictureClassroomDialogForm({
               )}
               <FileUpload
                 name="image"
-                url="http://ssb.matehuala.tecnm.mx/asis_be/graphql"
+                url="https://ssb.matehuala.tecnm.mx/asis_be/graphql"
                 mode="basic"
                 accept="image/*"
                 className="flex align-items-center justify-content-center"

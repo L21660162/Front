@@ -163,7 +163,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
       StudentServiceStatusData.getUserById.photo
     ) {
       setProfileImage(
-        `http://ssb.matehuala.tecnm.mx/asis_be${StudentServiceStatusData.getUserById.photo}`
+        `https://ssb.matehuala.tecnm.mx/asis_be${StudentServiceStatusData.getUserById.photo}`
       );
     }
     if (
@@ -171,7 +171,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
       StudentServiceStatusData.getUserById &&
       !StudentServiceStatusData.getUserById.photo
     ) {
-      setProfileImage(`http://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg`);
+      setProfileImage(`https://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg`);
     }
   }, [StudentServiceStatusData]);
 
@@ -256,7 +256,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
           aria-controls="popup_menu_right"
           aria-haspopup
         >
-          <Avatar image={profileImage} shape="circle" size="large" />
+          <Avatar image={profileImage || undefined} shape="circle" size="large" />
         </button>
         <Menu model={items} popup ref={menuRight} id="popup_menu_right" popupAlignment="right" />
       </div>

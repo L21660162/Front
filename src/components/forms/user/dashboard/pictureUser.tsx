@@ -94,7 +94,7 @@ export default function PicturebuildingDialogForm({
   useEffect(() => {
     if (userData && userData.getUserById && userData.getUserById.photo) {
       const fileName = userData.getUserById.photo;
-      const newLogoUrl = `http://ssb.matehuala.tecnm.mx/asis_be${fileName}`;
+      const newLogoUrl = `https://ssb.matehuala.tecnm.mx/asis_be${fileName}`;
 
       setLogo(newLogoUrl);
       setInitialImageUrl(newLogoUrl); // Establecer la URL inicial aquí
@@ -109,7 +109,7 @@ export default function PicturebuildingDialogForm({
       });
     }
     if (userData && userData.getUserById && !userData.getUserById.photo) {
-      setLogo(`http://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg`);
+      setLogo(`https://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg`);
     }
   }, [userData]);
 
@@ -214,7 +214,7 @@ export default function PicturebuildingDialogForm({
               )}
               <FileUpload
                 name="image"
-                url="http://ssb.matehuala.tecnm.mx/asis_be/graphql"
+                url="https://ssb.matehuala.tecnm.mx/asis_be/graphql"
                 mode="basic"
                 accept="image/*"
                 className="flex align-items-center justify-content-center"

@@ -129,14 +129,18 @@ function AppMenu() {
     if (roles.includes('SUPER_ADMINISTRATOR')) {
       return true;
     } else if (roles.includes('DIRECTOR_ACADEMICO')) {
-      return ['/home/dashboard', '/event/dashboard'].includes(item.items[0].to) && !item?.seperator;
+      return item.items && item.items[0].to && ['/home/dashboard', '/event/dashboard'].includes(item.items[0].to) && !item?.seperator;
     } else if (roles.includes('SUBDIRECTOR_ACADEMICO')) {
       return (
-        ['/home/dashboard', '/event/dashboard', 'schedule/dashboard'].includes(item.items[0].to) &&
+        item.items &&
+        typeof item.items[0].to === 'string' &&
+        ['/home/dashboard', '/event/dashboard', '/schedule/dashboard'].includes(item.items[0].to) &&
         !item?.seperator
       );
     } else if (roles.includes('JEFE_ACADEMICO')) {
       return (
+        item.items &&
+        item.items[0].to &&
         [
           '/home/dashboard',
           '/event/dashboard',
@@ -146,6 +150,9 @@ function AppMenu() {
       );
     } else if (roles.includes('DOCENTE')) {
       return (
+        item.items &&
+        item.items[0].to &&
+        typeof item.items[0].to === 'string' &&
         ['/home/dashboard', '/justify/dashboard'].includes(item.items[0].to) && !item?.seperator
       );
     } else if (roles.includes('RECURSOS_HUMANOS')) {
@@ -153,7 +160,10 @@ function AppMenu() {
         item.items = item.items?.slice(1);
       }
 
-      return ['/justify/dashboard'].includes(item.items[0].to) && !item?.seperator;
+      return item.items &&
+        item.items[0].to &&
+        typeof item.items[0].to === 'string' &&
+        ['/justify/dashboard'].includes(item.items[0].to) && !item?.seperator;
     } else {
       return false;
     }
