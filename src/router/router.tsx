@@ -291,8 +291,10 @@ const routeConfig = rootRoute.addChildren([
 ]);
 
 // Create the router using your route tree
-const router = new Router({ routeTree: routeConfig });
-
+const router = new Router({ 
+  routeTree: routeConfig,
+  basepath: '/asis'
+ });
 // Register your router for maximum type safety
 declare module '@tanstack/react-router' {
   interface Register {
