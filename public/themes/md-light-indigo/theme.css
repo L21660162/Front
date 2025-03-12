@@ -4925,6 +4925,9 @@
 .p-fileupload .p-progressbar {
   height: 4px;
 }
+.p-fileupload-row {
+  height: 610px;
+}
 .p-fileupload .p-fileupload-row > div {
   padding: 1rem 1rem;
 }

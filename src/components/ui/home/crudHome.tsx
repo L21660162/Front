@@ -38,19 +38,19 @@ function DashboardAttendancePanel() {
     { label: 'Año', value: '4' },
   ];
   const [value, setValue] = useState<FilterTime>(tiempo[3]);
+  const { _id: teacherId, roles } = useAccessTokenData() as TokenData;
   const { careerOptionsData, attendanceStatistics, datosDocente } = StadisticServices(
     selectedCareer,
     selectedDepartment?._id,
     selectedSemester,
     selectedPeriod,
-    selectedTeacher?.id
+    roles.includes('DOCENTE') ? teacherId : selectedTeacher?.id
   );
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue('--text-color') || '#495057';
   const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary') || '#6c757d';
   const surfaceBorder = documentStyle.getPropertyValue('--surface-border') || '#dfe7ef';
   const toast = useRef<Toast>(null);
-  const { _id: studentSelectedId } = useAccessTokenData() as TokenData;
   const [file, setFile] = useState<IFile>();
 
   const { data: department } = useGetAllDepartmentsQuery(GRAPHQL_CLIENT, {
@@ -331,58 +331,64 @@ function DashboardAttendancePanel() {
                 optionLabel="name"
                 optionValue="_id"
               /> */}
-            <div className="flex">
-              <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Departamento: </span>
-              </div>
-              <AutoComplete
-                value={selectedDepartment}
-                onChange={(e) => setSelectedDepartment(e.value)}
-                suggestions={filteredDepartment}
-                completeMethod={searchDepartments}
-                field="name"
-                placeholder={t('global.dictionary.filterDeparment')}
-              />
-              <div className="align-content-center pl-1">
-                <Button
-                  icon="pi pi-replay"
-                  rounded
-                  outlined
-                  severity="warning"
-                  aria-label="Notification"
-                  disabled={!selectedDepartment}
-                  onClick={() => {
-                    setSelectedDepartment(null);
-                  }}
-                />
-              </div>
-            </div>
-            <div className="flex">
-              <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Docente: </span>
-              </div>
-              <AutoComplete
-                value={selectedTeacher}
-                onChange={(e) => setSelectedTeacher(e.value)}
-                suggestions={filteredTeacher}
-                completeMethod={searchTeachers}
-                field="fullname"
-                placeholder={t('global.dictionary.filterTeacher')}
-              />
-              <div className="align-content-center pl-1">
-                <Button
-                  icon="pi pi-replay"
-                  rounded
-                  outlined
-                  severity="warning"
-                  aria-label="Notification"
-                  disabled={!selectedTeacher}
-                  onClick={() => {
-                    setSelectedTeacher(null);
-                  }}
-                />
-              </div>
-            </div>
+            {(roles.includes('SUPER_ADMINISTRATOR') ||
+              roles.includes('DIRECTOR_ACADEMICO') ||
+              roles.includes('SUBDIRECTOR_ACADEMICO')) && (
+              <>
+                <div className="flex">
+                  <div className="mr-3 align-content-center">
+                    <span className="block font-semibold ">Departamento: </span>
+                  </div>
+                  <AutoComplete
+                    value={selectedDepartment}
+                    onChange={(e) => setSelectedDepartment(e.value)}
+                    suggestions={filteredDepartment}
+                    completeMethod={searchDepartments}
+                    field="name"
+                    placeholder={t('global.dictionary.filterDeparment')}
+                  />
+                  <div className="align-content-center pl-1">
+                    <Button
+                      icon="pi pi-replay"
+                      rounded
+                      outlined
+                      severity="warning"
+                      aria-label="Notification"
+                      disabled={!selectedDepartment}
+                      onClick={() => {
+                        setSelectedDepartment(null);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="mr-3 align-content-center">
+                    <span className="block font-semibold ">Docente: </span>
+                  </div>
+                  <AutoComplete
+                    value={selectedTeacher}
+                    onChange={(e) => setSelectedTeacher(e.value)}
+                    suggestions={filteredTeacher}
+                    completeMethod={searchTeachers}
+                    field="fullname"
+                    placeholder={t('global.dictionary.filterTeacher')}
+                  />
+                  <div className="align-content-center pl-1">
+                    <Button
+                      icon="pi pi-replay"
+                      rounded
+                      outlined
+                      severity="warning"
+                      aria-label="Notification"
+                      disabled={!selectedTeacher}
+                      onClick={() => {
+                        setSelectedTeacher(null);
+                      }}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
             {/* <div className="flex">
               <div className="mr-3 align-content-center">
                 <span className="block font-semibold ">Filtr de Tiempo: </span>
