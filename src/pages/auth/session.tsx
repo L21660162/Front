@@ -8,16 +8,17 @@ function Session({ children }: PropsWithOptionalChildren) {
   const accessTokenData = useAccessTokenData();
 
   if (accessTokenData) {
-    const { roles } = getAccessTokenData() as TokenData;
-    if (roles.includes('RECURSOS_HUMANOS')) {
-      return <Navigate to="justify/dashboard" />;
+    const { roles, path } = getAccessTokenData() as TokenData;
+    if(path == "/asis/") {
+      if (roles.includes('RECURSOS_HUMANOS')) {
+        return <Navigate to="justify/dashboard" />;
+      }
+      if (roles.includes('PREFECTO')) {
+        return <Navigate to="*" />;
+      }
+      return <Navigate to="/home/dashboard" />;
     }
-    if (roles.includes('PREFECTO')) {
-      return <Navigate to="*" />;
-    }
-    return <Navigate to="/home/dashboard" />;
   }
-
   return children;
 }
 

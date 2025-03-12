@@ -13,6 +13,7 @@ const roles = z
     'PREFECTO',
   ])
   .array();
+const path = z.enum(['/asis/', '/ss/']);
 
 export const TokenDataSchema = z.object({
   _id: userMongoIdSchema,
@@ -20,6 +21,7 @@ export const TokenDataSchema = z.object({
   actualPeriod: periodMongoIdSchema,
   iat: z.number(),
   exp: z.number(),
+  path
 });
 
 export type TokenData = z.infer<typeof TokenDataSchema>;
