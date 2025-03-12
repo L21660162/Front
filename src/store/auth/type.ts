@@ -21,7 +21,7 @@ export const TokenDataSchema = z.object({
   actualPeriod: periodMongoIdSchema,
   iat: z.number(),
   exp: z.number(),
-  path
+  path,
 });
 
 export type TokenData = z.infer<typeof TokenDataSchema>;

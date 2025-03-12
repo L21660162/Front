@@ -9,7 +9,7 @@ function Session({ children }: PropsWithOptionalChildren) {
 
   if (accessTokenData) {
     const { roles, path } = getAccessTokenData() as TokenData;
-    if(path == "/asis/") {
+    if (path == '/asis/') {
       if (roles.includes('RECURSOS_HUMANOS')) {
         return <Navigate to="justify/dashboard" />;
       }

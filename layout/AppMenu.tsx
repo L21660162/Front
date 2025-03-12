@@ -129,7 +129,12 @@ function AppMenu() {
     if (roles.includes('SUPER_ADMINISTRATOR')) {
       return true;
     } else if (roles.includes('DIRECTOR_ACADEMICO')) {
-      return item.items && item.items[0].to && ['/home/dashboard', '/event/dashboard'].includes(item.items[0].to) && !item?.seperator;
+      return (
+        item.items &&
+        item.items[0].to &&
+        ['/home/dashboard', '/event/dashboard'].includes(item.items[0].to) &&
+        !item?.seperator
+      );
     } else if (roles.includes('SUBDIRECTOR_ACADEMICO')) {
       return (
         item.items &&
@@ -146,24 +151,29 @@ function AppMenu() {
           '/event/dashboard',
           '/schedule/dashboard',
           '/justify/dashboard',
-        ].includes(item.items[0].to) && !item?.seperator
+        ].includes(item.items[0].to) &&
+        !item?.seperator
       );
     } else if (roles.includes('DOCENTE')) {
       return (
         item.items &&
         item.items[0].to &&
         typeof item.items[0].to === 'string' &&
-        ['/home/dashboard', '/justify/dashboard'].includes(item.items[0].to) && !item?.seperator
+        ['/home/dashboard', '/justify/dashboard'].includes(item.items[0].to) &&
+        !item?.seperator
       );
     } else if (roles.includes('RECURSOS_HUMANOS')) {
       if (item.label === 'Panel de Control') {
         item.items = item.items?.slice(1);
       }
 
-      return item.items &&
+      return (
+        item.items &&
         item.items[0].to &&
         typeof item.items[0].to === 'string' &&
-        ['/justify/dashboard'].includes(item.items[0].to) && !item?.seperator;
+        ['/justify/dashboard'].includes(item.items[0].to) &&
+        !item?.seperator
+      );
     } else {
       return false;
     }
