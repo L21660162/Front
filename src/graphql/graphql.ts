@@ -908,6 +908,7 @@ export interface IQuery {
   getPeriodById: IPeriod;
   getPeriodos: Array<IPeriodos>;
   getProfesores: Array<IProfesores>;
+  getReportStatistics: Array<IReportStatistics>;
   getScheduleById: ISchedule;
   getSchedulesByTimeRange: Array<ISchedule>;
   getSchedulesFormatted: Array<ISchedulesFormatted>;
@@ -1127,6 +1128,14 @@ export interface IQueryGetPeriodByIdArgs {
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
 }
 
+export interface IQueryGetReportStatisticsArgs {
+  career?: InputMaybe<Scalars['ID']['input']>;
+  department?: InputMaybe<Scalars['ID']['input']>;
+  period?: InputMaybe<Scalars['ID']['input']>;
+  semester?: InputMaybe<Scalars['String']['input']>;
+  teacher?: InputMaybe<Scalars['ID']['input']>;
+}
+
 export interface IQueryGetScheduleByIdArgs {
   _id?: InputMaybe<Scalars['ID']['input']>;
   updatedBy?: InputMaybe<Scalars['ID']['input']>;
@@ -1166,6 +1175,20 @@ export interface IQueryRefreshTokenArgs {
 /** Input for user refresh token or sign out */
 export interface IRefreshTokenInput {
   refreshToken: Scalars['String']['input'];
+}
+
+/** Object type for dashboard statistics */
+export interface IReportStatistics {
+  absentAmount: Scalars['Float']['output'];
+  careerName: Scalars['String']['output'];
+  groupIdentifier: Scalars['String']['output'];
+  justifiedAmount: Scalars['Float']['output'];
+  periodName: Scalars['String']['output'];
+  presentAmount: Scalars['Float']['output'];
+  semester: Scalars['String']['output'];
+  subjectLargeName: Scalars['String']['output'];
+  teacherLargeName: Scalars['String']['output'];
+  weekday: Scalars['String']['output'];
 }
 
 /** Permisos disponibles para los usuarios */
