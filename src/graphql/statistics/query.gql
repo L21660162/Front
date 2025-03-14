@@ -46,3 +46,18 @@ query GetAttendanceStatistics(
     weekday7
   }
 }
+
+query GetReportStatistics($teacher: ID, $department: ID) {
+  getReportStatistics(teacher: $teacher, department: $department) {
+    periodName
+    teacherLargeName
+    subjectLargeName
+    weekday
+    careerName
+    semester
+    groupIdentifier
+    presentAmount
+    absentAmount
+    justifiedAmount
+  }
+}

@@ -2913,6 +2913,26 @@ export type IGetAttendanceStatisticsQuery = {
   };
 };
 
+export type IGetReportStatisticsQueryVariables = Exact<{
+  teacher?: InputMaybe<Scalars['ID']['input']>;
+  department?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+export type IGetReportStatisticsQuery = {
+  getReportStatistics: Array<{
+    periodName: string;
+    teacherLargeName: string;
+    subjectLargeName: string;
+    weekday: string;
+    careerName: string;
+    semester: string;
+    groupIdentifier: string;
+    presentAmount: number;
+    absentAmount: number;
+    justifiedAmount: number;
+  }>;
+};
+
 export type ICreateSubjectMutationVariables = Exact<{
   data: IUpsertSubjectInput;
 }>;
@@ -6305,6 +6325,52 @@ useGetAttendanceStatisticsQuery.fetcher = (
   fetcher<IGetAttendanceStatisticsQuery, IGetAttendanceStatisticsQueryVariables>(
     client,
     GetAttendanceStatisticsDocument,
+    variables,
+    headers
+  );
+export const GetReportStatisticsDocument = /*#__PURE__*/ `
+    query GetReportStatistics($teacher: ID, $department: ID) {
+  getReportStatistics(teacher: $teacher, department: $department) {
+    periodName
+    teacherLargeName
+    subjectLargeName
+    weekday
+    careerName
+    semester
+    groupIdentifier
+    presentAmount
+    absentAmount
+    justifiedAmount
+  }
+}
+    `;
+export const useGetReportStatisticsQuery = <TData = IGetReportStatisticsQuery, TError = unknown>(
+  client: GraphQLClient,
+  variables?: IGetReportStatisticsQueryVariables,
+  options?: UseQueryOptions<IGetReportStatisticsQuery, TError, TData>,
+  headers?: RequestInit['headers']
+) =>
+  useQuery<IGetReportStatisticsQuery, TError, TData>(
+    variables === undefined ? ['GetReportStatistics'] : ['GetReportStatistics', variables],
+    fetcher<IGetReportStatisticsQuery, IGetReportStatisticsQueryVariables>(
+      client,
+      GetReportStatisticsDocument,
+      variables,
+      headers
+    ),
+    options
+  );
+
+useGetReportStatisticsQuery.getKey = (variables?: IGetReportStatisticsQueryVariables) =>
+  variables === undefined ? ['GetReportStatistics'] : ['GetReportStatistics', variables];
+useGetReportStatisticsQuery.fetcher = (
+  client: GraphQLClient,
+  variables?: IGetReportStatisticsQueryVariables,
+  headers?: RequestInit['headers']
+) =>
+  fetcher<IGetReportStatisticsQuery, IGetReportStatisticsQueryVariables>(
+    client,
+    GetReportStatisticsDocument,
     variables,
     headers
   );
