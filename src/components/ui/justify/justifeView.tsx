@@ -32,7 +32,7 @@ function CareerCrud() {
   const { roles, _id } = useAccessTokenData() as TokenData;
   const [aprovateDialog, setAprovateDialog] = useState(false);
   const [addCommentDialog, setAddCommentDialog] = useState(false);
-  const [selectedAttendance, setSelectedAttendance] = useState(null);
+  const [selectedAttendance, setSelectedAttendance] = useState<IAttendance | null>(null);
   const [globalFilter, setGlobalFilter] = useState('');
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<any>>(null);
@@ -69,26 +69,20 @@ function CareerCrud() {
     },
   });
 
-  //   useEffect(() => {
-  //     if (status?.getAllAttendances?.docs?.length > 0) {
-  //       setAttendanceId(status.getAllAttendances.docs[0]._id);
-  //     }
-  //   }, [status]);
-
   const { data: file } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
     page: 1,
     limit: 10,
     offset: 0,
     filter: {
-      attendanceJustified: status?.getAllAttendances?.docs[0]?._id,
+      attendanceJustified: status?.getAllAttendances.docs[0]?._id,
     },
   });
 
-  const dataBodyTemplate = (atendans: IAttendance) => {
+  const dataBodyTemplate = (attendance: IAttendance) => {
     return (
       <>
-        <span className="p-column-title">Name</span>
-        {new Date(atendans.createdAt).toLocaleDateString('es-MX', {
+        <span className="p-column-title">Fecha</span>
+        {new Date(attendance.createdAt).toLocaleDateString('es-MX', {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric',
@@ -97,82 +91,100 @@ function CareerCrud() {
     );
   };
 
-  const nameBodyTemplate = (atendans: IAttendance) => {
-    let img = 'https://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg';
-    const { data } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
-      schedule: atendans.schedule,
+  const nameBodyTemplate = (attendance: IAttendance) => {
+    const { data: scheduleData } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
+      schedule: attendance.schedule,
     });
 
+    // ✅ validación previa
+    const sched = scheduleData?.getSchedulesFormatted?.[0];
     const { data: user } = useGetUserByIdQuery(GRAPHQL_CLIENT, {
-      id: data?.getSchedulesFormatted[0].teacherId,
+      id: sched?.teacherId ?? '',
     });
 
+    let img = 'https://ssb.matehuala.tecnm.mx/asis_be/uploads/users/default_profile.jpg';
     if (user?.getUserById?.photo) {
-      img = `https://ssb.matehuala.tecnm.mx/asis_be${user?.getUserById?.photo}`;
+      img = `https://ssb.matehuala.tecnm.mx/asis_be${user.getUserById.photo}`;
     }
+
     return (
       <div className="flex align-items-center gap-2">
         <Avatar image={img} shape="circle" size="large" />
-        <span className="p-column-title">{`${user?.getUserById.firstName} ${user?.getUserById.lastName} ${user?.getUserById.middleName}`}</span>
+        <span className="p-column-title">
+          {user
+            ? `${user.getUserById.firstName} ${user.getUserById.lastName} ${user.getUserById.middleName}`
+            : 'Profesor no disponible'}
+        </span>
       </div>
     );
   };
 
-  const durationBodyTemplate = (atendans: IAttendance) => {
-    const { data: schedule } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
-      schedule: atendans.schedule,
+  const durationBodyTemplate = (attendance: IAttendance) => {
+    const { data: scheduleData } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
+      schedule: attendance.schedule,
     });
 
-    const start = new Date(schedule?.getSchedulesFormatted[0].startTime).toLocaleTimeString(
-      'es-MX',
-      {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      }
-    );
-    const end = new Date(schedule?.getSchedulesFormatted[0].finalTime).toLocaleTimeString('es-MX', {
+    // ✅ validación previa
+    const sched = scheduleData?.getSchedulesFormatted?.[0];
+    if (!sched || !sched.startTime || !sched.finalTime) {
+      return (
+        <>
+          <span className="p-column-title">Duración</span>
+          Horario no disponible
+        </>
+      );
+    }
+
+    const start = new Date(sched.startTime).toLocaleTimeString('es-MX', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true,
     });
+    const end = new Date(sched.finalTime).toLocaleTimeString('es-MX', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+
     return (
       <>
-        <span className="p-column-title">Duration</span>
+        <span className="p-column-title">Duración</span>
         {start} - {end}
       </>
     );
   };
 
-  const subjectBodyTemplate = (atendans: IAttendance) => {
-    const { data: schedule } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
-      schedule: atendans.schedule,
+  const subjectBodyTemplate = (attendance: IAttendance) => {
+    const { data: scheduleData } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
+      schedule: attendance.schedule,
     });
 
+    const sched = scheduleData?.getSchedulesFormatted?.[0];
     return (
       <>
-        <span className="p-column-title">Credits</span>
-        {schedule?.getSchedulesFormatted[0].subjectLargeName}
+        <span className="p-column-title">Materia</span>
+        {sched?.subjectLargeName ?? 'Materia no disponible'}
       </>
     );
   };
 
-  const certificateBodyTemplate = (atendans: IAttendance) => {
-    const { data: file } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
+  const certificateBodyTemplate = (attendance: IAttendance) => {
+    const { data: fileData } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
       page: 1,
       limit: 10,
       offset: 0,
       filter: {
-        attendanceJustified: atendans._id,
+        attendanceJustified: attendance._id,
       },
     });
+
     return (
       <div>
-        {file?.getAllFiles?.docs?.length > 0 ? (
-          file.getAllFiles.docs[0].approvedBy !== null ? (
+        {fileData?.getAllFiles.docs?.length > 0 ? (
+          fileData.getAllFiles.docs[0].approvedBy !== null ? (
             <Tag value="Justificado" severity="success" className="p-tag-rounded mx-1" />
-          ) : file.getAllFiles.docs[0].comments?.length > 0 &&
-            file.getAllFiles.docs[0].comments[0]._id !== null ? (
+          ) : fileData.getAllFiles.docs[0].comments?.length > 0 &&
+            fileData.getAllFiles.docs[0].comments[0]._id !== null ? (
             <Tag value="No Aceptado" severity="danger" className="p-tag-rounded mx-1" />
           ) : (
             <Tag value="En revisión" severity="warning" className="p-tag-rounded mx-1" />
@@ -183,7 +195,8 @@ function CareerCrud() {
       </div>
     );
   };
-  const actionBodyTemplate = (atendans: IAttendance) => {
+
+  const actionBodyTemplate = (attendance: IAttendance) => {
     return (
       <div className="flex align-items-center">
         <Button
@@ -193,7 +206,6 @@ function CareerCrud() {
           outlined
           severity="warning"
           onClick={() => setAprovateDialog(true)}
-          style={{ marginRight: '10px' }}
           disabled={file?.getAllFiles.docs.length === 0}
         />
       </div>
@@ -348,13 +360,7 @@ function CareerCrud() {
             footer={aprovateDialogFooter}
             onHide={hideAprovateDialog}
           >
-            <div className="flex w-full h-full flex-grow-1">
-              {/* <iframe
-                src={`https://ssb.matehuala.tecnm.mx/asis_be${file?.getAllFiles.docs[0].path}#toolbar=0&navpanes=0&scrollbar=0`}
-                title="PDFDoc"
-                style={{ width: '100%', height: '100%', border: 'none' }}
-              /> */}
-            </div>
+            <div className="flex w-full h-full flex-grow-1">{/* contenido del iframe, etc. */}</div>
           </Dialog>
         </div>
       </div>

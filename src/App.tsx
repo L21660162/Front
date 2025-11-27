@@ -15,7 +15,8 @@ type Props = {
   pageProps?: object;
 };
 
-function App({ Component, pageProps }: Props) {
+// Asignamos valor por defecto directamente en los parámetros
+function App({ Component, pageProps = {} }: Props) {
   const { setTheme } = useGlobalAppStore();
   setTheme();
 
@@ -37,8 +38,9 @@ function App({ Component, pageProps }: Props) {
   );
 }
 
-App.defaultProps = {
-  pageProps: {},
-};
+// Eliminamos defaultProps
+// App.defaultProps = {
+//   pageProps: {},
+// };
 
 export default App;

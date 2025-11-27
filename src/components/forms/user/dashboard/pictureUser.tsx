@@ -146,12 +146,23 @@ export default function PicturebuildingDialogForm({
     }
   }, [userData, setValue]);
 
+
   const onSubmit: SubmitHandler<IUpdateUserInput> = (data: IUpdateUserInput) => {
-    setButtonDisabled(true);
-    data.photo = image;
-    mutate({ data });
-    reset();
-  };
+  setButtonDisabled(true);
+
+  // Crea una copia limpia de los datos
+  const cleanedData = { ...data };
+
+  // Solo agrega la imagen si existe
+  if (image) {
+    cleanedData.photo = image;
+  } else {
+    delete cleanedData.photo;
+  }
+
+  mutate({ data: cleanedData });
+  reset();
+};
 
   const footerContent = (
     <div>

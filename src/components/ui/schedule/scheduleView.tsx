@@ -145,19 +145,25 @@ function ScheduleView() {
     if (dataTeacherSerch) {
       const Alldata = dataTeacherSerch;
       const allSchedules = Alldata.schedule;
-      const grouped = daysOfWeek.reduce((acc, day, index) => {
+      
+      const grouped = daysOfWeek.reduce((acc, _day, index) => {
         acc[index + 1] = [];
         return acc;
-      }, {});
+      }, {} as Record<number, ISchedule[]>);
 
-      allSchedules.forEach((schedule) => {
-        if (schedule && schedule.weekday) {
-          grouped[schedule.weekday].push(schedule);
+      allSchedules?.forEach((schedule) => {
+        const weekday = schedule?.weekday;
+
+        // ✅ Validamos que sea número del 1 al 7
+        if (weekday && typeof weekday === 'number' && grouped[weekday]) {
+          grouped[weekday].push(schedule);
         }
       });
+
       setSchedules(grouped);
     }
   }, [dataTeacherSerch]);
+
 
   const dataviewGridItem = () => {
     const time = (data) => {
