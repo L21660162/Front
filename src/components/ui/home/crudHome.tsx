@@ -150,8 +150,8 @@ function DashboardAttendancePanel() {
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
       const statDate = extractDate(stat.weekday);
-      if (!statDate) return;
-      if (statDate < startOfWeek || statDate > endOfWeek) return;
+      if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
+
       const day = normalizeWeekday(stat.weekday);
       if (day === 'domingo' || !base[day]) return;
       base[day].present += stat.presentAmount;
@@ -568,7 +568,7 @@ function DashboardAttendancePanel() {
               <span className="block text-500 font-medium mb-3">
                 {t('global.dictionary.Absents')}
               </span>
-              <div className="text-900 font-medium text-3xl">
+              <div className="text-900 font-semibold text-4xl">
                 {value === tiempo[0]
                   ? attendanceStatistics?.getAttendanceStatistics.classAbsentDay
                   : value === tiempo[1]
@@ -594,7 +594,7 @@ function DashboardAttendancePanel() {
               <span className="block text-500 font-medium mb-3">
                 {t('global.dictionary.Justified')}
               </span>
-              <div className="text-900 font-medium text-3xl">
+              <div className="text-900 font-semibold text-4xl">
                 {value === tiempo[0]
                   ? attendanceStatistics?.getAttendanceStatistics.classJustifyDay
                   : value === tiempo[1]
@@ -620,7 +620,7 @@ function DashboardAttendancePanel() {
               <span className="block text-500 font-medium mb-3">
                 {t('global.dictionary.Presented')}
               </span>
-              <div className="text-900 font-medium text-3xl">
+              <div className="text-900 font-semibold text-4xl">
                 {value === tiempo[0]
                   ? attendanceStatistics?.getAttendanceStatistics.classPresentDay
                   : value === tiempo[1]
