@@ -186,10 +186,7 @@ function DashboardAttendancePanel() {
     const base: Record<string, { present: number; absent: number; justified: number }> = {};
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
-      if (selectedCareer && stat.careerName !== selectedCareer) return;
-      if (selectedSemester && stat.semester !== selectedSemester) return;
-      if (selectedPeriod && stat.periodName !== selectedPeriod) return;
-      if (selectedTeacher && stat.teacherLargeName !== selectedTeacher.fullname) return;
+      if (!matchesFilters(stat)) return;
 
       const statDate = extractDate(stat.weekday);
       if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
