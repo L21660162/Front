@@ -200,60 +200,6 @@ function DashboardAttendancePanel() {
     ],
   };
 
-  const pieDataMonth: ChartData = {
-    labels: ['Ausentes', 'Justificados', 'Presentes'],
-    datasets: [
-      {
-        data: [
-          attendanceStatistics?.getAttendanceStatistics.classAbsentMonth,
-          attendanceStatistics?.getAttendanceStatistics.classJustifyMonth,
-          attendanceStatistics?.getAttendanceStatistics.classPresentMonth,
-        ],
-        backgroundColor: [
-          documentStyle.getPropertyValue('--pink-500'),
-          documentStyle.getPropertyValue('--cyan-500'),
-          documentStyle.getPropertyValue('--teal-500'),
-        ],
-      },
-    ],
-  };
-
-  const pieDataSemester: ChartData = {
-    labels: ['Ausentes', 'Justificados', 'Presentes'],
-    datasets: [
-      {
-        data: [
-          attendanceStatistics?.getAttendanceStatistics.classAbsentPeriod,
-          attendanceStatistics?.getAttendanceStatistics.classJustifyPeriod,
-          attendanceStatistics?.getAttendanceStatistics.classPresentPeriod,
-        ],
-        backgroundColor: [
-          documentStyle.getPropertyValue('--red-500'),
-          documentStyle.getPropertyValue('--blue-500'),
-          documentStyle.getPropertyValue('--green-500'),
-        ],
-      },
-    ],
-  };
-
-  const pieDataYear: ChartData = {
-    labels: ['Ausentes', 'Justificados', 'Presentes'],
-    datasets: [
-      {
-        data: [
-          attendanceStatistics?.getAttendanceStatistics.classAbsentYear,
-          attendanceStatistics?.getAttendanceStatistics.classJustifyYear,
-          attendanceStatistics?.getAttendanceStatistics.classPresentYear,
-        ],
-        backgroundColor: [
-          documentStyle.getPropertyValue('--pink-500'),
-          documentStyle.getPropertyValue('--cyan-500'),
-          documentStyle.getPropertyValue('--teal-500'),
-        ],
-      },
-    ],
-  };
-
   const chartOptions: ChartOptions = {
     indexAxis: 'x',
     maintainAspectRatio: false,
@@ -338,6 +284,17 @@ function DashboardAttendancePanel() {
   const topPresentTeachers = topTeachersByStatus.present;
   const topJustifiedTeachers = topTeachersByStatus.justified;
 
+  const totalDayAttendance = useMemo(() => {
+    const stats = attendanceStatistics?.getAttendanceStatistics;
+    if (!stats) return 0;
+
+    return (
+      (stats.classAbsentDay ?? 0) +
+      (stats.classJustifyDay ?? 0) +
+      (stats.classPresentDay ?? 0)
+    );
+  }, [attendanceStatistics]);
+
   const pieOptions: ChartOptions = {
     plugins: {
       legend: {
@@ -356,7 +313,11 @@ function DashboardAttendancePanel() {
             ];
             const statusKey = statusMap[context.dataIndex];
             const topTeachers = topTeachersByStatus[statusKey];
-            const baseLabel = `${context.label}: ${context.formattedValue}`;
+            const rawValue = Number(context.raw) || 0;
+            const percentage = totalDayAttendance
+              ? ((rawValue / totalDayAttendance) * 100).toFixed(1)
+              : '0.0';
+            const baseLabel = `${context.label}: ${context.formattedValue} (${percentage}%)`;
 
             if (!topTeachers?.length) return baseLabel;
             const teacherLines = topTeachers.map(
@@ -679,36 +640,6 @@ function DashboardAttendancePanel() {
       {renderTeacherListCard('Más faltas del día', 'bg-red-50 text-red-500', 'pi-exclamation-circle', topAbsentTeachers, 'absent')}
       {renderTeacherListCard('Asistencias destacadas', 'bg-green-50 text-green-500', 'pi-check-circle', topPresentTeachers, 'present')}
       {renderTeacherListCard('Justificantes recibidos', 'bg-blue-50 text-blue-500', 'pi-file', topJustifiedTeachers, 'justified')}
-      <div className="col-12 xl:col-4">
-        <div className="card">
-          <div className="flex flex-column align-items-center">
-            <h5 className="text-left w-full">
-              {t('module.home.dashboard.dashboardPanel.graph.month')}
-            </h5>
-            <Chart type="pie" data={pieDataMonth} options={pieOptions} />
-          </div>
-        </div>
-      </div>
-      <div className="col-12 xl:col-4">
-        <div className="card">
-          <div className="flex flex-column align-items-center">
-            <h5 className="text-left w-full">
-              {t('module.home.dashboard.dashboardPanel.graph.semester')}
-            </h5>
-            <Chart type="pie" data={pieDataSemester} options={pieOptions} />
-          </div>
-        </div>
-      </div>
-      <div className="col-12 xl:col-4">
-        <div className="card">
-          <div className="flex flex-column align-items-center">
-            <h5 className="text-left w-full">
-              {t('module.home.dashboard.dashboardPanel.graph.year')}
-            </h5>
-            <Chart type="pie" data={pieDataYear} options={pieOptions} />
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
