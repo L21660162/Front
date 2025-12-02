@@ -269,6 +269,22 @@ function DashboardAttendancePanel() {
     ],
   };
 
+  const pickStatisticValue = (
+    field:
+      | 'classAbsentDay'
+      | 'classAbsentMonth'
+      | 'classAbsentSemester'
+      | 'classAbsentYear'
+      | 'classJustifyDay'
+      | 'classJustifyMonth'
+      | 'classJustifySemester'
+      | 'classJustifyYear'
+      | 'classPresentDay'
+      | 'classPresentMonth'
+      | 'classPresentSemester'
+      | 'classPresentYear'
+  ) => attendanceStatistics?.getAttendanceStatistics?.[field] ?? 0;
+
   const chartOptions: ChartOptions = {
     indexAxis: 'x',
     maintainAspectRatio: false,
@@ -418,7 +434,6 @@ function DashboardAttendancePanel() {
   );
 
   const topAbsentTeachers = topTeachersByStatus.absent;
-  const topPresentTeachers = topTeachersByStatus.present;
   const topJustifiedTeachers = topTeachersByStatus.justified;
 
   const totalDayAttendance = useMemo(() => {
@@ -567,6 +582,44 @@ function DashboardAttendancePanel() {
         )}
       </div>
     </div>
+  );
+
+  const pendingJustifyValue = (() => {
+    const absent =
+      value === tiempo[0]
+        ? pickStatisticValue('classAbsentDay')
+        : value === tiempo[1]
+        ? pickStatisticValue('classAbsentMonth')
+        : value === tiempo[2]
+        ? pickStatisticValue('classAbsentSemester')
+        : pickStatisticValue('classAbsentYear');
+
+    const justified =
+      value === tiempo[0]
+        ? pickStatisticValue('classJustifyDay')
+        : value === tiempo[1]
+        ? pickStatisticValue('classJustifyMonth')
+        : value === tiempo[2]
+        ? pickStatisticValue('classJustifySemester')
+        : pickStatisticValue('classJustifyYear');
+
+    return Math.max(absent - justified, 0);
+  })();
+
+  const weeklyEventSchedule = useMemo(
+    () =>
+      weekdayOrder.map((day) => {
+        const dayTotals = weeklyStatusTotals[day] ?? { present: 0, absent: 0, justified: 0 };
+        const label = `${day.charAt(0).toUpperCase()}${day.slice(1)}`;
+        const total = dayTotals.present + dayTotals.absent + dayTotals.justified;
+
+        return {
+          dayLabel: label,
+          ...dayTotals,
+          total,
+        };
+      }),
+    [weekdayOrder, weeklyStatusTotals]
   );
 
   return (
@@ -727,7 +780,7 @@ function DashboardAttendancePanel() {
         </div>
       </div>
 
-      <div className="col-12 lg:col-6 xl:col-4">
+      <div className="col-12 md:col-6 xl:col-3">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
@@ -753,7 +806,7 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
-      <div className="col-12 lg:col-6 xl:col-4">
+      <div className="col-12 md:col-6 xl:col-3">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
@@ -779,7 +832,23 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
-      <div className="col-12 lg:col-6 xl:col-4">
+      <div className="col-12 md:col-6 xl:col-3">
+        <div className="card mb-0 h-full">
+          <div className="flex justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-3">Pendientes de justificar</span>
+              <div className="text-900 font-semibold text-4xl">{pendingJustifyValue}</div>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center bg-amber-100 text-amber-500 text-xl border-round"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-clock text-amber-500 text-xl" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="col-12 md:col-6 xl:col-3">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
@@ -845,8 +914,51 @@ function DashboardAttendancePanel() {
         </div>
       </div>
       {renderTeacherListCard('Más faltas del día', 'bg-red-50 text-red-500', 'pi-exclamation-circle', topAbsentTeachers, 'absent')}
-      {renderTeacherListCard('Asistencias destacadas', 'bg-green-50 text-green-500', 'pi-check-circle', topPresentTeachers, 'present')}
       {renderTeacherListCard('Justificantes recibidos', 'bg-blue-50 text-blue-500', 'pi-file', topJustifiedTeachers, 'justified')}
+      <div className="col-12 md:col-6 xl:col-4">
+        <div className="card h-full">
+          <div className="flex align-items-center justify-content-between mb-3">
+            <div>
+              <span className="block text-500 font-medium mb-2">Eventos previstos</span>
+              <span className="text-sm text-600">Semana actual</span>
+            </div>
+            <div
+              className="flex align-items-center justify-content-center text-xl border-round bg-purple-50 text-purple-500"
+              style={{ width: '2.5rem', height: '2.5rem' }}
+            >
+              <i className="pi pi-calendar" />
+            </div>
+          </div>
+          {weeklyEventSchedule.some((event) => event.total > 0) ? (
+            <div className="border-1 surface-border border-round w-full overflow-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-600">
+                    <th className="text-left py-2 px-3 font-semibold">Día</th>
+                    <th className="text-right py-2 px-3 font-semibold">Presentes</th>
+                    <th className="text-right py-2 px-3 font-semibold">Ausentes</th>
+                    <th className="text-right py-2 px-3 font-semibold">Justificados</th>
+                    <th className="text-right py-2 px-3 font-semibold">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {weeklyEventSchedule.map((event) => (
+                    <tr key={event.dayLabel} className="border-top-1 surface-border">
+                      <td className="py-2 px-3 text-900 font-semibold">{event.dayLabel}</td>
+                      <td className="py-2 px-3 text-right text-green-600 font-medium">{event.present}</td>
+                      <td className="py-2 px-3 text-right text-red-600 font-medium">{event.absent}</td>
+                      <td className="py-2 px-3 text-right text-blue-600 font-medium">{event.justified}</td>
+                      <td className="py-2 px-3 text-right text-900 font-semibold">{event.total}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-500 text-center mt-2 mb-0">{t('global.dictionary.noData') ?? 'Sin datos'}</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
