@@ -2,6 +2,8 @@ import React from 'react';
 import {
   IRoles,
   IUser,
+  useGetAllEventsQuery,
+  useGetAllGroupsQuery,
   useGetAllUsersQuery,
   useGetAttendanceStatisticsQuery,
   useGetReportStatisticsQuery,
@@ -32,6 +34,18 @@ export const StadisticServices = (
     department,
   });
 
+  const { data: eventsData } = useGetAllEventsQuery(GRAPHQL_CLIENT, {
+    limit: 200,
+    offset: 0,
+    page: 1,
+  });
+
+  const { data: groupsData } = useGetAllGroupsQuery(GRAPHQL_CLIENT, {
+    limit: 500,
+    offset: 0,
+    page: 1,
+  });
+
   const { data: users } = useGetAllUsersQuery(GRAPHQL_CLIENT, {
     page: 1,
     limit: 500,
@@ -58,5 +72,12 @@ export const StadisticServices = (
   //   };
   // });
 
-  return { careerOptionsData, attendanceStatistics, reportStatistics, datosDocente };
+  return {
+    careerOptionsData,
+    attendanceStatistics,
+    reportStatistics,
+    datosDocente,
+    eventsData,
+    groupsData,
+  };
 };

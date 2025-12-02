@@ -39,7 +39,14 @@ function DashboardAttendancePanel() {
   ];
   const [value, setValue] = useState<FilterTime>(tiempo[3]);
   const { _id: teacherId, roles } = useAccessTokenData() as TokenData;
-  const { careerOptionsData, attendanceStatistics, reportStatistics, datosDocente } = StadisticServices(
+  const {
+    careerOptionsData,
+    attendanceStatistics,
+    reportStatistics,
+    datosDocente,
+    eventsData,
+    groupsData,
+  } = StadisticServices(
     selectedCareer,
     selectedDepartment?._id,
     selectedSemester,
@@ -143,6 +150,19 @@ function DashboardAttendancePanel() {
   startOfWeek.setDate(todayStart.getDate() - ((todayStart.getDay() + 6) % 7));
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+  const groupLookup = useMemo(() => {
+    const map: Record<string, { identifier: string; career: string; semester: string; period: string }> = {};
+    groupsData?.getAllGroups.docs.forEach((group) => {
+      map[group._id] = {
+        identifier: group.identifier,
+        career: group.career,
+        semester: group.semester,
+        period: group.period,
+      };
+    });
+    return map;
+  }, [groupsData]);
 
   type ReportStat = NonNullable<typeof reportStatistics>['getReportStatistics'][number];
 
@@ -606,21 +626,64 @@ function DashboardAttendancePanel() {
     return Math.max(absent - justified, 0);
   })();
 
-  const weeklyEventSchedule = useMemo(
-    () =>
-      weekdayOrder.map((day) => {
-        const dayTotals = weeklyStatusTotals[day] ?? { present: 0, absent: 0, justified: 0 };
-        const label = `${day.charAt(0).toUpperCase()}${day.slice(1)}`;
-        const total = dayTotals.present + dayTotals.absent + dayTotals.justified;
+  const weeklyEventSchedule = useMemo(() => {
+    if (!eventsData?.getAllEvents.docs) return [];
+
+    return eventsData.getAllEvents.docs
+      .filter((event) => {
+        const startDate = new Date(event.startDate);
+        const finishDate = new Date(event.finishDate);
+        const overlapsWeek = finishDate >= startOfWeek && startDate <= endOfWeek;
+        if (!overlapsWeek) return false;
+
+        const groups = event.groupsIncluded
+          .map((groupId) => groupLookup[groupId])
+          .filter(Boolean) as Array<{ identifier: string; career: string; semester: string; period: string }>;
+
+        if (selectedCareer && !groups.some((group) => normalize(group.career) === normalize(selectedCareer))) {
+          return false;
+        }
+
+        if (selectedSemester && !groups.some((group) => group.semester === selectedSemester)) {
+          return false;
+        }
+
+        if (selectedPeriod && event.period !== selectedPeriod && !groups.some((group) => group.period === selectedPeriod)) {
+          return false;
+        }
+
+        return true;
+      })
+      .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+      .map((event) => {
+        const groups = event.groupsIncluded
+          .map((groupId) => groupLookup[groupId])
+          .filter(Boolean) as Array<{ identifier: string }>;
 
         return {
-          dayLabel: label,
-          ...dayTotals,
-          total,
+          id: event._id,
+          activity: event.activity,
+          startDate: new Date(event.startDate),
+          finishDate: new Date(event.finishDate),
+          groups: groups.map((group) => group.identifier),
         };
-      }),
-    [weekdayOrder, weeklyStatusTotals]
-  );
+      });
+  }, [
+    endOfWeek,
+    eventsData,
+    groupLookup,
+    selectedCareer,
+    selectedPeriod,
+    selectedSemester,
+    startOfWeek,
+  ]);
+
+  const formatDateRange = (date: Date) =>
+    new Intl.DateTimeFormat('es-MX', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(date);
 
   return (
     <div className="grid">
@@ -929,26 +992,26 @@ function DashboardAttendancePanel() {
               <i className="pi pi-calendar" />
             </div>
           </div>
-          {weeklyEventSchedule.some((event) => event.total > 0) ? (
+          {weeklyEventSchedule.length ? (
             <div className="border-1 surface-border border-round w-full overflow-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-600">
-                    <th className="text-left py-2 px-3 font-semibold">Día</th>
-                    <th className="text-right py-2 px-3 font-semibold">Presentes</th>
-                    <th className="text-right py-2 px-3 font-semibold">Ausentes</th>
-                    <th className="text-right py-2 px-3 font-semibold">Justificados</th>
-                    <th className="text-right py-2 px-3 font-semibold">Total</th>
+                    <th className="text-left py-2 px-3 font-semibold">Actividad</th>
+                    <th className="text-left py-2 px-3 font-semibold">Inicio</th>
+                    <th className="text-left py-2 px-3 font-semibold">Finalización</th>
+                    <th className="text-left py-2 px-3 font-semibold">Grupos incluidos</th>
                   </tr>
                 </thead>
                 <tbody>
                   {weeklyEventSchedule.map((event) => (
-                    <tr key={event.dayLabel} className="border-top-1 surface-border">
-                      <td className="py-2 px-3 text-900 font-semibold">{event.dayLabel}</td>
-                      <td className="py-2 px-3 text-right text-green-600 font-medium">{event.present}</td>
-                      <td className="py-2 px-3 text-right text-red-600 font-medium">{event.absent}</td>
-                      <td className="py-2 px-3 text-right text-blue-600 font-medium">{event.justified}</td>
-                      <td className="py-2 px-3 text-right text-900 font-semibold">{event.total}</td>
+                    <tr key={event.id} className="border-top-1 surface-border">
+                      <td className="py-2 px-3 text-900 font-semibold">{event.activity}</td>
+                      <td className="py-2 px-3 text-700">{formatDateRange(event.startDate)}</td>
+                      <td className="py-2 px-3 text-700">{formatDateRange(event.finishDate)}</td>
+                      <td className="py-2 px-3 text-700">
+                        {event.groups.length ? event.groups.join(', ') : 'Sin grupos asignados'}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
