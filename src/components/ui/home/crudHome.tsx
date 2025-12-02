@@ -144,6 +144,7 @@ function DashboardAttendancePanel() {
     if (selectedCareer && stat.careerName !== selectedCareer) return false;
     if (selectedSemester && stat.semester !== selectedSemester) return false;
     if (selectedPeriod && stat.periodName !== selectedPeriod) return false;
+    if (selectedTeacher && stat.teacherLargeName !== selectedTeacher.fullname) return false;
     return true;
   };
 
@@ -171,7 +172,51 @@ function DashboardAttendancePanel() {
     });
 
     return base;
-  }, [endOfWeek, reportStatistics, selectedCareer, selectedPeriod, selectedSemester, startOfWeek]);
+  }, [
+    endOfWeek,
+    reportStatistics,
+    selectedCareer,
+    selectedPeriod,
+    selectedSemester,
+    selectedTeacher,
+    startOfWeek,
+  ]);
+
+  const weeklyCareerTotals = useMemo(() => {
+    const base: Record<string, { present: number; absent: number; justified: number }> = {};
+
+    reportStatistics?.getReportStatistics.forEach((stat) => {
+      if (selectedCareer && stat.careerName !== selectedCareer) return;
+      if (selectedSemester && stat.semester !== selectedSemester) return;
+      if (selectedPeriod && stat.periodName !== selectedPeriod) return;
+      if (selectedTeacher && stat.teacherLargeName !== selectedTeacher.fullname) return;
+
+      const statDate = extractDate(stat.weekday);
+      if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
+
+      const day = normalizeWeekday(stat.weekday);
+      if (day === 'domingo') return;
+
+      const label = stat.careerName || 'Sin carrera';
+      if (!base[label]) {
+        base[label] = { present: 0, absent: 0, justified: 0 };
+      }
+
+      base[label].present += stat.presentAmount;
+      base[label].absent += stat.absentAmount;
+      base[label].justified += stat.justifiedAmount;
+    });
+
+    return base;
+  }, [
+    endOfWeek,
+    reportStatistics,
+    selectedCareer,
+    selectedPeriod,
+    selectedSemester,
+    selectedTeacher,
+    startOfWeek,
+  ]);
 
   const chartData: ChartData = {
     labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
@@ -249,6 +294,63 @@ function DashboardAttendancePanel() {
     },
   };
 
+  const careerLabels = Object.keys(weeklyCareerTotals);
+
+  const careerChartData: ChartData = {
+    labels: careerLabels,
+    datasets: [
+      {
+        label: 'Presentes',
+        backgroundColor: documentStyle.getPropertyValue('--green-500'),
+        data: careerLabels.map((career) => weeklyCareerTotals[career]?.present ?? 0),
+      },
+      {
+        label: 'Ausentes',
+        backgroundColor: documentStyle.getPropertyValue('--red-500'),
+        data: careerLabels.map((career) => weeklyCareerTotals[career]?.absent ?? 0),
+      },
+      {
+        label: 'Justificados',
+        backgroundColor: documentStyle.getPropertyValue('--blue-500'),
+        data: careerLabels.map((career) => weeklyCareerTotals[career]?.justified ?? 0),
+      },
+    ],
+  };
+
+  const careerChartOptions: ChartOptions = {
+    indexAxis: 'y',
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          usePointStyle: true,
+          color: textColor,
+        },
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+        ticks: {
+          color: textColorSecondary,
+        },
+        grid: {
+          color: surfaceBorder,
+        },
+      },
+      y: {
+        stacked: true,
+        ticks: {
+          color: textColorSecondary,
+          font: { weight: 600 },
+        },
+        grid: {
+          display: false,
+        },
+      },
+    },
+  };
+
   const todayNormalized = normalizeWeekday(
     ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'][today.getDay()]
   );
@@ -277,7 +379,15 @@ function DashboardAttendancePanel() {
       teacher,
       ...values,
     }));
-  }, [reportStatistics, selectedCareer, selectedPeriod, selectedSemester, todayNormalized, todayStart]);
+  }, [
+    reportStatistics,
+    selectedCareer,
+    selectedPeriod,
+    selectedSemester,
+    selectedTeacher,
+    todayNormalized,
+    todayStart,
+  ]);
 
   const buildTeacherList = (field: 'present' | 'absent' | 'justified') =>
     [...teacherDailyStats]
@@ -703,6 +813,20 @@ function DashboardAttendancePanel() {
               data={chartData}
               options={chartOptions}
               pt={{ root: { className: 'w-full' } }}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="col-12">
+        <div className="card">
+          <div className="flex flex-column align-items-center">
+            <h5 className="text-left w-full">Asistencia semanal por carrera</h5>
+            <Chart
+              type="bar"
+              data={careerChartData}
+              options={careerChartOptions}
+              pt={{ root: { className: 'w-full' } }}
+              className="w-full"
             />
           </div>
         </div>
