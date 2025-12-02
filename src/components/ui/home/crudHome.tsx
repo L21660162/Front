@@ -46,6 +46,12 @@ function DashboardAttendancePanel() {
     selectedPeriod,
     roles.includes('DOCENTE') ? teacherId : selectedTeacher?.id
   );
+  const selectedCareerLabel = useMemo(
+    () =>
+      careerOptionsData?.getUniqueOptionsCareer.careers.find((career) => career.value === selectedCareer)
+        ?.label ?? null,
+    [careerOptionsData, selectedCareer]
+  );
   const documentStyle = getComputedStyle(document.documentElement);
   const textColor = documentStyle.getPropertyValue('--text-color') || '#495057';
   const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary') || '#6c757d';
@@ -140,8 +146,15 @@ function DashboardAttendancePanel() {
 
   type ReportStat = NonNullable<typeof reportStatistics>['getReportStatistics'][number];
 
+  const normalize = (value?: string | null) => value?.toString().trim().toLowerCase() ?? '';
+
   const matchesFilters = (stat: ReportStat) => {
-    if (selectedCareer && stat.careerName !== selectedCareer) return false;
+    if (selectedCareer) {
+      const careerValue = normalize(selectedCareer);
+      const careerLabel = normalize(selectedCareerLabel);
+      const statCareer = normalize(stat.careerName);
+      if (statCareer !== careerValue && statCareer !== careerLabel) return false;
+    }
     if (selectedSemester && stat.semester !== selectedSemester) return false;
     if (selectedPeriod && stat.periodName !== selectedPeriod) return false;
     if (selectedTeacher && stat.teacherLargeName !== selectedTeacher.fullname) return false;
@@ -176,6 +189,7 @@ function DashboardAttendancePanel() {
     endOfWeek,
     reportStatistics,
     selectedCareer,
+    selectedCareerLabel,
     selectedPeriod,
     selectedSemester,
     selectedTeacher,
@@ -209,6 +223,7 @@ function DashboardAttendancePanel() {
     endOfWeek,
     reportStatistics,
     selectedCareer,
+    selectedCareerLabel,
     selectedPeriod,
     selectedSemester,
     selectedTeacher,
@@ -379,6 +394,7 @@ function DashboardAttendancePanel() {
   }, [
     reportStatistics,
     selectedCareer,
+    selectedCareerLabel,
     selectedPeriod,
     selectedSemester,
     selectedTeacher,
