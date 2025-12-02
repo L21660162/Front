@@ -4,6 +4,7 @@ import {
   IUser,
   useGetAllUsersQuery,
   useGetAttendanceStatisticsQuery,
+  useGetReportStatisticsQuery,
   useGetUniqueOptionsCareerQuery,
 } from '../../../../graphql/graphql';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
@@ -24,6 +25,11 @@ export const StadisticServices = (
     semester,
     period,
     teacher,
+  });
+
+  const { data: reportStatistics } = useGetReportStatisticsQuery(GRAPHQL_CLIENT, {
+    teacher,
+    department,
   });
 
   const { data: users } = useGetAllUsersQuery(GRAPHQL_CLIENT, {
@@ -52,5 +58,5 @@ export const StadisticServices = (
   //   };
   // });
 
-  return { careerOptionsData, attendanceStatistics, datosDocente };
+  return { careerOptionsData, attendanceStatistics, reportStatistics, datosDocente };
 };

@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IDepartment, IFile, useGetAllDepartmentsQuery } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';
@@ -39,7 +39,7 @@ function DashboardAttendancePanel() {
   ];
   const [value, setValue] = useState<FilterTime>(tiempo[3]);
   const { _id: teacherId, roles } = useAccessTokenData() as TokenData;
-  const { careerOptionsData, attendanceStatistics, datosDocente } = StadisticServices(
+  const { careerOptionsData, attendanceStatistics, reportStatistics, datosDocente } = StadisticServices(
     selectedCareer,
     selectedDepartment?._id,
     selectedSemester,
@@ -87,43 +87,64 @@ function DashboardAttendancePanel() {
     }, 250);
   };
 
+  const weekdayOrder = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+
+  const weeklyStatusTotals = useMemo(() => {
+    const base = {
+      lunes: { present: 0, absent: 0, justified: 0 },
+      martes: { present: 0, absent: 0, justified: 0 },
+      miercoles: { present: 0, absent: 0, justified: 0 },
+      jueves: { present: 0, absent: 0, justified: 0 },
+      viernes: { present: 0, absent: 0, justified: 0 },
+      sabado: { present: 0, absent: 0, justified: 0 },
+    } as Record<string, { present: number; absent: number; justified: number }>;
+
+    const normalizeWeekday = (weekday: string) => {
+      const lowered = weekday.toLowerCase();
+      if (lowered.startsWith('mon')) return 'lunes';
+      if (lowered.startsWith('tue')) return 'martes';
+      if (lowered.startsWith('wed')) return 'miercoles';
+      if (lowered.startsWith('thu')) return 'jueves';
+      if (lowered.startsWith('fri')) return 'viernes';
+      if (lowered.startsWith('sat')) return 'sabado';
+      if (lowered.startsWith('sun')) return 'domingo';
+      if (lowered.includes('martes')) return 'martes';
+      if (lowered.includes('mier')) return 'miercoles';
+      if (lowered.includes('jue')) return 'jueves';
+      if (lowered.includes('vie')) return 'viernes';
+      if (lowered.includes('sab')) return 'sabado';
+      if (lowered.includes('lun')) return 'lunes';
+      return lowered;
+    };
+
+    reportStatistics?.getReportStatistics.forEach((stat) => {
+      const day = normalizeWeekday(stat.weekday);
+      if (day === 'domingo' || !base[day]) return;
+      base[day].present += stat.presentAmount;
+      base[day].absent += stat.absentAmount;
+      base[day].justified += stat.justifiedAmount;
+    });
+
+    return base;
+  }, [reportStatistics]);
+
   const chartData: ChartData = {
-    labels: ['Días de la semana'],
+    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
     datasets: [
       {
-        label: 'Lunes',
-        backgroundColor: documentStyle.getPropertyValue('--blue-500'),
-        data: [attendanceStatistics?.getAttendanceStatistics.weekday2],
-      },
-      {
-        label: 'Martes',
+        label: 'Presentes',
         backgroundColor: documentStyle.getPropertyValue('--green-500'),
-        data: [attendanceStatistics?.getAttendanceStatistics.weekday3],
+        data: weekdayOrder.map((day) => weeklyStatusTotals[day]?.present ?? 0),
       },
       {
-        label: 'Miercoles',
-        backgroundColor: documentStyle.getPropertyValue('--yellow-500'),
-        data: [attendanceStatistics?.getAttendanceStatistics.weekday4],
-      },
-      {
-        label: 'Jueves',
-        backgroundColor: documentStyle.getPropertyValue('--cyan-500'),
-        data: [attendanceStatistics?.getAttendanceStatistics.weekday5],
-      },
-      {
-        label: 'Viernes',
+        label: 'Ausentes',
         backgroundColor: documentStyle.getPropertyValue('--red-500'),
-        data: [attendanceStatistics?.getAttendanceStatistics.weekday6],
+        data: weekdayOrder.map((day) => weeklyStatusTotals[day]?.absent ?? 0),
       },
       {
-        label: 'Sabado',
-        backgroundColor: documentStyle.getPropertyValue('--indigo-500'),
-        data: [attendanceStatistics?.getAttendanceStatistics.weekday7],
-      },
-      {
-        label: 'Domingo',
-        backgroundColor: documentStyle.getPropertyValue('--teal-500'),
-        data: [attendanceStatistics?.getAttendanceStatistics.weekday1],
+        label: 'Justificados',
+        backgroundColor: documentStyle.getPropertyValue('--blue-500'),
+        data: weekdayOrder.map((day) => weeklyStatusTotals[day]?.justified ?? 0),
       },
     ],
   };
@@ -214,6 +235,7 @@ function DashboardAttendancePanel() {
     },
     scales: {
       x: {
+        stacked: true,
         ticks: {
           color: textColorSecondary,
           font: {
@@ -225,6 +247,7 @@ function DashboardAttendancePanel() {
         },
       },
       y: {
+        stacked: true,
         ticks: {
           color: textColorSecondary,
         },
@@ -245,6 +268,97 @@ function DashboardAttendancePanel() {
       },
     },
   };
+
+  const normalizeDayName = (weekday: string) => {
+    const lowered = weekday.toLowerCase();
+    if (lowered.startsWith('sun')) return 'domingo';
+    if (lowered.startsWith('mon') || lowered.includes('lun')) return 'lunes';
+    if (lowered.startsWith('tue') || lowered.includes('mar')) return 'martes';
+    if (lowered.startsWith('wed') || lowered.includes('mier')) return 'miercoles';
+    if (lowered.startsWith('thu') || lowered.includes('jue')) return 'jueves';
+    if (lowered.startsWith('fri') || lowered.includes('vie')) return 'viernes';
+    if (lowered.startsWith('sat') || lowered.includes('sab')) return 'sabado';
+    return lowered;
+  };
+
+  const today = new Date();
+  const todayNormalized = normalizeDayName(
+    ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'][today.getDay()]
+  );
+
+  const teacherDailyStats = useMemo(() => {
+    const results: Record<string, { present: number; absent: number; justified: number }> = {};
+
+    reportStatistics?.getReportStatistics.forEach((stat) => {
+      if (normalizeDayName(stat.weekday) !== todayNormalized) return;
+      if (!results[stat.teacherLargeName]) {
+        results[stat.teacherLargeName] = { present: 0, absent: 0, justified: 0 };
+      }
+      results[stat.teacherLargeName].present += stat.presentAmount;
+      results[stat.teacherLargeName].absent += stat.absentAmount;
+      results[stat.teacherLargeName].justified += stat.justifiedAmount;
+    });
+
+    return Object.entries(results).map(([teacher, values]) => ({
+      teacher,
+      ...values,
+    }));
+  }, [reportStatistics, todayNormalized]);
+
+  const buildTeacherList = (field: 'present' | 'absent' | 'justified') =>
+    [...teacherDailyStats]
+      .filter((item) => item[field] > 0)
+      .sort((a, b) => b[field] - a[field])
+      .slice(0, 5);
+
+  const topAbsentTeachers = buildTeacherList('absent');
+  const topPresentTeachers = buildTeacherList('present');
+  const topJustifiedTeachers = buildTeacherList('justified');
+
+  const renderTeacherListCard = (
+    title: string,
+    color: string,
+    icon: string,
+    items: { teacher: string; present: number; absent: number; justified: number }[],
+    valueKey: 'present' | 'absent' | 'justified'
+  ) => (
+    <div className="col-12 md:col-6 xl:col-4">
+      <div className="card h-full">
+        <div className="flex align-items-center justify-content-between mb-3">
+          <div>
+            <span className="block text-500 font-medium mb-2">{title}</span>
+            <span className="text-sm text-600">{t('module.home.dashboard.dashboardPanel.graph.day')}</span>
+          </div>
+          <div
+            className={`flex align-items-center justify-content-center text-xl border-round ${color}`}
+            style={{ width: '2.5rem', height: '2.5rem' }}
+          >
+            <i className={`pi ${icon}`} />
+          </div>
+        </div>
+        {items.length ? (
+          <ul className="list-none p-0 m-0">
+            {items.map((item) => (
+              <li
+                key={`${title}-${item.teacher}`}
+                className="flex align-items-center justify-content-between py-2 border-bottom-1 surface-border"
+              >
+                <div className="flex align-items-center">
+                  <span className="font-semibold mr-2">{item.teacher}</span>
+                </div>
+                <div className="flex align-items-center">
+                  <i className="pi pi-chart-bar text-500 mr-2" />
+                  <span className="text-900 font-bold">{item[valueKey]}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-500 text-center mt-2 mb-0">{t('global.dictionary.noData') ?? 'Sin datos'}</p>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div className="grid">
@@ -507,6 +621,9 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
+      {renderTeacherListCard('Más faltas del día', 'bg-red-50 text-red-500', 'pi-exclamation-circle', topAbsentTeachers, 'absent')}
+      {renderTeacherListCard('Asistencias destacadas', 'bg-green-50 text-green-500', 'pi-check-circle', topPresentTeachers, 'present')}
+      {renderTeacherListCard('Justificantes recibidos', 'bg-blue-50 text-blue-500', 'pi-file', topJustifiedTeachers, 'justified')}
       <div className="col-12 xl:col-4">
         <div className="card">
           <div className="flex flex-column align-items-center">
