@@ -89,6 +89,55 @@ function DashboardAttendancePanel() {
 
   const weekdayOrder = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
 
+  const normalizeWeekday = (weekday: string) => {
+    const lowered = weekday.toLowerCase().trim();
+    if (lowered.startsWith('mon')) return 'lunes';
+    if (lowered.startsWith('tue')) return 'martes';
+    if (lowered.startsWith('wed')) return 'miercoles';
+    if (lowered.startsWith('thu')) return 'jueves';
+    if (lowered.startsWith('fri')) return 'viernes';
+    if (lowered.startsWith('sat')) return 'sabado';
+    if (lowered.startsWith('sun')) return 'domingo';
+    if (lowered.startsWith('1')) return 'lunes';
+    if (lowered.startsWith('2')) return 'martes';
+    if (lowered.startsWith('3')) return 'miercoles';
+    if (lowered.startsWith('4')) return 'jueves';
+    if (lowered.startsWith('5')) return 'viernes';
+    if (lowered.startsWith('6')) return 'sabado';
+    if (lowered.startsWith('7')) return 'domingo';
+    if (lowered.includes('martes')) return 'martes';
+    if (lowered.includes('mier')) return 'miercoles';
+    if (lowered.includes('jue')) return 'jueves';
+    if (lowered.includes('vie')) return 'viernes';
+    if (lowered.includes('sab')) return 'sabado';
+    if (lowered.includes('lun')) return 'lunes';
+    return lowered.split(' ')[0];
+  };
+
+  const extractDate = (weekday: string) => {
+    const match = weekday.match(/(\d{4}[\/-]\d{1,2}[\/-]\d{1,2}|\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4})/);
+    if (!match) return null;
+    const parts = match[0].split(/[\/-]/).map(Number);
+    let year = parts[0];
+    let month = parts[1];
+    let day = parts[2];
+
+    if (year <= 31 && day > 31) {
+      year = day;
+      day = parts[0];
+    }
+
+    if (year < 100) return null;
+    return new Date(year, month - 1, day);
+  };
+
+  const today = new Date();
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const startOfWeek = new Date(todayStart);
+  startOfWeek.setDate(todayStart.getDate() - ((todayStart.getDay() + 6) % 7));
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+
   const weeklyStatusTotals = useMemo(() => {
     const base = {
       lunes: { present: 0, absent: 0, justified: 0 },
@@ -99,25 +148,9 @@ function DashboardAttendancePanel() {
       sabado: { present: 0, absent: 0, justified: 0 },
     } as Record<string, { present: number; absent: number; justified: number }>;
 
-    const normalizeWeekday = (weekday: string) => {
-      const lowered = weekday.toLowerCase();
-      if (lowered.startsWith('mon')) return 'lunes';
-      if (lowered.startsWith('tue')) return 'martes';
-      if (lowered.startsWith('wed')) return 'miercoles';
-      if (lowered.startsWith('thu')) return 'jueves';
-      if (lowered.startsWith('fri')) return 'viernes';
-      if (lowered.startsWith('sat')) return 'sabado';
-      if (lowered.startsWith('sun')) return 'domingo';
-      if (lowered.includes('martes')) return 'martes';
-      if (lowered.includes('mier')) return 'miercoles';
-      if (lowered.includes('jue')) return 'jueves';
-      if (lowered.includes('vie')) return 'viernes';
-      if (lowered.includes('sab')) return 'sabado';
-      if (lowered.includes('lun')) return 'lunes';
-      return lowered;
-    };
-
     reportStatistics?.getReportStatistics.forEach((stat) => {
+      const statDate = extractDate(stat.weekday);
+      if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
       const day = normalizeWeekday(stat.weekday);
       if (day === 'domingo' || !base[day]) return;
       base[day].present += stat.presentAmount;
@@ -126,7 +159,7 @@ function DashboardAttendancePanel() {
     });
 
     return base;
-  }, [reportStatistics]);
+  }, [endOfWeek, reportStatistics, startOfWeek]);
 
   const chartData: ChartData = {
     labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
@@ -258,31 +291,7 @@ function DashboardAttendancePanel() {
     },
   };
 
-  const pieOptions: ChartOptions = {
-    plugins: {
-      legend: {
-        labels: {
-          usePointStyle: true,
-          color: textColor,
-        },
-      },
-    },
-  };
-
-  const normalizeDayName = (weekday: string) => {
-    const lowered = weekday.toLowerCase();
-    if (lowered.startsWith('sun')) return 'domingo';
-    if (lowered.startsWith('mon') || lowered.includes('lun')) return 'lunes';
-    if (lowered.startsWith('tue') || lowered.includes('mar')) return 'martes';
-    if (lowered.startsWith('wed') || lowered.includes('mier')) return 'miercoles';
-    if (lowered.startsWith('thu') || lowered.includes('jue')) return 'jueves';
-    if (lowered.startsWith('fri') || lowered.includes('vie')) return 'viernes';
-    if (lowered.startsWith('sat') || lowered.includes('sab')) return 'sabado';
-    return lowered;
-  };
-
-  const today = new Date();
-  const todayNormalized = normalizeDayName(
+  const todayNormalized = normalizeWeekday(
     ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'][today.getDay()]
   );
 
@@ -290,7 +299,12 @@ function DashboardAttendancePanel() {
     const results: Record<string, { present: number; absent: number; justified: number }> = {};
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
-      if (normalizeDayName(stat.weekday) !== todayNormalized) return;
+      const statDate = extractDate(stat.weekday);
+      const matchesToday = statDate
+        ? statDate.getTime() === todayStart.getTime()
+        : normalizeWeekday(stat.weekday) === todayNormalized;
+
+      if (!matchesToday) return;
       if (!results[stat.teacherLargeName]) {
         results[stat.teacherLargeName] = { present: 0, absent: 0, justified: 0 };
       }
@@ -303,7 +317,7 @@ function DashboardAttendancePanel() {
       teacher,
       ...values,
     }));
-  }, [reportStatistics, todayNormalized]);
+  }, [reportStatistics, todayNormalized, todayStart]);
 
   const buildTeacherList = (field: 'present' | 'absent' | 'justified') =>
     [...teacherDailyStats]
@@ -311,9 +325,50 @@ function DashboardAttendancePanel() {
       .sort((a, b) => b[field] - a[field])
       .slice(0, 5);
 
-  const topAbsentTeachers = buildTeacherList('absent');
-  const topPresentTeachers = buildTeacherList('present');
-  const topJustifiedTeachers = buildTeacherList('justified');
+  const topTeachersByStatus = useMemo(
+    () => ({
+      absent: buildTeacherList('absent'),
+      justified: buildTeacherList('justified'),
+      present: buildTeacherList('present'),
+    }),
+    [teacherDailyStats]
+  );
+
+  const topAbsentTeachers = topTeachersByStatus.absent;
+  const topPresentTeachers = topTeachersByStatus.present;
+  const topJustifiedTeachers = topTeachersByStatus.justified;
+
+  const pieOptions: ChartOptions = {
+    plugins: {
+      legend: {
+        labels: {
+          usePointStyle: true,
+          color: textColor,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const statusMap: Array<'absent' | 'justified' | 'present'> = [
+              'absent',
+              'justified',
+              'present',
+            ];
+            const statusKey = statusMap[context.dataIndex];
+            const topTeachers = topTeachersByStatus[statusKey];
+            const baseLabel = `${context.label}: ${context.formattedValue}`;
+
+            if (!topTeachers?.length) return baseLabel;
+            const teacherLines = topTeachers.map(
+              (teacher, index) => `${index + 1}. ${teacher.teacher} (${teacher[statusKey]})`
+            );
+
+            return [baseLabel, ...teacherLines];
+          },
+        },
+      },
+    },
+  };
 
   const renderTeacherListCard = (
     title: string,
