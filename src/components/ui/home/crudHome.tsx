@@ -1,4 +1,4 @@
-import { ChartData, ChartOptions } from 'chart.js';
+import { Chart as ChartJS, ChartData, ChartOptions } from 'chart.js';
 import { AutoComplete, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
 import { Chart } from 'primereact/chart';
@@ -150,7 +150,8 @@ function DashboardAttendancePanel() {
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
       const statDate = extractDate(stat.weekday);
-      if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
+      if (!statDate) return;
+      if (statDate < startOfWeek || statDate > endOfWeek) return;
       const day = normalizeWeekday(stat.weekday);
       if (day === 'domingo' || !base[day]) return;
       base[day].present += stat.presentAmount;
@@ -294,6 +295,32 @@ function DashboardAttendancePanel() {
       (stats.classPresentDay ?? 0)
     );
   }, [attendanceStatistics]);
+
+  const piePercentagePlugin = useMemo(
+    () => ({
+      id: 'piePercentageLabels',
+      afterDatasetsDraw: (chartInstance: ChartJS) => {
+        const { ctx } = chartInstance;
+        const dataset = chartInstance.getDatasetMeta(0);
+
+        dataset.data.forEach((dataPoint, index) => {
+          const rawValue = Number(chartInstance.data.datasets?.[0]?.data?.[index] ?? 0);
+          const percentage = totalDayAttendance
+            ? ((rawValue / totalDayAttendance) * 100).toFixed(1)
+            : '0.0';
+          const { x, y } = dataPoint.tooltipPosition();
+          ctx.save();
+          ctx.fillStyle = textColor || '#495057';
+          ctx.font = '600 12px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(`${percentage}%`, x, y);
+          ctx.restore();
+        });
+      },
+    }),
+    [textColor, totalDayAttendance]
+  );
 
   const pieOptions: ChartOptions = {
     plugins: {
@@ -618,7 +645,7 @@ function DashboardAttendancePanel() {
             <h5 className="text-left w-full">
               {t('module.home.dashboard.dashboardPanel.graph.day')}
             </h5>
-            <Chart type="pie" data={pieDataDay} options={pieOptions} />
+            <Chart type="pie" data={pieDataDay} options={pieOptions} plugins={[piePercentagePlugin]} />
           </div>
         </div>
       </div>
