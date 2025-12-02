@@ -138,6 +138,15 @@ function DashboardAttendancePanel() {
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(startOfWeek.getDate() + 6);
 
+  type ReportStat = NonNullable<typeof reportStatistics>['getReportStatistics'][number];
+
+  const matchesFilters = (stat: ReportStat) => {
+    if (selectedCareer && stat.careerName !== selectedCareer) return false;
+    if (selectedSemester && stat.semester !== selectedSemester) return false;
+    if (selectedPeriod && stat.periodName !== selectedPeriod) return false;
+    return true;
+  };
+
   const weeklyStatusTotals = useMemo(() => {
     const base = {
       lunes: { present: 0, absent: 0, justified: 0 },
@@ -149,6 +158,8 @@ function DashboardAttendancePanel() {
     } as Record<string, { present: number; absent: number; justified: number }>;
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
+      if (!matchesFilters(stat)) return;
+
       const statDate = extractDate(stat.weekday);
       if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
 
@@ -160,7 +171,7 @@ function DashboardAttendancePanel() {
     });
 
     return base;
-  }, [endOfWeek, reportStatistics, startOfWeek]);
+  }, [endOfWeek, reportStatistics, selectedCareer, selectedPeriod, selectedSemester, startOfWeek]);
 
   const chartData: ChartData = {
     labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
@@ -246,6 +257,8 @@ function DashboardAttendancePanel() {
     const results: Record<string, { present: number; absent: number; justified: number }> = {};
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
+      if (!matchesFilters(stat)) return;
+
       const statDate = extractDate(stat.weekday);
       const matchesToday = statDate
         ? statDate.getTime() === todayStart.getTime()
@@ -264,7 +277,7 @@ function DashboardAttendancePanel() {
       teacher,
       ...values,
     }));
-  }, [reportStatistics, todayNormalized, todayStart]);
+  }, [reportStatistics, selectedCareer, selectedPeriod, selectedSemester, todayNormalized, todayStart]);
 
   const buildTeacherList = (field: 'present' | 'absent' | 'justified') =>
     [...teacherDailyStats]
@@ -311,10 +324,40 @@ function DashboardAttendancePanel() {
           const { x, y } = dataPoint.tooltipPosition();
           ctx.save();
           ctx.fillStyle = textColor || '#495057';
-          ctx.font = '600 12px sans-serif';
+          ctx.font = '700 18px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText(`${percentage}%`, x, y);
+          const label = `${percentage}%`;
+          const padding = 6;
+          const textWidth = ctx.measureText(label).width;
+          const boxWidth = textWidth + padding * 2;
+          const boxHeight = 24;
+
+          const radius = 8;
+          const left = x - boxWidth / 2;
+          const top = y - boxHeight / 2;
+          const right = x + boxWidth / 2;
+          const bottom = y + boxHeight / 2;
+
+          ctx.fillStyle = 'rgba(255,255,255,0.85)';
+          ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(left + radius, top);
+          ctx.lineTo(right - radius, top);
+          ctx.quadraticCurveTo(right, top, right, top + radius);
+          ctx.lineTo(right, bottom - radius);
+          ctx.quadraticCurveTo(right, bottom, right - radius, bottom);
+          ctx.lineTo(left + radius, bottom);
+          ctx.quadraticCurveTo(left, bottom, left, bottom - radius);
+          ctx.lineTo(left, top + radius);
+          ctx.quadraticCurveTo(left, top, left + radius, top);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = textColor || '#495057';
+          ctx.fillText(label, x, y);
           ctx.restore();
         });
       },
