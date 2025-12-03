@@ -133,11 +133,17 @@ function UserCrud() {
         setVisiblePasswordUser(false);
       },
       onError: (errorResponse: IApiError) => {
+        const serverMessage = errorResponse.response.errors?.[0]?.message;
+        const isSmtpAuthError =
+          typeof serverMessage === 'string' && serverMessage.includes('Authentication unsuccessful');
+
         toast.current?.show({
           severity: 'error',
           summary: t('global.toast.error.summary'),
-          detail: errorResponse.response.errors[0].message,
-          life: 5000,
+          detail: isSmtpAuthError
+            ? 'No se pudo actualizar la contraseña porque el servidor de correo rechazó las credenciales configuradas. Contacta al administrador del sistema.'
+            : serverMessage,
+          life: 7000,
         });
       },
     });
