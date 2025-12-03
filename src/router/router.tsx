@@ -55,6 +55,7 @@ const dashboardRoute = new Route({
       'JEFE_ACADEMICO',
       'SUPER_ADMINISTRATOR',
       'DOCENTE',
+      'RECURSOS_HUMANOS',
     ];
 
     if (allowedroles.some((role) => roles.includes(role))) {
@@ -160,6 +161,7 @@ const eventRoute = new Route({
       'SUBDIRECTOR_ACADEMICO',
       'JEFE_ACADEMICO',
       'SUPER_ADMINISTRATOR',
+      'RECURSOS_HUMANOS',
     ];
 
     if (allowedroles.some((role) => roles.includes(role))) {

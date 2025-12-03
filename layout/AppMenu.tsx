@@ -163,15 +163,13 @@ function AppMenu() {
         !item?.seperator
       );
     } else if (roles.includes('RECURSOS_HUMANOS')) {
-      if (item.label === 'Panel de Control') {
-        item.items = item.items?.slice(1);
-      }
+      const allowedPaths = ['/home/dashboard', '/justify/dashboard', '/event/dashboard'];
 
       return (
         item.items &&
-        item.items[0].to &&
-        typeof item.items[0].to === 'string' &&
-        ['/justify/dashboard'].includes(item.items[0].to) &&
+        item.items.some(
+          (child) => child.to && typeof child.to === 'string' && allowedPaths.includes(child.to),
+        ) &&
         !item?.seperator
       );
     } else {
