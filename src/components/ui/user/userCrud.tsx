@@ -16,6 +16,7 @@ import {
   IUser,
   useDeleteUserMutation,
   useGetAllUsersQuery,
+  useUpsertUserMutation,
 } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';
 import { TokenData } from '../../../store/auth/type';
@@ -82,8 +83,14 @@ function UserCrud() {
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<any>>(null);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+  const [selectedUserPassword, setSelectedUserPassword] = useState<IUser | null>(null);
   const [visibleEditUser, setVisibleEditUser] = useState(false);
   const [visiblePictureUser, setVisiblePictureUser] = useState(false);
+  const [visiblePasswordUser, setVisiblePasswordUser] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    newPassword: '',
+    confirmPassword: '',
+  });
 
   const { data } = useGetAllUsersQuery<IGetAllUsersQuery>(GRAPHQL_CLIENT, {
     limit: 99999,
@@ -113,6 +120,27 @@ function UserCrud() {
       });
     },
   });
+
+  const { mutate: upsertUserMutation, isLoading: isUpdatingPassword } =
+    useUpsertUserMutation<IApiError>(GRAPHQL_CLIENT, {
+      onSuccess: () => {
+        toast.current?.show({
+          severity: 'success',
+          summary: t('global.toast.success.summary'),
+          detail: 'Contraseña actualizada correctamente',
+        });
+
+        setVisiblePasswordUser(false);
+      },
+      onError: (errorResponse: IApiError) => {
+        toast.current?.show({
+          severity: 'error',
+          summary: t('global.toast.error.summary'),
+          detail: errorResponse.response.errors[0].message,
+          life: 5000,
+        });
+      },
+    });
 
   const roleTranslations = {
     DIRECTOR: 'Director Academico',
@@ -151,6 +179,12 @@ function UserCrud() {
     setSelectedUser(user);
   };
 
+  const changePasswordUser = (user: IUser) => {
+    setSelectedUserPassword(user);
+    setPasswordForm({ newPassword: '', confirmPassword: '' });
+    setVisiblePasswordUser(true);
+  };
+
   const confirmDeleteUser = (user: IUser) => {
     setUser(user);
     setDeleteUserDialog(true);
@@ -163,6 +197,44 @@ function UserCrud() {
       data: { _id: _users, updatedBy: actuallyUser },
     });
     setDeleteUserDialog(false);
+  };
+
+  const submitPasswordChange = () => {
+    if (!selectedUserPassword) return;
+
+    if (!passwordForm.newPassword || !passwordForm.confirmPassword) {
+      toast.current?.show({
+        severity: 'warn',
+        summary: 'Validación',
+        detail: 'Ingresa y confirma la nueva contraseña.',
+      });
+      return;
+    }
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.current?.show({
+        severity: 'warn',
+        summary: 'Validación',
+        detail: 'Las contraseñas no coinciden.',
+      });
+      return;
+    }
+
+    upsertUserMutation({
+      data: {
+        _id: selectedUserPassword._id,
+        email: selectedUserPassword.email,
+        firstName: selectedUserPassword.firstName,
+        lastName: selectedUserPassword.lastName,
+        middleName: selectedUserPassword.middleName,
+        password: passwordForm.newPassword,
+        department: selectedUserPassword.department,
+        roles: selectedUserPassword.roles as IRoles[],
+        gender: selectedUserPassword.gender,
+        rfc: selectedUserPassword.rfc,
+        updatedBy: actuallyUser,
+      },
+    });
   };
 
   const exportCSV = () => {
@@ -253,6 +325,17 @@ function UserCrud() {
         />
         {roles.includes('SUPER_ADMINISTRATOR') && (
           <Button
+            icon="pi pi-key"
+            className="mb-2"
+            rounded
+            outlined
+            severity="info"
+            onClick={() => changePasswordUser(rowData)}
+            style={{ marginRight: '2px' }}
+          />
+        )}
+        {roles.includes('SUPER_ADMINISTRATOR') && (
+          <Button
             icon="pi pi-trash"
             className="mb-2"
             rounded
@@ -314,6 +397,59 @@ function UserCrud() {
               setVisible={setVisibleEditUser}
               id={selectedUser._id}
             />
+          )}
+
+          {selectedUserPassword && visiblePasswordUser && (
+            <Dialog
+              visible={visiblePasswordUser}
+              style={{ width: '25rem' }}
+              header="Cambiar contraseña"
+              onHide={() => setVisiblePasswordUser(false)}
+              footer={
+                <div className="flex gap-2 justify-content-end">
+                  <Button
+                    label="Cancelar"
+                    className="p-button-text"
+                    onClick={() => setVisiblePasswordUser(false)}
+                  />
+                  <Button
+                    label="Guardar"
+                    icon="pi pi-save"
+                    loading={isUpdatingPassword}
+                    onClick={submitPasswordChange}
+                  />
+                </div>
+              }
+            >
+              <div className="field">
+                <span className="p-float-label p-input-icon-right">
+                  <i className="pi pi-key" />
+                  <InputText
+                    id="new-password"
+                    type="password"
+                    value={passwordForm.newPassword}
+                    onChange={(e) =>
+                      setPasswordForm((prev) => ({ ...prev, newPassword: e.target.value }))
+                    }
+                  />
+                  <label htmlFor="new-password">Nueva contraseña</label>
+                </span>
+              </div>
+              <div className="field mt-3">
+                <span className="p-float-label p-input-icon-right">
+                  <i className="pi pi-lock" />
+                  <InputText
+                    id="confirm-password"
+                    type="password"
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) =>
+                      setPasswordForm((prev) => ({ ...prev, confirmPassword: e.target.value }))
+                    }
+                  />
+                  <label htmlFor="confirm-password">Confirmar contraseña</label>
+                </span>
+              </div>
+            </Dialog>
           )}
 
           {selectedUser && visiblePictureUser && (
