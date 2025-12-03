@@ -125,59 +125,57 @@ function AppMenu() {
     },
   ];
 
-  const filterMenu = model.filter((item) => {
-    if (roles.includes('SUPER_ADMINISTRATOR')) {
-      return true;
-    } else if (roles.includes('DIRECTOR_ACADEMICO')) {
-      return (
-        item.items &&
-        item.items[0].to &&
-        ['/home/dashboard', '/event/dashboard'].includes(item.items[0].to) &&
-        !item?.seperator
-      );
-    } else if (roles.includes('SUBDIRECTOR_ACADEMICO')) {
-      return (
-        item.items &&
-        typeof item.items[0].to === 'string' &&
-        ['/home/dashboard', '/event/dashboard', '/schedule/dashboard'].includes(item.items[0].to) &&
-        !item?.seperator
-      );
-    } else if (roles.includes('JEFE_ACADEMICO')) {
-      return (
-        item.items &&
-        item.items[0].to &&
-        [
-          '/home/dashboard',
-          '/event/dashboard',
-          '/schedule/dashboard',
-          '/justify/dashboard',
-        ].includes(item.items[0].to) &&
-        !item?.seperator
-      );
-    } else if (roles.includes('DOCENTE')) {
-      return (
-        item.items &&
-        item.items[0].to &&
-        typeof item.items[0].to === 'string' &&
-        ['/home/dashboard', '/justify/dashboard'].includes(item.items[0].to) &&
-        !item?.seperator
-      );
-    } else if (roles.includes('RECURSOS_HUMANOS')) {
-      if (item.label === 'Panel de Control') {
-        item.items = item.items?.slice(1);
-      }
+  const routeRoles: Record<string, string[]> = {
+    '/home/dashboard': [
+      'DIRECTOR_ACADEMICO',
+      'SUBDIRECTOR_ACADEMICO',
+      'JEFE_ACADEMICO',
+      'SUPER_ADMINISTRATOR',
+      'DOCENTE',
+    ],
+    '/user/dashboard': ['SUPER_ADMINISTRATOR'],
+    '/schedule/dashboard': ['SUPER_ADMINISTRATOR', 'SUBDIRECTOR_ACADEMICO', 'JEFE_ACADEMICO'],
+    '/justify/dashboard': ['SUPER_ADMINISTRATOR', 'DOCENTE', 'RECURSOS_HUMANOS', 'JEFE_ACADEMICO'],
+    '/event/dashboard': ['DIRECTOR_ACADEMICO', 'SUBDIRECTOR_ACADEMICO', 'JEFE_ACADEMICO', 'SUPER_ADMINISTRATOR'],
+    '/maintenance/dashboard': ['SUPER_ADMINISTRATOR'],
+    '/settings/schedule': ['SUPER_ADMINISTRATOR'],
+    '/settings/subject': ['SUPER_ADMINISTRATOR'],
+    '/settings/building': ['SUPER_ADMINISTRATOR'],
+    '/settings/department': ['SUPER_ADMINISTRATOR'],
+    '/settings/period': ['SUPER_ADMINISTRATOR'],
+    '/settings/career': ['SUPER_ADMINISTRATOR'],
+    '/settings/classroom': ['SUPER_ADMINISTRATOR'],
+    '/settings/group': ['SUPER_ADMINISTRATOR'],
+  };
 
-      return (
-        item.items &&
-        item.items[0].to &&
-        typeof item.items[0].to === 'string' &&
-        ['/justify/dashboard'].includes(item.items[0].to) &&
-        !item?.seperator
-      );
-    } else {
-      return false;
-    }
-  });
+  const isAllowedPath = (path?: string | null) => {
+    if (!path) return false;
+    if (roles.includes('SUPER_ADMINISTRATOR')) return true;
+    const allowed = routeRoles[path];
+    return allowed ? allowed.some((role) => roles.includes(role)) : false;
+  };
+
+  const filterMenu = model
+    .map((item) => {
+      const filteredItems = item.items
+        ?.map((child) => {
+          if (child.items && child.items.length > 0) {
+            const nestedItems = child.items.filter((grandChild) =>
+              isAllowedPath(typeof grandChild.to === 'string' ? grandChild.to : null)
+            );
+            return nestedItems.length > 0 ? { ...child, items: nestedItems } : null;
+          }
+
+          return isAllowedPath(typeof child.to === 'string' ? child.to : null) ? child : null;
+        })
+        .filter((child): child is AppMenuItem => Boolean(child));
+
+      if (filteredItems && filteredItems.length > 0) {
+        return { ...item, items: filteredItems };
+      }
+      return null;
+    })
+    .filter((item): item is AppMenuItem => Boolean(item));
 
   return (
     <MenuProvider>
