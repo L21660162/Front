@@ -73,15 +73,6 @@ function CareerCrud() {
     },
   });
 
-  const { data: file } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
-    page: 1,
-    limit: 10,
-    offset: 0,
-    filter: {
-      attendanceJustified: status?.getAllAttendances.docs[0]?._id,
-    },
-  });
-
   const { data: filesData } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
     page: 1,
     limit: 50,
@@ -191,19 +182,21 @@ function CareerCrud() {
       },
     });
 
+    const hasRejection = fileData?.getAllFiles.docs?.[0]?.comments?.some((comment) => comment?._id) ?? false;
+    const isApproved = fileData?.getAllFiles.docs?.[0]?.approvedBy !== null;
+
     return (
       <div>
         {fileData?.getAllFiles.docs?.length > 0 ? (
-          fileData.getAllFiles.docs[0].approvedBy !== null ? (
+          isApproved ? (
             <Tag value="Justificado" severity="success" className="p-tag-rounded mx-1" />
-          ) : fileData.getAllFiles.docs[0].comments?.length > 0 &&
-            fileData.getAllFiles.docs[0].comments[0]._id !== null ? (
-            <Tag value="No Aceptado" severity="danger" className="p-tag-rounded mx-1" />
+          ) : hasRejection ? (
+            <Tag value="No aceptado" severity="danger" className="p-tag-rounded mx-1" />
           ) : (
-            <Tag value="En revisión" severity="warning" className="p-tag-rounded mx-1" />
+            <Tag value="Pendiente de revisión" severity="warning" className="p-tag-rounded mx-1" />
           )
         ) : (
-          <Tag value="Sin Justificar" severity="info" className="p-tag-rounded mx-1" />
+          <Tag value="Pendiente de justificar" severity="warning" className="p-tag-rounded mx-1" />
         )}
       </div>
     );
@@ -271,6 +264,27 @@ function CareerCrud() {
 
   const approvedRecords = filesData?.getAllFiles.docs?.filter((fileItem) => fileItem.approvedBy) ?? [];
 
+  const { data: selectedScheduleData } = useGetSchedulesFormattedQuery(GRAPHQL_CLIENT, {
+    schedule: selectedAttendance?.schedule ?? '',
+  });
+
+  const selectedSched = selectedScheduleData?.getSchedulesFormatted?.[0];
+
+  const { data: selectedTeacher } = useGetUserByIdQuery(GRAPHQL_CLIENT, {
+    id: selectedSched?.teacherId ?? '',
+  });
+
+  const { data: selectedFiles } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
+    page: 1,
+    limit: 1,
+    offset: 0,
+    filter: {
+      attendanceJustified: selectedAttendance?._id,
+    },
+  });
+
+  const selectedFile = selectedFiles?.getAllFiles.docs?.[0];
+
   const actionBodyTemplate = (attendance: IAttendance) => {
     return (
       <div className="flex align-items-center">
@@ -280,8 +294,10 @@ function CareerCrud() {
           rounded
           outlined
           severity="warning"
-          onClick={() => setAprovateDialog(true)}
-          disabled={file?.getAllFiles.docs.length === 0}
+          onClick={() => {
+            setSelectedAttendance(attendance);
+            setAprovateDialog(true);
+          }}
         />
       </div>
     );
@@ -329,10 +345,20 @@ function CareerCrud() {
     </div>
   );
 
-  const hideAprovateDialog = () => {
+  const handleApprove = () => {
+    if (!selectedFile?._id) {
+      toast.current?.show({
+        severity: 'warn',
+        summary: 'Acción no disponible',
+        detail: 'No se encontró un justificante para aprobar.',
+        life: 4000,
+      });
+      return;
+    }
+
     mutate({
       data: {
-        _id: file?.getAllFiles.docs[0]._id,
+        _id: selectedFile._id,
         approvedBy: _id,
       },
     });
@@ -341,10 +367,18 @@ function CareerCrud() {
 
   const aprovateDialogFooter = () => (
     <>
-      <Button label="No" icon="pi pi-times" text onClick={() => setAddCommentDialog(true)} />
-      <Button label="Yes" icon="pi pi-check" text onClick={hideAprovateDialog} />
+      <Button
+        label="Rechazar"
+        icon="pi pi-times"
+        outlined
+        severity="danger"
+        onClick={() => setAddCommentDialog(true)}
+      />
+      <Button label="Aprobar" icon="pi pi-check" text severity="success" onClick={handleApprove} />
     </>
   );
+
+  const closeAprovateDialog = () => setAprovateDialog(false);
 
   return (
     <div className="grid crud-demo">
@@ -352,11 +386,11 @@ function CareerCrud() {
         <div className="card">
           <Toast ref={toast} />
 
-          {file?.getAllFiles.docs.length > 0 && addCommentDialog && (
+          {selectedFile && addCommentDialog && (
             <AddCommentDialogForm
               visible={addCommentDialog}
               setVisible={setAddCommentDialog}
-              file={file?.getAllFiles.docs[0]._id}
+              file={selectedFile._id}
               headerTitle="Agregar comentario"
             />
           )}
@@ -433,7 +467,7 @@ function CareerCrud() {
               />
               <Column
                 field="certificate"
-                header={t('global.dictionary.tisCertified')}
+                header="Estado"
                 dataType="boolean"
                 body={certificateBodyTemplate}
                 headerStyle={{
@@ -525,12 +559,56 @@ function CareerCrud() {
           <Dialog
             visible={aprovateDialog}
             style={{ width: '450px' }}
-            header="Documento"
+            header="Revisión de justificante"
             modal
             footer={aprovateDialogFooter}
-            onHide={hideAprovateDialog}
+            onHide={closeAprovateDialog}
           >
-            <div className="flex w-full h-full flex-grow-1">{/* contenido del iframe, etc. */}</div>
+            <div className="flex flex-column gap-3 w-full">
+              <div className="flex flex-column gap-1">
+                <span className="font-semibold text-900">Acción a realizar</span>
+                <p className="m-0 text-700">
+                  Estás a punto de {selectedFile?._id ? 'aprobar o rechazar' : 'gestionar'} el justificante
+                  registrado para esta ausencia. Aprobar lo marcará como justificado; rechazar solicitará un
+                  comentario.
+                </p>
+              </div>
+
+              <div className="flex flex-column gap-2 p-3 border-1 surface-border border-round">
+                <div className="flex justify-content-between">
+                  <span className="text-700">Profesor</span>
+                  <span className="font-semibold text-900">
+                    {selectedTeacher
+                      ? `${selectedTeacher.getUserById.firstName} ${selectedTeacher.getUserById.lastName} ${selectedTeacher.getUserById.middleName}`
+                      : 'Sin datos'}
+                  </span>
+                </div>
+                <div className="flex justify-content-between">
+                  <span className="text-700">Materia</span>
+                  <span className="font-semibold text-900">{selectedSched?.subjectLargeName ?? 'Sin datos'}</span>
+                </div>
+                <div className="flex justify-content-between">
+                  <span className="text-700">Fecha de registro</span>
+                  <span className="font-semibold text-900">
+                    {selectedAttendance
+                      ? new Date(selectedAttendance.createdAt).toLocaleDateString('es-MX', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        })
+                      : 'Sin datos'}
+                  </span>
+                </div>
+                <div className="flex justify-content-between">
+                  <span className="text-700">Archivo</span>
+                  <span className="font-semibold text-900">{selectedFile?.nameFile ?? 'No adjunto'}</span>
+                </div>
+              </div>
+
+              <p className="m-0 text-600">
+                Confirma la acción para este justificante. Se notificará al profesor correspondiente.
+              </p>
+            </div>
           </Dialog>
         </div>
       </div>
