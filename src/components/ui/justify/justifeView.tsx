@@ -7,6 +7,7 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { RadioButton } from 'primereact/radiobutton';
 import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
 import React, { useRef, useState } from 'react';
@@ -15,6 +16,8 @@ import { IApiError } from '../../../../types/apierror';
 import {
   IAttendance,
   IAttendanceStatus,
+  IFile,
+  IFileType,
   useApproveFileMutation,
   useGetAllAttendancesQuery,
   useGetAllFilesQuery,
@@ -33,6 +36,7 @@ function CareerCrud() {
   const [aprovateDialog, setAprovateDialog] = useState(false);
   const [addCommentDialog, setAddCommentDialog] = useState(false);
   const [selectedAttendance, setSelectedAttendance] = useState<IAttendance | null>(null);
+  const [selectedView, setSelectedView] = useState<'pending' | 'approved'>('pending');
   const [globalFilter, setGlobalFilter] = useState('');
   const toast = useRef<Toast>(null);
   const dt = useRef<DataTable<any>>(null);
@@ -75,6 +79,15 @@ function CareerCrud() {
     offset: 0,
     filter: {
       attendanceJustified: status?.getAllAttendances.docs[0]?._id,
+    },
+  });
+
+  const { data: filesData } = useGetAllFilesQuery(GRAPHQL_CLIENT, {
+    page: 1,
+    limit: 50,
+    offset: 0,
+    filter: {
+      fileType: [IFileType.Justificante],
     },
   });
 
@@ -196,6 +209,68 @@ function CareerCrud() {
     );
   };
 
+  const approvedStatusTemplate = (fileItem: IFile) => {
+    const isApproved = fileItem.approvedBy !== null && fileItem.approvedBy !== undefined;
+    const hasRejection = fileItem.comments?.some((comment) => comment?._id) ?? false;
+
+    if (isApproved) {
+      return <Tag value="Aprobado" severity="success" className="p-tag-rounded mx-1" />;
+    }
+
+    if (hasRejection) {
+      return <Tag value="No aceptado" severity="danger" className="p-tag-rounded mx-1" />;
+    }
+
+    return <Tag value="En revisión" severity="warning" className="p-tag-rounded mx-1" />;
+  };
+
+  const approvedUploaderTemplate = (fileItem: IFile) => {
+    const { firstName, lastName, middleName, email } = fileItem.uploadedBy;
+    const fullName = `${firstName} ${lastName} ${middleName}`.trim();
+
+    return (
+      <div className="flex flex-column">
+        <span className="font-semibold text-900">{fullName || email}</span>
+        <small className="text-500">{email}</small>
+      </div>
+    );
+  };
+
+  const approvedFileNameTemplate = (fileItem: IFile) => {
+    const createdAt = new Date(fileItem.createdAt).toLocaleDateString('es-MX', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+
+    return (
+      <div className="flex flex-column">
+        <span className="font-semibold">{fileItem.nameFile}</span>
+        <small className="text-500">Subido el {createdAt}</small>
+      </div>
+    );
+  };
+
+  const approvedActionTemplate = (fileItem: IFile) => {
+    const basePath = 'https://ssb.matehuala.tecnm.mx/asis_be';
+    const fileUrl = `${basePath}${fileItem.path}`;
+
+    return (
+      <div className="flex align-items-center gap-2">
+        <Button
+          icon="pi pi-external-link"
+          rounded
+          outlined
+          severity="info"
+          onClick={() => window.open(fileUrl, '_blank')}
+          tooltip="Abrir justificante"
+        />
+      </div>
+    );
+  };
+
+  const approvedRecords = filesData?.getAllFiles.docs?.filter((fileItem) => fileItem.approvedBy) ?? [];
+
   const actionBodyTemplate = (attendance: IAttendance) => {
     return (
       <div className="flex align-items-center">
@@ -213,8 +288,36 @@ function CareerCrud() {
   };
 
   const header = (
-    <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-      <h5 className="m-0">{t('global.dictionary.justifilist')}</h5>
+    <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center gap-3">
+      <div className="flex align-items-center gap-3">
+        <h5 className="m-0">{t('global.dictionary.justifilist')}</h5>
+        <div className="flex align-items-center gap-3">
+          <div className="flex align-items-center gap-2">
+            <RadioButton
+              inputId="pending"
+              name="justify-view"
+              value="pending"
+              onChange={(e) => setSelectedView(e.value)}
+              checked={selectedView === 'pending'}
+            />
+            <label htmlFor="pending" className="cursor-pointer">
+              Pendientes
+            </label>
+          </div>
+          <div className="flex align-items-center gap-2">
+            <RadioButton
+              inputId="approved"
+              name="justify-view"
+              value="approved"
+              onChange={(e) => setSelectedView(e.value)}
+              checked={selectedView === 'approved'}
+            />
+            <label htmlFor="approved" className="cursor-pointer">
+              Aprobados
+            </label>
+          </div>
+        </div>
+      </div>
       <span className="block mt-2 md:mt-0 p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -258,99 +361,166 @@ function CareerCrud() {
             />
           )}
 
-          <DataTable
-            ref={dt}
-            value={status?.getAllAttendances.docs}
-            selection={selectedAttendance}
-            onSelectionChange={(e) => setSelectedAttendance(e.value as any)}
-            dataKey="_id"
-            paginator
-            rows={10}
-            rowsPerPageOptions={[5, 10, 25]}
-            className="datatable-responsive"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} registros"
-            globalFilter={globalFilter}
-            emptyMessage={t('global.dictionary.Nojustifieds')}
-            header={header}
-            responsiveLayout="scroll"
-          >
-            <Column
-              field="name"
-              header={t('global.dictionary.tcareerName')}
-              sortable
-              body={nameBodyTemplate}
-              headerStyle={{
-                minWidth: '15rem',
-                border: '1px solid #2a497b',
-                backgroundColor: '#2a497b',
-                color: 'white',
-              }}
-              style={{ textAlign: 'left' }}
-            />
-            <Column
-              field="description"
-              header={t('global.dictionary.tcareerDescription')}
-              sortable
-              body={dataBodyTemplate}
-              headerStyle={{
-                minWidth: '15rem',
-                border: '1px solid #2a497b',
-                backgroundColor: '#2a497b',
-                color: 'white',
-              }}
-              style={{ textAlign: 'left' }}
-            />
-            <Column
-              field="duration"
-              header={t('global.dictionary.tduration')}
-              sortable
-              body={subjectBodyTemplate}
-              headerStyle={{
-                minWidth: '15rem',
-                border: '1px solid #2a497b',
-                backgroundColor: '#2a497b',
-                color: 'white',
-              }}
-              style={{ textAlign: 'left' }}
-            />
-            <Column
-              field="institute"
-              header={t('global.dictionary.tcredits')}
-              sortable
-              body={durationBodyTemplate}
-              headerStyle={{
-                minWidth: '15rem',
-                border: '1px solid #2a497b',
-                backgroundColor: '#2a497b',
-                color: 'white',
-              }}
-              style={{ textAlign: 'left' }}
-            />
-            <Column
-              field="certificate"
-              header={t('global.dictionary.tisCertified')}
-              dataType="boolean"
-              body={certificateBodyTemplate}
-              headerStyle={{
-                minWidth: '5rem',
-                border: '1px solid #2a497b',
-                backgroundColor: '#2a497b',
-                color: 'white',
-              }}
-              style={{ textAlign: 'left', minWidth: '8rem' }}
-            />
-            <Column
-              body={actionBodyTemplate}
-              header="View"
-              headerStyle={{
-                minWidth: '10rem',
-                border: '1px solid #2a497b',
-                backgroundColor: '#2a497b',
-                color: 'white',
-              }}
-            />
-          </DataTable>
+          {selectedView === 'pending' ? (
+            <DataTable
+              ref={dt}
+              value={status?.getAllAttendances.docs}
+              selection={selectedAttendance}
+              onSelectionChange={(e) => setSelectedAttendance(e.value as any)}
+              dataKey="_id"
+              paginator
+              rows={10}
+              rowsPerPageOptions={[5, 10, 25]}
+              className="datatable-responsive"
+              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+              currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} registros"
+              globalFilter={globalFilter}
+              emptyMessage={t('global.dictionary.Nojustifieds')}
+              header={header}
+              responsiveLayout="scroll"
+            >
+              <Column
+                field="name"
+                header={t('global.dictionary.tcareerName')}
+                sortable
+                body={nameBodyTemplate}
+                headerStyle={{
+                  minWidth: '15rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+                style={{ textAlign: 'left' }}
+              />
+              <Column
+                field="description"
+                header={t('global.dictionary.tcareerDescription')}
+                sortable
+                body={dataBodyTemplate}
+                headerStyle={{
+                  minWidth: '15rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+                style={{ textAlign: 'left' }}
+              />
+              <Column
+                field="duration"
+                header={t('global.dictionary.tduration')}
+                sortable
+                body={subjectBodyTemplate}
+                headerStyle={{
+                  minWidth: '15rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+                style={{ textAlign: 'left' }}
+              />
+              <Column
+                field="institute"
+                header={t('global.dictionary.tcredits')}
+                sortable
+                body={durationBodyTemplate}
+                headerStyle={{
+                  minWidth: '15rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+                style={{ textAlign: 'left' }}
+              />
+              <Column
+                field="certificate"
+                header={t('global.dictionary.tisCertified')}
+                dataType="boolean"
+                body={certificateBodyTemplate}
+                headerStyle={{
+                  minWidth: '5rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+                style={{ textAlign: 'left', minWidth: '8rem' }}
+              />
+              <Column
+                body={actionBodyTemplate}
+                header="View"
+                headerStyle={{
+                  minWidth: '10rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+              />
+            </DataTable>
+          ) : (
+            <DataTable
+              value={approvedRecords}
+              dataKey="_id"
+              paginator
+              rows={10}
+              rowsPerPageOptions={[5, 10, 25]}
+              className="datatable-responsive"
+              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+              currentPageReportTemplate="Mostrar del {first} al {last} de {totalRecords} justificantes aprobados"
+              globalFilter={globalFilter}
+              emptyMessage="No hay justificantes aprobados"
+              header={header}
+              responsiveLayout="scroll"
+            >
+              <Column
+                field="nameFile"
+                header="Justificante"
+                sortable
+                body={approvedFileNameTemplate}
+                headerStyle={{
+                  minWidth: '15rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+                style={{ textAlign: 'left' }}
+              />
+              <Column
+                field="uploadedBy.firstName"
+                header="Subido por"
+                sortable
+                body={approvedUploaderTemplate}
+                headerStyle={{
+                  minWidth: '15rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+                style={{ textAlign: 'left' }}
+              />
+              <Column
+                field="approvedBy"
+                header="Estado"
+                sortable
+                body={approvedStatusTemplate}
+                headerStyle={{
+                  minWidth: '10rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+                style={{ textAlign: 'left', minWidth: '8rem' }}
+              />
+              <Column
+                body={approvedActionTemplate}
+                header="Acciones"
+                headerStyle={{
+                  minWidth: '10rem',
+                  border: '1px solid #2a497b',
+                  backgroundColor: '#2a497b',
+                  color: 'white',
+                }}
+              />
+            </DataTable>
+          )}
 
           <Dialog
             visible={aprovateDialog}
