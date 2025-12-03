@@ -39,6 +39,7 @@ function DashboardAttendancePanel() {
   ];
   const [value, setValue] = useState<FilterTime>(tiempo[3]);
   const { _id: teacherId, roles } = useAccessTokenData() as TokenData;
+  const isHr = roles.includes('RECURSOS_HUMANOS');
   const {
     careerOptionsData,
     attendanceStatistics,
@@ -304,6 +305,27 @@ function DashboardAttendancePanel() {
       | 'classPresentSemester'
       | 'classPresentYear'
   ) => attendanceStatistics?.getAttendanceStatistics?.[field] ?? 0;
+
+  const absentsValue = useMemo(() => {
+    if (value === tiempo[0]) return pickStatisticValue('classAbsentDay');
+    if (value === tiempo[1]) return pickStatisticValue('classAbsentMonth');
+    if (value === tiempo[2]) return pickStatisticValue('classAbsentSemester');
+    return pickStatisticValue('classAbsentYear');
+  }, [attendanceStatistics, value]);
+
+  const justifiedValue = useMemo(() => {
+    if (value === tiempo[0]) return pickStatisticValue('classJustifyDay');
+    if (value === tiempo[1]) return pickStatisticValue('classJustifyMonth');
+    if (value === tiempo[2]) return pickStatisticValue('classJustifySemester');
+    return pickStatisticValue('classJustifyYear');
+  }, [attendanceStatistics, value]);
+
+  const presentValue = useMemo(() => {
+    if (value === tiempo[0]) return pickStatisticValue('classPresentDay');
+    if (value === tiempo[1]) return pickStatisticValue('classPresentMonth');
+    if (value === tiempo[2]) return pickStatisticValue('classPresentSemester');
+    return pickStatisticValue('classPresentYear');
+  }, [attendanceStatistics, value]);
 
   const chartOptions: ChartOptions = {
     indexAxis: 'x',
@@ -604,27 +626,10 @@ function DashboardAttendancePanel() {
     </div>
   );
 
-  const pendingJustifyValue = (() => {
-    const absent =
-      value === tiempo[0]
-        ? pickStatisticValue('classAbsentDay')
-        : value === tiempo[1]
-        ? pickStatisticValue('classAbsentMonth')
-        : value === tiempo[2]
-        ? pickStatisticValue('classAbsentSemester')
-        : pickStatisticValue('classAbsentYear');
-
-    const justified =
-      value === tiempo[0]
-        ? pickStatisticValue('classJustifyDay')
-        : value === tiempo[1]
-        ? pickStatisticValue('classJustifyMonth')
-        : value === tiempo[2]
-        ? pickStatisticValue('classJustifySemester')
-        : pickStatisticValue('classJustifyYear');
-
-    return Math.max(absent - justified, 0);
-  })();
+  const pendingJustifyValue = useMemo(() => Math.max(absentsValue - justifiedValue, 0), [
+    absentsValue,
+    justifiedValue,
+  ]);
 
   const weeklyEventSchedule = useMemo(() => {
     if (!eventsData?.getAllEvents.docs) return [];
@@ -843,6 +848,48 @@ function DashboardAttendancePanel() {
         </div>
       </div>
 
+      {isHr && (
+        <div className="col-12">
+          <div className="card surface-50">
+            <div className="flex align-items-center justify-content-between mb-3">
+              <div>
+                <span className="block text-500 font-medium">Resumen para Recursos Humanos</span>
+                <p className="m-0 text-600 text-sm">
+                  Visualiza ausencias, asistencias y el avance de justificantes según el periodo seleccionado.
+                </p>
+              </div>
+              <div
+                className="flex align-items-center justify-content-center bg-primary-50 text-primary-500 text-2xl border-round"
+                style={{ width: '3rem', height: '3rem' }}
+              >
+                <i className="pi pi-briefcase" aria-hidden />
+              </div>
+            </div>
+
+            <div className="grid text-sm">
+              <div className="col-12 md:col-4">
+                <div className="flex justify-content-between align-items-center border-round surface-100 p-3">
+                  <span className="text-600">Ausencias registradas</span>
+                  <span className="text-900 font-semibold text-xl">{absentsValue}</span>
+                </div>
+              </div>
+              <div className="col-12 md:col-4">
+                <div className="flex justify-content-between align-items-center border-round surface-100 p-3">
+                  <span className="text-600">Justificantes aprobados</span>
+                  <span className="text-900 font-semibold text-xl">{justifiedValue}</span>
+                </div>
+              </div>
+              <div className="col-12 md:col-4">
+                <div className="flex justify-content-between align-items-center border-round surface-100 p-3">
+                  <span className="text-600">Pendientes por justificar</span>
+                  <span className="text-900 font-semibold text-xl">{pendingJustifyValue}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="col-12 md:col-6 xl:col-3">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
@@ -850,15 +897,7 @@ function DashboardAttendancePanel() {
               <span className="block text-500 font-medium mb-3">
                 {t('global.dictionary.Absents')}
               </span>
-              <div className="text-900 font-semibold text-4xl">
-                {value === tiempo[0]
-                  ? attendanceStatistics?.getAttendanceStatistics.classAbsentDay
-                  : value === tiempo[1]
-                  ? attendanceStatistics?.getAttendanceStatistics.classAbsentMonth
-                  : value === tiempo[2]
-                  ? attendanceStatistics?.getAttendanceStatistics.classAbsentSemester
-                  : attendanceStatistics?.getAttendanceStatistics.classAbsentYear}
-              </div>
+              <div className="text-900 font-semibold text-4xl">{absentsValue}</div>
             </div>
             <div
               className="flex align-items-center justify-content-center bg-red-100 text-red-500 text-xl border-round"
@@ -876,15 +915,7 @@ function DashboardAttendancePanel() {
               <span className="block text-500 font-medium mb-3">
                 {t('global.dictionary.Justified')}
               </span>
-              <div className="text-900 font-semibold text-4xl">
-                {value === tiempo[0]
-                  ? attendanceStatistics?.getAttendanceStatistics.classJustifyDay
-                  : value === tiempo[1]
-                  ? attendanceStatistics?.getAttendanceStatistics.classJustifyMonth
-                  : value === tiempo[2]
-                  ? attendanceStatistics?.getAttendanceStatistics.classJustifySemester
-                  : attendanceStatistics?.getAttendanceStatistics.classJustifyYear}
-              </div>
+              <div className="text-900 font-semibold text-4xl">{justifiedValue}</div>
             </div>
             <div
               className="flex align-items-center justify-content-center bg-blue-100 text-blue-500 text-xl border-round"
@@ -918,15 +949,7 @@ function DashboardAttendancePanel() {
               <span className="block text-500 font-medium mb-3">
                 {t('global.dictionary.Presented')}
               </span>
-              <div className="text-900 font-semibold text-4xl">
-                {value === tiempo[0]
-                  ? attendanceStatistics?.getAttendanceStatistics.classPresentDay
-                  : value === tiempo[1]
-                  ? attendanceStatistics?.getAttendanceStatistics.classPresentMonth
-                  : value === tiempo[2]
-                  ? attendanceStatistics?.getAttendanceStatistics.classPresentSemester
-                  : attendanceStatistics?.getAttendanceStatistics.classPresentYear}
-              </div>
+              <div className="text-900 font-semibold text-4xl">{presentValue}</div>
             </div>
             <div
               className="flex align-items-center justify-content-center bg-green-100 text-green-500 text-xl border-round"
