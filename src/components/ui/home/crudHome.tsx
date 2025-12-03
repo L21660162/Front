@@ -772,7 +772,8 @@ function DashboardAttendancePanel() {
               /> */}
             {(roles.includes('SUPER_ADMINISTRATOR') ||
               roles.includes('DIRECTOR_ACADEMICO') ||
-              roles.includes('SUBDIRECTOR_ACADEMICO')) && (
+              roles.includes('SUBDIRECTOR_ACADEMICO') ||
+              roles.includes('RECURSOS_HUMANOS')) && (
               <>
                 <div className="flex">
                   <div className="mr-3 align-content-center">
