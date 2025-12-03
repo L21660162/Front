@@ -11,7 +11,7 @@ function Session({ children }: PropsWithOptionalChildren) {
     const { roles, path } = getAccessTokenData() as TokenData;
     if (path == '/asis/') {
       if (roles.includes('RECURSOS_HUMANOS')) {
-        return <Navigate to="/home/dashboard" />;
+        return <Navigate to="justify/dashboard" />;
       }
       if (roles.includes('PREFECTO')) {
         return <Navigate to="*" />;

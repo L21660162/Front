@@ -55,7 +55,6 @@ const dashboardRoute = new Route({
       'JEFE_ACADEMICO',
       'SUPER_ADMINISTRATOR',
       'DOCENTE',
-      'RECURSOS_HUMANOS',
     ];
 
     if (allowedroles.some((role) => roles.includes(role))) {
@@ -96,12 +95,7 @@ const scheduleRoute = new Route({
   path: 'schedule/dashboard',
   component: () => {
     const { roles } = useAccessTokenData() as TokenData;
-    const allowedroles = [
-      'SUPER_ADMINISTRATOR',
-      'SUBDIRECTOR_ACADEMICO',
-      'JEFE_ACADEMICO',
-      'RECURSOS_HUMANOS',
-    ];
+    const allowedroles = ['SUPER_ADMINISTRATOR', 'SUBDIRECTOR_ACADEMICO', 'JEFE_ACADEMICO'];
 
     if (allowedroles.some((role) => roles.includes(role))) {
       return <App Component={Schedule} />;
@@ -166,7 +160,6 @@ const eventRoute = new Route({
       'SUBDIRECTOR_ACADEMICO',
       'JEFE_ACADEMICO',
       'SUPER_ADMINISTRATOR',
-      'RECURSOS_HUMANOS',
     ];
 
     if (allowedroles.some((role) => roles.includes(role))) {
