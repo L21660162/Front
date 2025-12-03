@@ -96,7 +96,12 @@ const scheduleRoute = new Route({
   path: 'schedule/dashboard',
   component: () => {
     const { roles } = useAccessTokenData() as TokenData;
-    const allowedroles = ['SUPER_ADMINISTRATOR', 'SUBDIRECTOR_ACADEMICO', 'JEFE_ACADEMICO'];
+    const allowedroles = [
+      'SUPER_ADMINISTRATOR',
+      'SUBDIRECTOR_ACADEMICO',
+      'JEFE_ACADEMICO',
+      'RECURSOS_HUMANOS',
+    ];
 
     if (allowedroles.some((role) => roles.includes(role))) {
       return <App Component={Schedule} />;

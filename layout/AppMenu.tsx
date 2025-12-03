@@ -163,7 +163,12 @@ function AppMenu() {
         !item?.seperator
       );
     } else if (roles.includes('RECURSOS_HUMANOS')) {
-      const allowedPaths = ['/home/dashboard', '/justify/dashboard', '/event/dashboard'];
+      const allowedPaths = [
+        '/home/dashboard',
+        '/justify/dashboard',
+        '/event/dashboard',
+        '/schedule/dashboard',
+      ];
 
       return (
         item.items &&

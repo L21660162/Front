@@ -2,10 +2,11 @@ import { useNavigate } from '@tanstack/react-router';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { MultiSelect } from 'primereact/multiselect';
 import { RadioButton } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { IApiError } from '../../../../../types/apierror';
@@ -43,7 +44,7 @@ export default function UserDialogForm({
   const { t } = useTranslation('common');
   const navigate = useNavigate({ from: '/user/dashboard' });
   const toast = useRef<Toast>(null);
-  const { _id: actuallyUser } = useAccessTokenData() as TokenData;
+  const { _id: actuallyUser, roles: currentUserRoles } = useAccessTokenData() as TokenData;
   const [isButtonDisablesed, setIsButtonDisabld] = useState(false);
 
   const { mutate } = useUpdateUserMutation<IApiError>(GRAPHQL_CLIENT, {
@@ -92,6 +93,19 @@ export default function UserDialogForm({
     offset: 0,
   });
 
+  const roleOptions = useMemo(
+    () => [
+      { value: IRoles.Director, label: t('global.dictionary.roles.DIRECTOR') },
+      { value: IRoles.Docente, label: t('global.dictionary.roles.DOCENTE') },
+      { value: IRoles.JefeAcademico, label: t('global.dictionary.roles.JEFE_ACADEMICO') },
+      { value: IRoles.Prefecto, label: t('global.dictionary.roles.PREFECTO') },
+      { value: IRoles.Rrhh, label: t('global.dictionary.roles.RRHH') },
+      { value: IRoles.Sa, label: t('global.dictionary.roles.SA') },
+      { value: IRoles.Subdirector, label: t('global.dictionary.roles.SUBDIRECTOR') },
+    ],
+    [t],
+  );
+
   let careerData: Array<ICareer> = [];
   if (allCareersData && Array.isArray(allCareersData?.getAllCareers.docs)) {
     careerData = allCareersData?.getAllCareers.docs;
@@ -107,7 +121,6 @@ export default function UserDialogForm({
     control,
     formState: { errors },
     reset,
-    watch,
     setValue,
   } = useForm<IUpdateUserInput>({
     defaultValues: {
@@ -116,7 +129,7 @@ export default function UserDialogForm({
       lastName: UserData?.getUserById.lastName,
       middleName: UserData?.getUserById.middleName,
       email: UserData?.getUserById.email,
-      // roles: UserData?.getUserById.roles,
+      roles: (UserData?.getUserById.roles as IRoles[]) || [],
       rfc: UserData?.getUserById.rfc,
       updatedBy: actuallyUser,
     },
@@ -129,14 +142,13 @@ export default function UserDialogForm({
       setValue('lastName', UserData.getUserById.lastName);
       setValue('middleName', UserData.getUserById.middleName);
       setValue('email', UserData.getUserById.email);
-      // setValue('roles', UserData.getUserById.roles)
+      setValue('roles', UserData.getUserById.roles as IRoles[]);
       setValue('gender', UserData.getUserById.gender);
     }
   }, [UserData, setValue]);
 
   const onSubmit: SubmitHandler<IUpdateUserInput> = (data: IUpdateUserInput) => {
     setIsButtonDisabld(true);
-    // data.UserId = selectedUser || watch('UserId');
     reset();
     mutate({ data });
   };
@@ -261,6 +273,39 @@ export default function UserDialogForm({
           </span>
           {errors.middleName && <small className="p-error">{errors.middleName?.message}</small>}
         </div>
+
+        {currentUserRoles.includes('SUPER_ADMINISTRATOR') && (
+          <div className="field">
+            <span className="p-float-label p-input-icon-right">
+              <i className="pi pi-shield" />
+              <Controller
+                name="roles"
+                control={control}
+                rules={{
+                  validate: (value) =>
+                    (value && value.length > 0) || 'Selecciona al menos un rol',
+                }}
+                render={({ field, fieldState }) => (
+                  <MultiSelect
+                    id={field.name}
+                    value={field.value}
+                    options={roleOptions}
+                    optionLabel="label"
+                    optionValue="value"
+                    display="chip"
+                    placeholder={t('global.dictionary.roles.rules')}
+                    className={classNames({ 'p-invalid': fieldState.invalid })}
+                    onChange={(e) => field.onChange(e.value)}
+                  />
+                )}
+              />
+              <label htmlFor="roles" className={classNames({ 'p-error': errors.roles })}>
+                {t('global.dictionary.roles.rules')}*
+              </label>
+            </span>
+            {errors.roles && <small className="p-error">{errors.roles?.message}</small>}
+          </div>
+        )}
 
         <div className="field">
           <span className="p-float-label p-input-icon-right">
