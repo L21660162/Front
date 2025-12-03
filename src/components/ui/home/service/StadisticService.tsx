@@ -2,8 +2,11 @@ import React from 'react';
 import {
   IRoles,
   IUser,
+  useGetAllEventsQuery,
+  useGetAllGroupsQuery,
   useGetAllUsersQuery,
   useGetAttendanceStatisticsQuery,
+  useGetReportStatisticsQuery,
   useGetUniqueOptionsCareerQuery,
 } from '../../../../graphql/graphql';
 import { GRAPHQL_CLIENT } from '../../../../utils/graphqlClient';
@@ -24,6 +27,23 @@ export const StadisticServices = (
     semester,
     period,
     teacher,
+  });
+
+  const { data: reportStatistics } = useGetReportStatisticsQuery(GRAPHQL_CLIENT, {
+    teacher,
+    department,
+  });
+
+  const { data: eventsData } = useGetAllEventsQuery(GRAPHQL_CLIENT, {
+    limit: 200,
+    offset: 0,
+    page: 1,
+  });
+
+  const { data: groupsData } = useGetAllGroupsQuery(GRAPHQL_CLIENT, {
+    limit: 500,
+    offset: 0,
+    page: 1,
   });
 
   const { data: users } = useGetAllUsersQuery(GRAPHQL_CLIENT, {
@@ -52,5 +72,12 @@ export const StadisticServices = (
   //   };
   // });
 
-  return { careerOptionsData, attendanceStatistics, datosDocente };
+  return {
+    careerOptionsData,
+    attendanceStatistics,
+    reportStatistics,
+    datosDocente,
+    eventsData,
+    groupsData,
+  };
 };
