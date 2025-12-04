@@ -525,6 +525,74 @@ function DashboardAttendancePanel() {
     todayStart,
   ]);
 
+  const parsePeriodStartMinutes = (period?: string | null) => {
+    if (!period) return Number.MAX_SAFE_INTEGER;
+
+    const match = period
+      .toLowerCase()
+      .replace('a.m.', 'am')
+      .replace('p.m.', 'pm')
+      .match(/(\d{1,2})(?::(\d{2}))?\s*(a|p)?m?/i);
+
+    if (!match) return Number.MAX_SAFE_INTEGER;
+
+    const hours = parseInt(match[1], 10);
+    const minutes = match[2] ? parseInt(match[2], 10) : 0;
+    const meridiem = match[3]?.toLowerCase();
+
+    if (!meridiem) return hours * 60 + minutes;
+    if (meridiem === 'p' && hours < 12) return hours * 60 + minutes + 12 * 60;
+    if (meridiem === 'a' && hours === 12) return minutes; // 12am
+    return hours * 60 + minutes;
+  };
+
+  const teacherDailySchedule = useMemo(() => {
+    const entries: Array<{
+      teacher: string;
+      subject: string;
+      period: string;
+      status: 'present' | 'absent' | 'justified' | 'unknown';
+    }> = [];
+
+    reportStatistics?.getReportStatistics.forEach((stat) => {
+      if (!matchesFilters(stat)) return;
+
+      const statDate = extractDate(stat.weekday);
+      const matchesToday = statDate
+        ? statDate.getTime() === todayStart.getTime()
+        : normalizeWeekday(stat.weekday) === todayNormalized;
+
+      if (!matchesToday) return;
+
+      const status: 'present' | 'absent' | 'justified' | 'unknown' = stat.presentAmount
+        ? 'present'
+        : stat.absentAmount
+          ? 'absent'
+          : stat.justifiedAmount
+            ? 'justified'
+            : 'unknown';
+
+      entries.push({
+        teacher: stat.teacherLargeName,
+        subject: stat.subjectLargeName,
+        period: stat.periodName,
+        status,
+      });
+    });
+
+    return entries.sort((a, b) => parsePeriodStartMinutes(a.period) - parsePeriodStartMinutes(b.period));
+  }, [
+    reportStatistics,
+    selectedCareer,
+    selectedCareerLabel,
+    selectedGroup,
+    selectedPeriod,
+    selectedSemester,
+    selectedTeacher,
+    todayNormalized,
+    todayStart,
+  ]);
+
   const buildTeacherList = (field: 'present' | 'absent' | 'justified') =>
     [...teacherDailyStats]
       .filter((item) => item[field] > 0)
@@ -911,7 +979,7 @@ function DashboardAttendancePanel() {
               <div>
                 <span className="block text-500 font-medium">Docentes del grupo seleccionado</span>
                 <p className="m-0 text-600 text-sm">
-                  Lista de maestros que imparten hoy al grupo {selectedGroup} y su estado de asistencia.
+                  Horarios de hoy para el grupo {selectedGroup} con su estado de asistencia.
                 </p>
               </div>
               <div
@@ -922,32 +990,62 @@ function DashboardAttendancePanel() {
               </div>
             </div>
 
-            {teacherDailyStats.length ? (
+            {teacherDailySchedule.length ? (
               <div className="border-1 surface-border border-round overflow-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="text-600 text-sm">
+                      <th className="text-left py-3 px-3 font-semibold">Horario</th>
                       <th className="text-left py-3 px-3 font-semibold">Docente</th>
-                      <th className="text-left py-3 px-3 font-semibold">Presentes</th>
-                      <th className="text-left py-3 px-3 font-semibold">Ausentes</th>
-                      <th className="text-left py-3 px-3 font-semibold">Justificados</th>
+                      <th className="text-left py-3 px-3 font-semibold">Materia</th>
+                      <th className="text-left py-3 px-3 font-semibold">Estado</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {teacherDailyStats.map((stat) => (
-                      <tr key={stat.teacher} className="border-top-1 surface-border">
-                        <td className="py-3 px-3 text-900 font-semibold">{stat.teacher}</td>
-                        <td className="py-3 px-3 text-green-600 font-bold flex align-items-center gap-2">
-                          <i className="pi pi-check-circle" /> {stat.present}
-                        </td>
-                        <td className="py-3 px-3 text-red-600 font-bold flex align-items-center gap-2">
-                          <i className="pi pi-times-circle" /> {stat.absent}
-                        </td>
-                        <td className="py-3 px-3 text-blue-600 font-bold flex align-items-center gap-2">
-                          <i className="pi pi-file" /> {stat.justified}
-                        </td>
-                      </tr>
-                    ))}
+                    {teacherDailySchedule.map((stat, index) => {
+                      const statusStyles: Record<
+                        typeof stat.status,
+                        { icon: string; className: string; label: string }
+                      > = {
+                        present: {
+                          icon: 'pi pi-check-circle',
+                          className: 'bg-green-50 text-green-700 border-round-xl px-3 py-2 inline-flex align-items-center gap-2',
+                          label: 'Asistencia',
+                        },
+                        absent: {
+                          icon: 'pi pi-times-circle',
+                          className: 'bg-red-50 text-red-700 border-round-xl px-3 py-2 inline-flex align-items-center gap-2',
+                          label: 'Ausencia',
+                        },
+                        justified: {
+                          icon: 'pi pi-file',
+                          className: 'bg-blue-50 text-blue-700 border-round-xl px-3 py-2 inline-flex align-items-center gap-2',
+                          label: 'Justificado',
+                        },
+                        unknown: {
+                          icon: 'pi pi-question-circle',
+                          className:
+                            'bg-gray-50 text-gray-700 border-round-xl px-3 py-2 inline-flex align-items-center gap-2',
+                          label: 'Sin estado',
+                        },
+                      };
+
+                      const statusStyle = statusStyles[stat.status];
+
+                      return (
+                        <tr key={`${stat.teacher}-${index}`} className="border-top-1 surface-border">
+                          <td className="py-3 px-3 text-900 font-semibold">{stat.period || 'Horario no especificado'}</td>
+                          <td className="py-3 px-3 text-900 font-semibold">{stat.teacher}</td>
+                          <td className="py-3 px-3 text-700">{stat.subject}</td>
+                          <td className="py-3 px-3">
+                            <span className={statusStyle.className}>
+                              <i className={statusStyle.icon} />
+                              <span className="font-semibold text-sm">{statusStyle.label}</span>
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
