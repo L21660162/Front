@@ -4,7 +4,8 @@ import { Button } from 'primereact/button';
 import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
-import React, { useMemo, useRef, useState } from 'react';
+import { TabMenu, TabMenuTabChangeEvent } from 'primereact/tabmenu';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IDepartment, IFile, useGetAllDepartmentsQuery } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';
@@ -32,6 +33,8 @@ function DashboardAttendancePanel() {
   const [filteredTeacher, setFilteredTeacher] = useState<Userdata[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<IDepartment | null>(null);
   const [filteredDepartment, setFilteredDepartment] = useState<IDepartment[]>([]);
+  const [careerTabIndex, setCareerTabIndex] = useState(0);
+  const [groupTabIndex, setGroupTabIndex] = useState(0);
   const tiempo: FilterTime[] = [
     { label: 'Día', value: '1' },
     { label: 'Mes', value: '2' },
@@ -193,6 +196,16 @@ function DashboardAttendancePanel() {
     return [{ label: 'Todos', value: null }, ...mapped];
   }, [groupsData, selectedCareer]);
 
+  const syncCareerTabIndex = (careerValue: string | null) => {
+    const index = careerTabs.findIndex((tab) => normalize(tab.value) === normalize(careerValue));
+    setCareerTabIndex(index >= 0 ? index : 0);
+  };
+
+  const syncGroupTabIndex = (groupValue: string | null) => {
+    const index = groupTabs.findIndex((tab) => normalize(tab.value) === normalize(groupValue));
+    setGroupTabIndex(index >= 0 ? index : 0);
+  };
+
   const handleCareerTabChange = (careerValue: string | null) => {
     setSelectedCareer(careerValue);
     setSelectedGroup((currentGroup) => {
@@ -201,7 +214,21 @@ function DashboardAttendancePanel() {
       if (matchingGroup && normalize(matchingGroup.career) === normalize(careerValue)) return currentGroup;
       return null;
     });
+    syncCareerTabIndex(careerValue);
   };
+
+  const handleGroupTabChange = (groupValue: string | null) => {
+    setSelectedGroup(groupValue);
+    syncGroupTabIndex(groupValue);
+  };
+
+  useEffect(() => {
+    syncCareerTabIndex(selectedCareer);
+  }, [careerTabs, selectedCareer]);
+
+  useEffect(() => {
+    syncGroupTabIndex(selectedGroup);
+  }, [groupTabs, selectedGroup]);
 
   const matchesFilters = (stat: ReportStat) => {
     if (selectedCareer) {
@@ -757,35 +784,27 @@ function DashboardAttendancePanel() {
           </div>
           <div className="flex flex-column md:flex-row justify-content-between mt-3 gap-3">
             <div className="flex-1 surface-50 border-round p-3">
-              <div className="mb-3">
+              <div className="mb-4">
                 <span className="block font-semibold text-600 mb-2">Filtrar por carrera</span>
-                <div className="flex flex-wrap gap-2">
-                  {careerTabs.map((career) => (
-                    <Button
-                      key={career.label}
-                      label={career.label}
-                      onClick={() => handleCareerTabChange(career.value)}
-                      outlined={selectedCareer !== career.value}
-                      severity={selectedCareer === career.value ? 'primary' : undefined}
-                      className="p-button-sm"
-                    />
-                  ))}
-                </div>
+                <TabMenu
+                  model={careerTabs.map((career) => ({ label: career.label }))}
+                  activeIndex={careerTabIndex}
+                  onTabChange={(e: TabMenuTabChangeEvent) =>
+                    handleCareerTabChange(careerTabs[e.index]?.value ?? null)
+                  }
+                  className="surface-0 border-round-lg shadow-1"
+                />
               </div>
               <div>
                 <span className="block font-semibold text-600 mb-2">Filtrar por grupo</span>
-                <div className="flex flex-wrap gap-2">
-                  {groupTabs.map((group) => (
-                    <Button
-                      key={group.label}
-                      label={group.label}
-                      onClick={() => setSelectedGroup(group.value)}
-                      outlined={selectedGroup !== group.value}
-                      severity={selectedGroup === group.value ? 'primary' : undefined}
-                      className="p-button-sm"
-                    />
-                  ))}
-                </div>
+                <TabMenu
+                  model={groupTabs.map((group) => ({ label: group.label }))}
+                  activeIndex={groupTabIndex}
+                  onTabChange={(e: TabMenuTabChangeEvent) =>
+                    handleGroupTabChange(groupTabs[e.index]?.value ?? null)
+                  }
+                  className="surface-0 border-round-lg shadow-1"
+                />
               </div>
             </div>
 
