@@ -25,6 +25,7 @@ interface FilterTime {
 function DashboardAttendancePanel() {
   const { t } = useTranslation('common');
   const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
   const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
   const [selectedTeacher, setSelectedTeacher] = useState<Userdata | null>(null);
@@ -169,6 +170,39 @@ function DashboardAttendancePanel() {
 
   const normalize = (value?: string | null) => value?.toString().trim().toLowerCase() ?? '';
 
+  const careerTabs = useMemo(() => {
+    const base = [{ label: 'Todas', value: null }];
+    const careers = careerOptionsData?.getUniqueOptionsCareer.careers ?? [];
+    return base.concat(careers);
+  }, [careerOptionsData]);
+
+  const groupTabs = useMemo(() => {
+    const allGroups = groupsData?.getAllGroups.docs ?? [];
+    const filtered = selectedCareer
+      ? allGroups.filter((group) => normalize(group.career) === normalize(selectedCareer))
+      : allGroups;
+
+    const mapped = filtered
+      .map((group) => ({
+        label: group.identifier,
+        value: group.identifier,
+        career: group.career,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label, 'es'));
+
+    return [{ label: 'Todos', value: null }, ...mapped];
+  }, [groupsData, selectedCareer]);
+
+  const handleCareerTabChange = (careerValue: string | null) => {
+    setSelectedCareer(careerValue);
+    setSelectedGroup((currentGroup) => {
+      if (!careerValue || !currentGroup) return currentGroup;
+      const matchingGroup = groupTabs.find((group) => normalize(group.value) === normalize(currentGroup));
+      if (matchingGroup && normalize(matchingGroup.career) === normalize(careerValue)) return currentGroup;
+      return null;
+    });
+  };
+
   const matchesFilters = (stat: ReportStat) => {
     if (selectedCareer) {
       const careerValue = normalize(selectedCareer);
@@ -176,6 +210,7 @@ function DashboardAttendancePanel() {
       const statCareer = normalize(stat.careerName);
       if (statCareer !== careerValue && statCareer !== careerLabel) return false;
     }
+    if (selectedGroup && normalize(stat.groupIdentifier) !== normalize(selectedGroup)) return false;
     if (selectedSemester && stat.semester !== selectedSemester) return false;
     if (selectedPeriod && stat.periodName !== selectedPeriod) return false;
     if (selectedTeacher && stat.teacherLargeName !== selectedTeacher.fullname) return false;
@@ -211,6 +246,7 @@ function DashboardAttendancePanel() {
     reportStatistics,
     selectedCareer,
     selectedCareerLabel,
+    selectedGroup,
     selectedPeriod,
     selectedSemester,
     selectedTeacher,
@@ -245,6 +281,7 @@ function DashboardAttendancePanel() {
     reportStatistics,
     selectedCareer,
     selectedCareerLabel,
+    selectedGroup,
     selectedPeriod,
     selectedSemester,
     selectedTeacher,
@@ -453,6 +490,7 @@ function DashboardAttendancePanel() {
     reportStatistics,
     selectedCareer,
     selectedCareerLabel,
+    selectedGroup,
     selectedPeriod,
     selectedSemester,
     selectedTeacher,
@@ -649,6 +687,10 @@ function DashboardAttendancePanel() {
           return false;
         }
 
+        if (selectedGroup && !groups.some((group) => normalize(group.identifier) === normalize(selectedGroup))) {
+          return false;
+        }
+
         if (selectedSemester && !groups.some((group) => group.semester === selectedSemester)) {
           return false;
         }
@@ -678,6 +720,7 @@ function DashboardAttendancePanel() {
     eventsData,
     groupLookup,
     selectedCareer,
+    selectedGroup,
     selectedPeriod,
     selectedSemester,
     startOfWeek,
@@ -712,48 +755,50 @@ function DashboardAttendancePanel() {
               <div className="font-medium text-3xl text-900">{t('sidebar.home.dashboard')}</div>
             </div>
           </div>
-          <div className="flex align-items-center justify-content-between mt-3">
-            <div className="flex">
-              <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Carera: </span>
+          <div className="flex flex-column md:flex-row justify-content-between mt-3 gap-3">
+            <div className="flex-1 surface-50 border-round p-3">
+              <div className="mb-3">
+                <span className="block font-semibold text-600 mb-2">Filtrar por carrera</span>
+                <div className="flex flex-wrap gap-2">
+                  {careerTabs.map((career) => (
+                    <Button
+                      key={career.label}
+                      label={career.label}
+                      onClick={() => handleCareerTabChange(career.value)}
+                      outlined={selectedCareer !== career.value}
+                      severity={selectedCareer === career.value ? 'primary' : undefined}
+                      className="p-button-sm"
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="flex justify-content-center">
-                <Dropdown
-                  value={selectedCareer}
-                  onChange={(e: DropdownChangeEvent) => setSelectedCareer(e.value)}
-                  options={careerOptionsData?.getUniqueOptionsCareer.careers}
-                  placeholder={t('global.dictionary.filterCareer')}
-                  optionLabel="label"
-                  optionValue="value"
-                  className="w-14rem"
-                />
-              </div>
-              <div className="align-content-center pl-1">
-                <Button
-                  icon="pi pi-replay"
-                  rounded
-                  outlined
-                  severity="warning"
-                  aria-label="Notification"
-                  disabled={!selectedCareer}
-                  onClick={() => {
-                    setSelectedCareer(null);
-                  }}
-                />
+              <div>
+                <span className="block font-semibold text-600 mb-2">Filtrar por grupo</span>
+                <div className="flex flex-wrap gap-2">
+                  {groupTabs.map((group) => (
+                    <Button
+                      key={group.label}
+                      label={group.label}
+                      onClick={() => setSelectedGroup(group.value)}
+                      outlined={selectedGroup !== group.value}
+                      severity={selectedGroup === group.value ? 'primary' : undefined}
+                      className="p-button-sm"
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="flex">
-              <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Semestre: </span>
-              </div>
-              <Dropdown
-                value={selectedSemester}
-                onChange={(e: DropdownChangeEvent) => setSelectedSemester(e.value)}
-                options={careerOptionsData?.getUniqueOptionsCareer.semesters}
-                placeholder={t('global.dictionary.filterSemester')}
-                className="w-14rem"
-              />
-              <div className="align-content-center pl-1">
+
+            <div className="flex flex-column gap-3 justify-content-start md:justify-content-center">
+              <div className="flex align-items-center gap-2">
+                <span className="block font-semibold">Semestre: </span>
+                <Dropdown
+                  value={selectedSemester}
+                  onChange={(e: DropdownChangeEvent) => setSelectedSemester(e.value)}
+                  options={careerOptionsData?.getUniqueOptionsCareer.semesters}
+                  placeholder={t('global.dictionary.filterSemester')}
+                  className="w-14rem"
+                />
                 <Button
                   icon="pi pi-replay"
                   rounded
@@ -766,7 +811,6 @@ function DashboardAttendancePanel() {
                   }}
                 />
               </div>
-            </div>
             {/* <Dropdown
                 value={selectedPeriod}
                 onChange={(e: DropdownChangeEvent) => setSelectedPeriod(e.value)}
@@ -775,23 +819,20 @@ function DashboardAttendancePanel() {
                 optionLabel="name"
                 optionValue="_id"
               /> */}
-            {(roles.includes('SUPER_ADMINISTRATOR') ||
-              roles.includes('DIRECTOR_ACADEMICO') ||
-              roles.includes('SUBDIRECTOR_ACADEMICO')) && (
-              <>
-                <div className="flex">
-                  <div className="mr-3 align-content-center">
-                    <span className="block font-semibold ">Departamento: </span>
-                  </div>
-                  <AutoComplete
-                    value={selectedDepartment}
-                    onChange={(e) => setSelectedDepartment(e.value)}
-                    suggestions={filteredDepartment}
-                    completeMethod={searchDepartments}
-                    field="name"
-                    placeholder={t('global.dictionary.filterDeparment')}
-                  />
-                  <div className="align-content-center pl-1">
+              {(roles.includes('SUPER_ADMINISTRATOR') ||
+                roles.includes('DIRECTOR_ACADEMICO') ||
+                roles.includes('SUBDIRECTOR_ACADEMICO')) && (
+                <>
+                  <div className="flex align-items-center gap-2">
+                    <span className="block font-semibold">Departamento: </span>
+                    <AutoComplete
+                      value={selectedDepartment}
+                      onChange={(e) => setSelectedDepartment(e.value)}
+                      suggestions={filteredDepartment}
+                      completeMethod={searchDepartments}
+                      field="name"
+                      placeholder={t('global.dictionary.filterDeparment')}
+                    />
                     <Button
                       icon="pi pi-replay"
                       rounded
@@ -804,20 +845,16 @@ function DashboardAttendancePanel() {
                       }}
                     />
                   </div>
-                </div>
-                <div className="flex">
-                  <div className="mr-3 align-content-center">
-                    <span className="block font-semibold ">Docente: </span>
-                  </div>
-                  <AutoComplete
-                    value={selectedTeacher}
-                    onChange={(e) => setSelectedTeacher(e.value)}
-                    suggestions={filteredTeacher}
-                    completeMethod={searchTeachers}
-                    field="fullname"
-                    placeholder={t('global.dictionary.filterTeacher')}
-                  />
-                  <div className="align-content-center pl-1">
+                  <div className="flex align-items-center gap-2">
+                    <span className="block font-semibold">Docente: </span>
+                    <AutoComplete
+                      value={selectedTeacher}
+                      onChange={(e) => setSelectedTeacher(e.value)}
+                      suggestions={filteredTeacher}
+                      completeMethod={searchTeachers}
+                      field="fullname"
+                      placeholder={t('global.dictionary.filterTeacher')}
+                    />
                     <Button
                       icon="pi pi-replay"
                       rounded
@@ -830,9 +867,8 @@ function DashboardAttendancePanel() {
                       }}
                     />
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
             {/* <div className="flex">
               <div className="mr-3 align-content-center">
                 <span className="block font-semibold ">Filtr de Tiempo: </span>
@@ -844,6 +880,7 @@ function DashboardAttendancePanel() {
                 placeholder={t('global.dictionary.Career')}
               />
             </div> */}
+            </div>
           </div>
         </div>
       </div>
