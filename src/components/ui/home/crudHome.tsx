@@ -546,11 +546,45 @@ function DashboardAttendancePanel() {
     return hours * 60 + minutes;
   };
 
+  const parseTimeRange = (period?: string | null) => {
+    if (!period) return { start: null, end: null };
+
+    const rangeMatch = period
+      .toLowerCase()
+      .replace('a.m.', 'am')
+      .replace('p.m.', 'pm')
+      .match(
+        /(\d{1,2}(?::\d{2})?\s*(?:a|p)?m?)\s*[-–]\s*(\d{1,2}(?::\d{2})?\s*(?:a|p)?m?)/i
+      );
+
+    if (!rangeMatch) return { start: null, end: null };
+
+    const normalizeLabel = (label: string) => {
+      const cleaned = label.replace(/\s+/g, '');
+      const match = cleaned.match(/(\d{1,2})(?::(\d{2}))?(a|p)?m?/i);
+      if (!match) return label;
+
+      const hours = parseInt(match[1], 10);
+      const minutes = match[2] ? parseInt(match[2], 10) : 0;
+      const meridiem = match[3]?.toLowerCase();
+
+      const displayHours = ((meridiem === 'p' && hours < 12 ? hours + 12 : hours) + 24) % 24;
+      const formattedHours = String(displayHours).padStart(2, '0');
+      const formattedMinutes = String(minutes).padStart(2, '0');
+
+      return `${formattedHours}:${formattedMinutes}`;
+    };
+
+    return { start: normalizeLabel(rangeMatch[1]), end: normalizeLabel(rangeMatch[2]) };
+  };
+
   const teacherDailySchedule = useMemo(() => {
     const entries: Array<{
       teacher: string;
       subject: string;
       period: string;
+      startTime: string | null;
+      endTime: string | null;
       status: 'present' | 'absent' | 'justified' | 'unknown';
     }> = [];
 
@@ -572,10 +606,14 @@ function DashboardAttendancePanel() {
             ? 'justified'
             : 'unknown';
 
+      const { start, end } = parseTimeRange(stat.periodName);
+
       entries.push({
         teacher: stat.teacherLargeName,
         subject: stat.subjectLargeName,
         period: stat.periodName,
+        startTime: start,
+        endTime: end,
         status,
       });
     });
@@ -610,6 +648,25 @@ function DashboardAttendancePanel() {
 
   const topAbsentTeachers = topTeachersByStatus.absent;
   const topJustifiedTeachers = topTeachersByStatus.justified;
+
+  const scheduleByStatus = useMemo(
+    () =>
+      teacherDailySchedule.reduce<
+        Record<'present' | 'absent' | 'justified' | 'unknown', typeof teacherDailySchedule>
+      >(
+        (acc, entry) => {
+          acc[entry.status] = acc[entry.status] ? [...acc[entry.status], entry] : [entry];
+          return acc;
+        },
+        {
+          absent: [],
+          justified: [],
+          present: [],
+          unknown: [],
+        }
+      ),
+    [teacherDailySchedule]
+  );
 
   const totalDayAttendance = useMemo(() => {
     const stats = attendanceStatistics?.getAttendanceStatistics;
@@ -1034,7 +1091,17 @@ function DashboardAttendancePanel() {
 
                       return (
                         <tr key={`${stat.teacher}-${index}`} className="border-top-1 surface-border">
-                          <td className="py-3 px-3 text-900 font-semibold">{stat.period || 'Horario no especificado'}</td>
+                          <td className="py-3 px-3 text-900 font-semibold">
+                            <div className="flex flex-column">
+                              <span>{stat.period || 'Horario no especificado'}</span>
+                              {(stat.startTime || stat.endTime) && (
+                                <span className="text-600 text-sm">
+                                  {stat.startTime ? stat.startTime : '¿?'}
+                                  {stat.endTime ? ` - ${stat.endTime}` : ''}
+                                </span>
+                              )}
+                            </div>
+                          </td>
                           <td className="py-3 px-3 text-900 font-semibold">{stat.teacher}</td>
                           <td className="py-3 px-3 text-700">{stat.subject}</td>
                           <td className="py-3 px-3">
@@ -1051,6 +1118,61 @@ function DashboardAttendancePanel() {
               </div>
             ) : (
               <p className="text-500 text-center m-0">No hay registros de asistencia para este grupo hoy.</p>
+            )}
+
+            {!!teacherDailySchedule.length && (
+              <div className="grid mt-4">
+                {([
+                  {
+                    key: 'present' as const,
+                    title: 'Con asistencia',
+                    color: 'bg-green-50 text-green-700',
+                    icon: 'pi pi-check-circle',
+                  },
+                  {
+                    key: 'absent' as const,
+                    title: 'Ausentes',
+                    color: 'bg-red-50 text-red-700',
+                    icon: 'pi pi-times-circle',
+                  },
+                  {
+                    key: 'justified' as const,
+                    title: 'Justificados',
+                    color: 'bg-blue-50 text-blue-700',
+                    icon: 'pi pi-file',
+                  },
+                ] as const).map((section) => (
+                  <div key={section.key} className="col-12 md:col-4">
+                    <div className="border-1 surface-border border-round p-3 h-full">
+                      <div className={`inline-flex align-items-center gap-2 px-3 py-2 border-round ${section.color}`}>
+                        <i className={section.icon} />
+                        <span className="font-semibold">{section.title}</span>
+                        <span className="font-semibold">({scheduleByStatus[section.key].length})</span>
+                      </div>
+                      {scheduleByStatus[section.key].length ? (
+                        <ul className="list-none p-0 m-0 mt-3">
+                          {scheduleByStatus[section.key].map((entry, idx) => (
+                            <li
+                              key={`${section.key}-${entry.teacher}-${idx}`}
+                              className="py-2 px-2 border-bottom-1 surface-border"
+                            >
+                              <div className="font-semibold text-900">{entry.teacher}</div>
+                              <div className="text-700 text-sm">{entry.subject}</div>
+                              <div className="text-600 text-sm">
+                                {entry.startTime || entry.endTime
+                                  ? `${entry.startTime ?? '?'}${entry.endTime ? ` - ${entry.endTime}` : ''}`
+                                  : entry.period}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-500 text-sm mt-2 mb-0">Sin registros para hoy.</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>
