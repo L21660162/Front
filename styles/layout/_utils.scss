@@ -47,3 +47,15 @@
     justify-content: center;
   }
 }
+
+.tabmenu-groups {
+  .p-tabmenu-nav {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+
+  .p-tabmenuitem,
+  .p-tabmenu-nav .p-menuitem-link {
+    width: 100%;
+  }
+}

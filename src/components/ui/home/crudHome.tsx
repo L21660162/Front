@@ -803,7 +803,7 @@ function DashboardAttendancePanel() {
                   onTabChange={(e: TabMenuTabChangeEvent) =>
                     handleGroupTabChange(groupTabs[e.index]?.value ?? null)
                   }
-                  className="surface-0 border-round-lg shadow-1 tabmenu-multiline"
+                  className="surface-0 border-round-lg shadow-1 tabmenu-multiline tabmenu-groups"
                 />
               </div>
             </div>
@@ -903,6 +903,60 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
+
+      {selectedGroup && (
+        <div className="col-12">
+          <div className="card">
+            <div className="flex align-items-center justify-content-between mb-3">
+              <div>
+                <span className="block text-500 font-medium">Docentes del grupo seleccionado</span>
+                <p className="m-0 text-600 text-sm">
+                  Lista de maestros que imparten hoy al grupo {selectedGroup} y su estado de asistencia.
+                </p>
+              </div>
+              <div
+                className="flex align-items-center justify-content-center bg-bluegray-50 text-bluegray-500 text-xl border-round"
+                style={{ width: '2.5rem', height: '2.5rem' }}
+              >
+                <i className="pi pi-users" />
+              </div>
+            </div>
+
+            {teacherDailyStats.length ? (
+              <div className="border-1 surface-border border-round overflow-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-600 text-sm">
+                      <th className="text-left py-3 px-3 font-semibold">Docente</th>
+                      <th className="text-left py-3 px-3 font-semibold">Presentes</th>
+                      <th className="text-left py-3 px-3 font-semibold">Ausentes</th>
+                      <th className="text-left py-3 px-3 font-semibold">Justificados</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {teacherDailyStats.map((stat) => (
+                      <tr key={stat.teacher} className="border-top-1 surface-border">
+                        <td className="py-3 px-3 text-900 font-semibold">{stat.teacher}</td>
+                        <td className="py-3 px-3 text-green-600 font-bold flex align-items-center gap-2">
+                          <i className="pi pi-check-circle" /> {stat.present}
+                        </td>
+                        <td className="py-3 px-3 text-red-600 font-bold flex align-items-center gap-2">
+                          <i className="pi pi-times-circle" /> {stat.absent}
+                        </td>
+                        <td className="py-3 px-3 text-blue-600 font-bold flex align-items-center gap-2">
+                          <i className="pi pi-file" /> {stat.justified}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-500 text-center m-0">No hay registros de asistencia para este grupo hoy.</p>
+            )}
+          </div>
+        </div>
+      )}
 
       {isHr && (
         <div className="col-12">
