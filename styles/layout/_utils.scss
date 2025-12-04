@@ -30,3 +30,20 @@
   align-items: center;
   text-align: center;
 }
+
+.tabmenu-multiline {
+  .p-tabmenu-nav {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    overflow: visible;
+  }
+
+  .p-tabmenuitem {
+    flex: 0 1 auto;
+  }
+
+  .p-tabmenu-nav .p-menuitem-link {
+    min-width: 8rem;
+    justify-content: center;
+  }
+}

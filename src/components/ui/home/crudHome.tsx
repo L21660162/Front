@@ -792,7 +792,7 @@ function DashboardAttendancePanel() {
                   onTabChange={(e: TabMenuTabChangeEvent) =>
                     handleCareerTabChange(careerTabs[e.index]?.value ?? null)
                   }
-                  className="surface-0 border-round-lg shadow-1"
+                  className="surface-0 border-round-lg shadow-1 tabmenu-multiline"
                 />
               </div>
               <div>
@@ -803,7 +803,7 @@ function DashboardAttendancePanel() {
                   onTabChange={(e: TabMenuTabChangeEvent) =>
                     handleGroupTabChange(groupTabs[e.index]?.value ?? null)
                   }
-                  className="surface-0 border-round-lg shadow-1"
+                  className="surface-0 border-round-lg shadow-1 tabmenu-multiline"
                 />
               </div>
             </div>
