@@ -370,26 +370,11 @@ function DashboardAttendancePanel() {
       | 'classPresentYear'
   ) => attendanceStatistics?.getAttendanceStatistics?.[field] ?? 0;
 
-  const absentsValue = useMemo(() => {
-    if (value === tiempo[0]) return pickStatisticValue('classAbsentDay');
-    if (value === tiempo[1]) return pickStatisticValue('classAbsentMonth');
-    if (value === tiempo[2]) return pickStatisticValue('classAbsentSemester');
-    return pickStatisticValue('classAbsentYear');
-  }, [attendanceStatistics, value]);
+  const absentsValue = pickStatisticValue('classAbsentDay');
 
-  const justifiedValue = useMemo(() => {
-    if (value === tiempo[0]) return pickStatisticValue('classJustifyDay');
-    if (value === tiempo[1]) return pickStatisticValue('classJustifyMonth');
-    if (value === tiempo[2]) return pickStatisticValue('classJustifySemester');
-    return pickStatisticValue('classJustifyYear');
-  }, [attendanceStatistics, value]);
+  const justifiedValue = pickStatisticValue('classJustifyDay');
 
-  const presentValue = useMemo(() => {
-    if (value === tiempo[0]) return pickStatisticValue('classPresentDay');
-    if (value === tiempo[1]) return pickStatisticValue('classPresentMonth');
-    if (value === tiempo[2]) return pickStatisticValue('classPresentSemester');
-    return pickStatisticValue('classPresentYear');
-  }, [attendanceStatistics, value]);
+  const presentValue = pickStatisticValue('classPresentDay');
 
   const chartOptions: ChartOptions = {
     indexAxis: 'x',
@@ -816,11 +801,6 @@ function DashboardAttendancePanel() {
     </div>
   );
 
-  const pendingJustifyValue = useMemo(() => Math.max(absentsValue - justifiedValue, 0), [
-    absentsValue,
-    justifiedValue,
-  ]);
-
   const weeklyEventSchedule = useMemo(() => {
     if (!eventsData?.getAllEvents.docs) return [];
 
@@ -1197,22 +1177,16 @@ function DashboardAttendancePanel() {
             </div>
 
             <div className="grid text-sm">
-              <div className="col-12 md:col-4">
+              <div className="col-12 md:col-6">
                 <div className="flex justify-content-between align-items-center border-round surface-100 p-3">
                   <span className="text-600">Ausencias registradas</span>
                   <span className="text-900 font-semibold text-xl">{absentsValue}</span>
                 </div>
               </div>
-              <div className="col-12 md:col-4">
+              <div className="col-12 md:col-6">
                 <div className="flex justify-content-between align-items-center border-round surface-100 p-3">
                   <span className="text-600">Justificantes aprobados</span>
                   <span className="text-900 font-semibold text-xl">{justifiedValue}</span>
-                </div>
-              </div>
-              <div className="col-12 md:col-4">
-                <div className="flex justify-content-between align-items-center border-round surface-100 p-3">
-                  <span className="text-600">Pendientes por justificar</span>
-                  <span className="text-900 font-semibold text-xl">{pendingJustifyValue}</span>
                 </div>
               </div>
             </div>
@@ -1220,7 +1194,7 @@ function DashboardAttendancePanel() {
         </div>
       )}
 
-      <div className="col-12 md:col-6 xl:col-3">
+      <div className="col-12 md:col-4 xl:col-4">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
@@ -1238,7 +1212,7 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
-      <div className="col-12 md:col-6 xl:col-3">
+      <div className="col-12 md:col-4 xl:col-4">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
@@ -1256,23 +1230,7 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
-      <div className="col-12 md:col-6 xl:col-3">
-        <div className="card mb-0 h-full">
-          <div className="flex justify-content-between mb-3">
-            <div>
-              <span className="block text-500 font-medium mb-3">Pendientes de justificar</span>
-              <div className="text-900 font-semibold text-4xl">{pendingJustifyValue}</div>
-            </div>
-            <div
-              className="flex align-items-center justify-content-center bg-amber-100 text-amber-500 text-xl border-round"
-              style={{ width: '2.5rem', height: '2.5rem' }}
-            >
-              <i className="pi pi-clock text-amber-500 text-xl" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="col-12 md:col-6 xl:col-3">
+      <div className="col-12 md:col-4 xl:col-4">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
