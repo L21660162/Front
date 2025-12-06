@@ -54,6 +54,7 @@ const dashboardRoute = new Route({
       'SUBDIRECTOR_ACADEMICO',
       'JEFE_ACADEMICO',
       'SUPER_ADMINISTRATOR',
+      'RECURSOS_HUMANOS',
       'DOCENTE',
     ];
 
