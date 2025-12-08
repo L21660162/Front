@@ -149,12 +149,42 @@ function DashboardAttendancePanel() {
     return new Date(year, month - 1, day);
   };
 
-  const today = new Date();
-  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const startOfWeek = new Date(todayStart);
-  startOfWeek.setDate(todayStart.getDate() - ((todayStart.getDay() + 6) % 7));
+  const [weekReferenceDate, setWeekReferenceDate] = useState(() => new Date());
+
+  const getStartOfWeek = (baseDate: Date) => {
+    const normalized = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate());
+    const start = new Date(normalized);
+    start.setDate(normalized.getDate() - ((normalized.getDay() + 6) % 7));
+    return start;
+  };
+
+  const todayStart = new Date(weekReferenceDate.getFullYear(), weekReferenceDate.getMonth(), weekReferenceDate.getDate());
+  const startOfWeek = getStartOfWeek(weekReferenceDate);
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const normalizedNow = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const currentStart = getStartOfWeek(normalizedNow);
+      const referenceStart = getStartOfWeek(weekReferenceDate);
+
+      if (currentStart.getTime() !== referenceStart.getTime()) {
+        setWeekReferenceDate(normalizedNow);
+      }
+    }, 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [weekReferenceDate]);
+
+  const isStatInCurrentWeek = (stat: ReportStat) => {
+    const statDate = extractDate(stat.weekday);
+    if (!statDate) return false;
+
+    const normalizedDate = new Date(statDate.getFullYear(), statDate.getMonth(), statDate.getDate());
+    return normalizedDate >= startOfWeek && normalizedDate <= endOfWeek;
+  };
 
   const groupLookup = useMemo(() => {
     const map: Record<string, { identifier: string; career: string; semester: string; period: string }> = {};
@@ -256,9 +286,7 @@ function DashboardAttendancePanel() {
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
       if (!matchesFilters(stat)) return;
-
-      const statDate = extractDate(stat.weekday);
-      if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
+      if (!isStatInCurrentWeek(stat)) return;
 
       const day = normalizeWeekday(stat.weekday);
       if (day === 'domingo' || !base[day]) return;
@@ -285,9 +313,7 @@ function DashboardAttendancePanel() {
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
       if (!matchesFilters(stat)) return;
-
-      const statDate = extractDate(stat.weekday);
-      if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
+      if (!isStatInCurrentWeek(stat)) return;
 
       const day = normalizeWeekday(stat.weekday);
       if (day === 'domingo') return;
