@@ -4,7 +4,8 @@ import { Button } from 'primereact/button';
 import { Chart } from 'primereact/chart';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
-import React, { useMemo, useRef, useState } from 'react';
+import { TabMenu, TabMenuTabChangeEvent } from 'primereact/tabmenu';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IDepartment, IFile, useGetAllDepartmentsQuery } from '../../../graphql/graphql';
 import { useAccessTokenData } from '../../../store/auth/store';
@@ -25,12 +26,15 @@ interface FilterTime {
 function DashboardAttendancePanel() {
   const { t } = useTranslation('common');
   const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
   const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
   const [selectedTeacher, setSelectedTeacher] = useState<Userdata | null>(null);
   const [filteredTeacher, setFilteredTeacher] = useState<Userdata[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<IDepartment | null>(null);
   const [filteredDepartment, setFilteredDepartment] = useState<IDepartment[]>([]);
+  const [careerTabIndex, setCareerTabIndex] = useState(0);
+  const [groupTabIndex, setGroupTabIndex] = useState(0);
   const tiempo: FilterTime[] = [
     { label: 'Día', value: '1' },
     { label: 'Mes', value: '2' },
@@ -39,6 +43,7 @@ function DashboardAttendancePanel() {
   ];
   const [value, setValue] = useState<FilterTime>(tiempo[3]);
   const { _id: teacherId, roles } = useAccessTokenData() as TokenData;
+  const isHr = roles.includes('RECURSOS_HUMANOS');
   const {
     careerOptionsData,
     attendanceStatistics,
@@ -151,6 +156,14 @@ function DashboardAttendancePanel() {
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(startOfWeek.getDate() + 6);
 
+  const isStatInCurrentWeek = (stat: ReportStat) => {
+    const statDate = extractDate(stat.weekday);
+    if (!statDate) return false;
+
+    const normalizedDate = new Date(statDate.getFullYear(), statDate.getMonth(), statDate.getDate());
+    return normalizedDate >= startOfWeek && normalizedDate <= endOfWeek;
+  };
+
   const groupLookup = useMemo(() => {
     const map: Record<string, { identifier: string; career: string; semester: string; period: string }> = {};
     groupsData?.getAllGroups.docs.forEach((group) => {
@@ -168,6 +181,63 @@ function DashboardAttendancePanel() {
 
   const normalize = (value?: string | null) => value?.toString().trim().toLowerCase() ?? '';
 
+  const careerTabs = useMemo(() => {
+    const base = [{ label: 'Todas', value: null }];
+    const careers = careerOptionsData?.getUniqueOptionsCareer.careers ?? [];
+    return base.concat(careers);
+  }, [careerOptionsData]);
+
+  const groupTabs = useMemo(() => {
+    const allGroups = groupsData?.getAllGroups.docs ?? [];
+    const filtered = selectedCareer
+      ? allGroups.filter((group) => normalize(group.career) === normalize(selectedCareer))
+      : allGroups;
+
+    const mapped = filtered
+      .map((group) => ({
+        label: group.identifier,
+        value: group.identifier,
+        career: group.career,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label, 'es'));
+
+    return [{ label: 'Todos', value: null }, ...mapped];
+  }, [groupsData, selectedCareer]);
+
+  const syncCareerTabIndex = (careerValue: string | null) => {
+    const index = careerTabs.findIndex((tab) => normalize(tab.value) === normalize(careerValue));
+    setCareerTabIndex(index >= 0 ? index : 0);
+  };
+
+  const syncGroupTabIndex = (groupValue: string | null) => {
+    const index = groupTabs.findIndex((tab) => normalize(tab.value) === normalize(groupValue));
+    setGroupTabIndex(index >= 0 ? index : 0);
+  };
+
+  const handleCareerTabChange = (careerValue: string | null) => {
+    setSelectedCareer(careerValue);
+    setSelectedGroup((currentGroup) => {
+      if (!careerValue || !currentGroup) return currentGroup;
+      const matchingGroup = groupTabs.find((group) => normalize(group.value) === normalize(currentGroup));
+      if (matchingGroup && normalize(matchingGroup.career) === normalize(careerValue)) return currentGroup;
+      return null;
+    });
+    syncCareerTabIndex(careerValue);
+  };
+
+  const handleGroupTabChange = (groupValue: string | null) => {
+    setSelectedGroup(groupValue);
+    syncGroupTabIndex(groupValue);
+  };
+
+  useEffect(() => {
+    syncCareerTabIndex(selectedCareer);
+  }, [careerTabs, selectedCareer]);
+
+  useEffect(() => {
+    syncGroupTabIndex(selectedGroup);
+  }, [groupTabs, selectedGroup]);
+
   const matchesFilters = (stat: ReportStat) => {
     if (selectedCareer) {
       const careerValue = normalize(selectedCareer);
@@ -175,6 +245,7 @@ function DashboardAttendancePanel() {
       const statCareer = normalize(stat.careerName);
       if (statCareer !== careerValue && statCareer !== careerLabel) return false;
     }
+    if (selectedGroup && normalize(stat.groupIdentifier) !== normalize(selectedGroup)) return false;
     if (selectedSemester && stat.semester !== selectedSemester) return false;
     if (selectedPeriod && stat.periodName !== selectedPeriod) return false;
     if (selectedTeacher && stat.teacherLargeName !== selectedTeacher.fullname) return false;
@@ -193,9 +264,7 @@ function DashboardAttendancePanel() {
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
       if (!matchesFilters(stat)) return;
-
-      const statDate = extractDate(stat.weekday);
-      if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
+      if (!isStatInCurrentWeek(stat)) return;
 
       const day = normalizeWeekday(stat.weekday);
       if (day === 'domingo' || !base[day]) return;
@@ -210,6 +279,7 @@ function DashboardAttendancePanel() {
     reportStatistics,
     selectedCareer,
     selectedCareerLabel,
+    selectedGroup,
     selectedPeriod,
     selectedSemester,
     selectedTeacher,
@@ -221,9 +291,7 @@ function DashboardAttendancePanel() {
 
     reportStatistics?.getReportStatistics.forEach((stat) => {
       if (!matchesFilters(stat)) return;
-
-      const statDate = extractDate(stat.weekday);
-      if (statDate && (statDate < startOfWeek || statDate > endOfWeek)) return;
+      if (!isStatInCurrentWeek(stat)) return;
 
       const day = normalizeWeekday(stat.weekday);
       if (day === 'domingo') return;
@@ -244,6 +312,7 @@ function DashboardAttendancePanel() {
     reportStatistics,
     selectedCareer,
     selectedCareerLabel,
+    selectedGroup,
     selectedPeriod,
     selectedSemester,
     selectedTeacher,
@@ -304,6 +373,12 @@ function DashboardAttendancePanel() {
       | 'classPresentSemester'
       | 'classPresentYear'
   ) => attendanceStatistics?.getAttendanceStatistics?.[field] ?? 0;
+
+  const absentsValue = pickStatisticValue('classAbsentDay');
+
+  const justifiedValue = pickStatisticValue('classJustifyDay');
+
+  const presentValue = pickStatisticValue('classPresentDay');
 
   const chartOptions: ChartOptions = {
     indexAxis: 'x',
@@ -431,6 +506,113 @@ function DashboardAttendancePanel() {
     reportStatistics,
     selectedCareer,
     selectedCareerLabel,
+    selectedGroup,
+    selectedPeriod,
+    selectedSemester,
+    selectedTeacher,
+    todayNormalized,
+    todayStart,
+  ]);
+
+  const parsePeriodStartMinutes = (period?: string | null) => {
+    if (!period) return Number.MAX_SAFE_INTEGER;
+
+    const match = period
+      .toLowerCase()
+      .replace('a.m.', 'am')
+      .replace('p.m.', 'pm')
+      .match(/(\d{1,2})(?::(\d{2}))?\s*(a|p)?m?/i);
+
+    if (!match) return Number.MAX_SAFE_INTEGER;
+
+    const hours = parseInt(match[1], 10);
+    const minutes = match[2] ? parseInt(match[2], 10) : 0;
+    const meridiem = match[3]?.toLowerCase();
+
+    if (!meridiem) return hours * 60 + minutes;
+    if (meridiem === 'p' && hours < 12) return hours * 60 + minutes + 12 * 60;
+    if (meridiem === 'a' && hours === 12) return minutes; // 12am
+    return hours * 60 + minutes;
+  };
+
+  const parseTimeRange = (period?: string | null) => {
+    if (!period) return { start: null, end: null };
+
+    const rangeMatch = period
+      .toLowerCase()
+      .replace('a.m.', 'am')
+      .replace('p.m.', 'pm')
+      .match(
+        /(\d{1,2}(?::\d{2})?\s*(?:a|p)?m?)\s*[-–]\s*(\d{1,2}(?::\d{2})?\s*(?:a|p)?m?)/i
+      );
+
+    if (!rangeMatch) return { start: null, end: null };
+
+    const normalizeLabel = (label: string) => {
+      const cleaned = label.replace(/\s+/g, '');
+      const match = cleaned.match(/(\d{1,2})(?::(\d{2}))?(a|p)?m?/i);
+      if (!match) return label;
+
+      const hours = parseInt(match[1], 10);
+      const minutes = match[2] ? parseInt(match[2], 10) : 0;
+      const meridiem = match[3]?.toLowerCase();
+
+      const displayHours = ((meridiem === 'p' && hours < 12 ? hours + 12 : hours) + 24) % 24;
+      const formattedHours = String(displayHours).padStart(2, '0');
+      const formattedMinutes = String(minutes).padStart(2, '0');
+
+      return `${formattedHours}:${formattedMinutes}`;
+    };
+
+    return { start: normalizeLabel(rangeMatch[1]), end: normalizeLabel(rangeMatch[2]) };
+  };
+
+  const teacherDailySchedule = useMemo(() => {
+    const entries: Array<{
+      teacher: string;
+      subject: string;
+      period: string;
+      startTime: string | null;
+      endTime: string | null;
+      status: 'present' | 'absent' | 'justified' | 'unknown';
+    }> = [];
+
+    reportStatistics?.getReportStatistics.forEach((stat) => {
+      if (!matchesFilters(stat)) return;
+
+      const statDate = extractDate(stat.weekday);
+      const matchesToday = statDate
+        ? statDate.getTime() === todayStart.getTime()
+        : normalizeWeekday(stat.weekday) === todayNormalized;
+
+      if (!matchesToday) return;
+
+      const status: 'present' | 'absent' | 'justified' | 'unknown' = stat.presentAmount
+        ? 'present'
+        : stat.absentAmount
+          ? 'absent'
+          : stat.justifiedAmount
+            ? 'justified'
+            : 'unknown';
+
+      const { start, end } = parseTimeRange(stat.periodName);
+
+      entries.push({
+        teacher: stat.teacherLargeName,
+        subject: stat.subjectLargeName,
+        period: stat.periodName,
+        startTime: start,
+        endTime: end,
+        status,
+      });
+    });
+
+    return entries.sort((a, b) => parsePeriodStartMinutes(a.period) - parsePeriodStartMinutes(b.period));
+  }, [
+    reportStatistics,
+    selectedCareer,
+    selectedCareerLabel,
+    selectedGroup,
     selectedPeriod,
     selectedSemester,
     selectedTeacher,
@@ -455,6 +637,25 @@ function DashboardAttendancePanel() {
 
   const topAbsentTeachers = topTeachersByStatus.absent;
   const topJustifiedTeachers = topTeachersByStatus.justified;
+
+  const scheduleByStatus = useMemo(
+    () =>
+      teacherDailySchedule.reduce<
+        Record<'present' | 'absent' | 'justified' | 'unknown', typeof teacherDailySchedule>
+      >(
+        (acc, entry) => {
+          acc[entry.status] = acc[entry.status] ? [...acc[entry.status], entry] : [entry];
+          return acc;
+        },
+        {
+          absent: [],
+          justified: [],
+          present: [],
+          unknown: [],
+        }
+      ),
+    [teacherDailySchedule]
+  );
 
   const totalDayAttendance = useMemo(() => {
     const stats = attendanceStatistics?.getAttendanceStatistics;
@@ -604,28 +805,6 @@ function DashboardAttendancePanel() {
     </div>
   );
 
-  const pendingJustifyValue = (() => {
-    const absent =
-      value === tiempo[0]
-        ? pickStatisticValue('classAbsentDay')
-        : value === tiempo[1]
-        ? pickStatisticValue('classAbsentMonth')
-        : value === tiempo[2]
-        ? pickStatisticValue('classAbsentSemester')
-        : pickStatisticValue('classAbsentYear');
-
-    const justified =
-      value === tiempo[0]
-        ? pickStatisticValue('classJustifyDay')
-        : value === tiempo[1]
-        ? pickStatisticValue('classJustifyMonth')
-        : value === tiempo[2]
-        ? pickStatisticValue('classJustifySemester')
-        : pickStatisticValue('classJustifyYear');
-
-    return Math.max(absent - justified, 0);
-  })();
-
   const weeklyEventSchedule = useMemo(() => {
     if (!eventsData?.getAllEvents.docs) return [];
 
@@ -641,6 +820,10 @@ function DashboardAttendancePanel() {
           .filter(Boolean) as Array<{ identifier: string; career: string; semester: string; period: string }>;
 
         if (selectedCareer && !groups.some((group) => normalize(group.career) === normalize(selectedCareer))) {
+          return false;
+        }
+
+        if (selectedGroup && !groups.some((group) => normalize(group.identifier) === normalize(selectedGroup))) {
           return false;
         }
 
@@ -673,6 +856,7 @@ function DashboardAttendancePanel() {
     eventsData,
     groupLookup,
     selectedCareer,
+    selectedGroup,
     selectedPeriod,
     selectedSemester,
     startOfWeek,
@@ -707,48 +891,42 @@ function DashboardAttendancePanel() {
               <div className="font-medium text-3xl text-900">{t('sidebar.home.dashboard')}</div>
             </div>
           </div>
-          <div className="flex align-items-center justify-content-between mt-3">
-            <div className="flex">
-              <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Carera: </span>
-              </div>
-              <div className="flex justify-content-center">
-                <Dropdown
-                  value={selectedCareer}
-                  onChange={(e: DropdownChangeEvent) => setSelectedCareer(e.value)}
-                  options={careerOptionsData?.getUniqueOptionsCareer.careers}
-                  placeholder={t('global.dictionary.filterCareer')}
-                  optionLabel="label"
-                  optionValue="value"
-                  className="w-14rem"
+          <div className="flex flex-column md:flex-row justify-content-between mt-3 gap-3">
+            <div className="flex-1 surface-50 border-round p-3">
+              <div className="mb-4">
+                <span className="block font-semibold text-600 mb-2">Filtrar por carrera</span>
+                <TabMenu
+                  model={careerTabs.map((career) => ({ label: career.label }))}
+                  activeIndex={careerTabIndex}
+                  onTabChange={(e: TabMenuTabChangeEvent) =>
+                    handleCareerTabChange(careerTabs[e.index]?.value ?? null)
+                  }
+                  className="surface-0 border-round-lg shadow-1 tabmenu-multiline"
                 />
               </div>
-              <div className="align-content-center pl-1">
-                <Button
-                  icon="pi pi-replay"
-                  rounded
-                  outlined
-                  severity="warning"
-                  aria-label="Notification"
-                  disabled={!selectedCareer}
-                  onClick={() => {
-                    setSelectedCareer(null);
-                  }}
+              <div>
+                <span className="block font-semibold text-600 mb-2">Filtrar por grupo</span>
+                <TabMenu
+                  model={groupTabs.map((group) => ({ label: group.label }))}
+                  activeIndex={groupTabIndex}
+                  onTabChange={(e: TabMenuTabChangeEvent) =>
+                    handleGroupTabChange(groupTabs[e.index]?.value ?? null)
+                  }
+                  className="surface-0 border-round-lg shadow-1 tabmenu-multiline tabmenu-groups"
                 />
               </div>
             </div>
-            <div className="flex">
-              <div className="mr-3 align-content-center">
-                <span className="block font-semibold ">Semestre: </span>
-              </div>
-              <Dropdown
-                value={selectedSemester}
-                onChange={(e: DropdownChangeEvent) => setSelectedSemester(e.value)}
-                options={careerOptionsData?.getUniqueOptionsCareer.semesters}
-                placeholder={t('global.dictionary.filterSemester')}
-                className="w-14rem"
-              />
-              <div className="align-content-center pl-1">
+
+            <div className="flex flex-column gap-3 justify-content-start md:justify-content-center">
+              <div className="flex align-items-center gap-2">
+                <span className="block font-semibold">Semestre: </span>
+                <Dropdown
+                  value={selectedSemester}
+                  onChange={(e: DropdownChangeEvent) => setSelectedSemester(e.value)}
+                  options={careerOptionsData?.getUniqueOptionsCareer.semesters}
+                  placeholder={t('global.dictionary.filterSemester')}
+                  className="w-14rem"
+                />
                 <Button
                   icon="pi pi-replay"
                   rounded
@@ -761,7 +939,6 @@ function DashboardAttendancePanel() {
                   }}
                 />
               </div>
-            </div>
             {/* <Dropdown
                 value={selectedPeriod}
                 onChange={(e: DropdownChangeEvent) => setSelectedPeriod(e.value)}
@@ -770,23 +947,20 @@ function DashboardAttendancePanel() {
                 optionLabel="name"
                 optionValue="_id"
               /> */}
-            {(roles.includes('SUPER_ADMINISTRATOR') ||
-              roles.includes('DIRECTOR_ACADEMICO') ||
-              roles.includes('SUBDIRECTOR_ACADEMICO')) && (
-              <>
-                <div className="flex">
-                  <div className="mr-3 align-content-center">
-                    <span className="block font-semibold ">Departamento: </span>
-                  </div>
-                  <AutoComplete
-                    value={selectedDepartment}
-                    onChange={(e) => setSelectedDepartment(e.value)}
-                    suggestions={filteredDepartment}
-                    completeMethod={searchDepartments}
-                    field="name"
-                    placeholder={t('global.dictionary.filterDeparment')}
-                  />
-                  <div className="align-content-center pl-1">
+              {(roles.includes('SUPER_ADMINISTRATOR') ||
+                roles.includes('DIRECTOR_ACADEMICO') ||
+                roles.includes('SUBDIRECTOR_ACADEMICO')) && (
+                <>
+                  <div className="flex align-items-center gap-2">
+                    <span className="block font-semibold">Departamento: </span>
+                    <AutoComplete
+                      value={selectedDepartment}
+                      onChange={(e) => setSelectedDepartment(e.value)}
+                      suggestions={filteredDepartment}
+                      completeMethod={searchDepartments}
+                      field="name"
+                      placeholder={t('global.dictionary.filterDeparment')}
+                    />
                     <Button
                       icon="pi pi-replay"
                       rounded
@@ -799,20 +973,16 @@ function DashboardAttendancePanel() {
                       }}
                     />
                   </div>
-                </div>
-                <div className="flex">
-                  <div className="mr-3 align-content-center">
-                    <span className="block font-semibold ">Docente: </span>
-                  </div>
-                  <AutoComplete
-                    value={selectedTeacher}
-                    onChange={(e) => setSelectedTeacher(e.value)}
-                    suggestions={filteredTeacher}
-                    completeMethod={searchTeachers}
-                    field="fullname"
-                    placeholder={t('global.dictionary.filterTeacher')}
-                  />
-                  <div className="align-content-center pl-1">
+                  <div className="flex align-items-center gap-2">
+                    <span className="block font-semibold">Docente: </span>
+                    <AutoComplete
+                      value={selectedTeacher}
+                      onChange={(e) => setSelectedTeacher(e.value)}
+                      suggestions={filteredTeacher}
+                      completeMethod={searchTeachers}
+                      field="fullname"
+                      placeholder={t('global.dictionary.filterTeacher')}
+                    />
                     <Button
                       icon="pi pi-replay"
                       rounded
@@ -825,9 +995,8 @@ function DashboardAttendancePanel() {
                       }}
                     />
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
             {/* <div className="flex">
               <div className="mr-3 align-content-center">
                 <span className="block font-semibold ">Filtr de Tiempo: </span>
@@ -839,26 +1008,204 @@ function DashboardAttendancePanel() {
                 placeholder={t('global.dictionary.Career')}
               />
             </div> */}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="col-12 md:col-6 xl:col-3">
+      {selectedGroup && (
+        <div className="col-12">
+          <div className="card">
+            <div className="flex align-items-center justify-content-between mb-3">
+              <div>
+                <span className="block text-500 font-medium">Docentes del grupo seleccionado</span>
+                <p className="m-0 text-600 text-sm">
+                  Horarios de hoy para el grupo {selectedGroup} con su estado de asistencia.
+                </p>
+              </div>
+              <div
+                className="flex align-items-center justify-content-center bg-bluegray-50 text-bluegray-500 text-xl border-round"
+                style={{ width: '2.5rem', height: '2.5rem' }}
+              >
+                <i className="pi pi-users" />
+              </div>
+            </div>
+
+            {teacherDailySchedule.length ? (
+              <div className="border-1 surface-border border-round overflow-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-600 text-sm">
+                      <th className="text-left py-3 px-3 font-semibold">Horario</th>
+                      <th className="text-left py-3 px-3 font-semibold">Docente</th>
+                      <th className="text-left py-3 px-3 font-semibold">Materia</th>
+                      <th className="text-left py-3 px-3 font-semibold">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {teacherDailySchedule.map((stat, index) => {
+                      const statusStyles: Record<
+                        typeof stat.status,
+                        { icon: string; className: string; label: string }
+                      > = {
+                        present: {
+                          icon: 'pi pi-check-circle',
+                          className: 'bg-green-50 text-green-700 border-round-xl px-3 py-2 inline-flex align-items-center gap-2',
+                          label: 'Asistencia',
+                        },
+                        absent: {
+                          icon: 'pi pi-times-circle',
+                          className: 'bg-red-50 text-red-700 border-round-xl px-3 py-2 inline-flex align-items-center gap-2',
+                          label: 'Ausencia',
+                        },
+                        justified: {
+                          icon: 'pi pi-file',
+                          className: 'bg-blue-50 text-blue-700 border-round-xl px-3 py-2 inline-flex align-items-center gap-2',
+                          label: 'Justificado',
+                        },
+                        unknown: {
+                          icon: 'pi pi-question-circle',
+                          className:
+                            'bg-gray-50 text-gray-700 border-round-xl px-3 py-2 inline-flex align-items-center gap-2',
+                          label: 'Sin estado',
+                        },
+                      };
+
+                      const statusStyle = statusStyles[stat.status];
+
+                      return (
+                        <tr key={`${stat.teacher}-${index}`} className="border-top-1 surface-border">
+                          <td className="py-3 px-3 text-900 font-semibold">
+                            <div className="flex flex-column">
+                              <span>{stat.period || 'Horario no especificado'}</span>
+                              {(stat.startTime || stat.endTime) && (
+                                <span className="text-600 text-sm">
+                                  {stat.startTime ? stat.startTime : '¿?'}
+                                  {stat.endTime ? ` - ${stat.endTime}` : ''}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-3 px-3 text-900 font-semibold">{stat.teacher}</td>
+                          <td className="py-3 px-3 text-700">{stat.subject}</td>
+                          <td className="py-3 px-3">
+                            <span className={statusStyle.className}>
+                              <i className={statusStyle.icon} />
+                              <span className="font-semibold text-sm">{statusStyle.label}</span>
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-500 text-center m-0">No hay registros de asistencia para este grupo hoy.</p>
+            )}
+
+            {!!teacherDailySchedule.length && (
+              <div className="grid mt-4">
+                {([
+                  {
+                    key: 'present' as const,
+                    title: 'Con asistencia',
+                    color: 'bg-green-50 text-green-700',
+                    icon: 'pi pi-check-circle',
+                  },
+                  {
+                    key: 'absent' as const,
+                    title: 'Ausentes',
+                    color: 'bg-red-50 text-red-700',
+                    icon: 'pi pi-times-circle',
+                  },
+                  {
+                    key: 'justified' as const,
+                    title: 'Justificados',
+                    color: 'bg-blue-50 text-blue-700',
+                    icon: 'pi pi-file',
+                  },
+                ] as const).map((section) => (
+                  <div key={section.key} className="col-12 md:col-4">
+                    <div className="border-1 surface-border border-round p-3 h-full">
+                      <div className={`inline-flex align-items-center gap-2 px-3 py-2 border-round ${section.color}`}>
+                        <i className={section.icon} />
+                        <span className="font-semibold">{section.title}</span>
+                        <span className="font-semibold">({scheduleByStatus[section.key].length})</span>
+                      </div>
+                      {scheduleByStatus[section.key].length ? (
+                        <ul className="list-none p-0 m-0 mt-3">
+                          {scheduleByStatus[section.key].map((entry, idx) => (
+                            <li
+                              key={`${section.key}-${entry.teacher}-${idx}`}
+                              className="py-2 px-2 border-bottom-1 surface-border"
+                            >
+                              <div className="font-semibold text-900">{entry.teacher}</div>
+                              <div className="text-700 text-sm">{entry.subject}</div>
+                              <div className="text-600 text-sm">
+                                {entry.startTime || entry.endTime
+                                  ? `${entry.startTime ?? '?'}${entry.endTime ? ` - ${entry.endTime}` : ''}`
+                                  : entry.period}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-500 text-sm mt-2 mb-0">Sin registros para hoy.</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {isHr && (
+        <div className="col-12">
+          <div className="card surface-50">
+            <div className="flex align-items-center justify-content-between mb-3">
+              <div>
+                <span className="block text-500 font-medium">Resumen para Recursos Humanos</span>
+                <p className="m-0 text-600 text-sm">
+                  Visualiza ausencias, asistencias y el avance de justificantes según el periodo seleccionado.
+                </p>
+              </div>
+              <div
+                className="flex align-items-center justify-content-center bg-primary-50 text-primary-500 text-2xl border-round"
+                style={{ width: '3rem', height: '3rem' }}
+              >
+                <i className="pi pi-briefcase" aria-hidden />
+              </div>
+            </div>
+
+            <div className="grid text-sm">
+              <div className="col-12 md:col-6">
+                <div className="flex justify-content-between align-items-center border-round surface-100 p-3">
+                  <span className="text-600">Ausencias registradas</span>
+                  <span className="text-900 font-semibold text-xl">{absentsValue}</span>
+                </div>
+              </div>
+              <div className="col-12 md:col-6">
+                <div className="flex justify-content-between align-items-center border-round surface-100 p-3">
+                  <span className="text-600">Justificantes aprobados</span>
+                  <span className="text-900 font-semibold text-xl">{justifiedValue}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="col-12 md:col-4 xl:col-4">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
               <span className="block text-500 font-medium mb-3">
                 {t('global.dictionary.Absents')}
               </span>
-              <div className="text-900 font-semibold text-4xl">
-                {value === tiempo[0]
-                  ? attendanceStatistics?.getAttendanceStatistics.classAbsentDay
-                  : value === tiempo[1]
-                  ? attendanceStatistics?.getAttendanceStatistics.classAbsentMonth
-                  : value === tiempo[2]
-                  ? attendanceStatistics?.getAttendanceStatistics.classAbsentSemester
-                  : attendanceStatistics?.getAttendanceStatistics.classAbsentYear}
-              </div>
+              <div className="text-900 font-semibold text-4xl">{absentsValue}</div>
             </div>
             <div
               className="flex align-items-center justify-content-center bg-red-100 text-red-500 text-xl border-round"
@@ -869,22 +1216,14 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
-      <div className="col-12 md:col-6 xl:col-3">
+      <div className="col-12 md:col-4 xl:col-4">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
               <span className="block text-500 font-medium mb-3">
                 {t('global.dictionary.Justified')}
               </span>
-              <div className="text-900 font-semibold text-4xl">
-                {value === tiempo[0]
-                  ? attendanceStatistics?.getAttendanceStatistics.classJustifyDay
-                  : value === tiempo[1]
-                  ? attendanceStatistics?.getAttendanceStatistics.classJustifyMonth
-                  : value === tiempo[2]
-                  ? attendanceStatistics?.getAttendanceStatistics.classJustifySemester
-                  : attendanceStatistics?.getAttendanceStatistics.classJustifyYear}
-              </div>
+              <div className="text-900 font-semibold text-4xl">{justifiedValue}</div>
             </div>
             <div
               className="flex align-items-center justify-content-center bg-blue-100 text-blue-500 text-xl border-round"
@@ -895,38 +1234,14 @@ function DashboardAttendancePanel() {
           </div>
         </div>
       </div>
-      <div className="col-12 md:col-6 xl:col-3">
-        <div className="card mb-0 h-full">
-          <div className="flex justify-content-between mb-3">
-            <div>
-              <span className="block text-500 font-medium mb-3">Pendientes de justificar</span>
-              <div className="text-900 font-semibold text-4xl">{pendingJustifyValue}</div>
-            </div>
-            <div
-              className="flex align-items-center justify-content-center bg-amber-100 text-amber-500 text-xl border-round"
-              style={{ width: '2.5rem', height: '2.5rem' }}
-            >
-              <i className="pi pi-clock text-amber-500 text-xl" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="col-12 md:col-6 xl:col-3">
+      <div className="col-12 md:col-4 xl:col-4">
         <div className="card mb-0 h-full">
           <div className="flex justify-content-between mb-3">
             <div>
               <span className="block text-500 font-medium mb-3">
                 {t('global.dictionary.Presented')}
               </span>
-              <div className="text-900 font-semibold text-4xl">
-                {value === tiempo[0]
-                  ? attendanceStatistics?.getAttendanceStatistics.classPresentDay
-                  : value === tiempo[1]
-                  ? attendanceStatistics?.getAttendanceStatistics.classPresentMonth
-                  : value === tiempo[2]
-                  ? attendanceStatistics?.getAttendanceStatistics.classPresentSemester
-                  : attendanceStatistics?.getAttendanceStatistics.classPresentYear}
-              </div>
+              <div className="text-900 font-semibold text-4xl">{presentValue}</div>
             </div>
             <div
               className="flex align-items-center justify-content-center bg-green-100 text-green-500 text-xl border-round"

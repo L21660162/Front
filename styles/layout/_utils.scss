@@ -30,3 +30,32 @@
   align-items: center;
   text-align: center;
 }
+
+.tabmenu-multiline {
+  .p-tabmenu-nav {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    overflow: visible;
+  }
+
+  .p-tabmenuitem {
+    flex: 0 1 auto;
+  }
+
+  .p-tabmenu-nav .p-menuitem-link {
+    min-width: 8rem;
+    justify-content: center;
+  }
+}
+
+.tabmenu-groups {
+  .p-tabmenu-nav {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+
+  .p-tabmenuitem,
+  .p-tabmenu-nav .p-menuitem-link {
+    width: 100%;
+  }
+}

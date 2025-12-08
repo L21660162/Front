@@ -163,15 +163,11 @@ function AppMenu() {
         !item?.seperator
       );
     } else if (roles.includes('RECURSOS_HUMANOS')) {
-      if (item.label === 'Panel de Control') {
-        item.items = item.items?.slice(1);
-      }
-
       return (
         item.items &&
         item.items[0].to &&
         typeof item.items[0].to === 'string' &&
-        ['/justify/dashboard'].includes(item.items[0].to) &&
+        ['/home/dashboard', '/justify/dashboard'].includes(item.items[0].to) &&
         !item?.seperator
       );
     } else {
